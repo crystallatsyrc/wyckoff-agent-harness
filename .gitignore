@@ -1,0 +1,22 @@
+.DS_Store
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+work/
+*.log
+
+# Local credentials and runtime state
+.env
+.env.*
+*.key
+*.pem
+wyckoff.json
+session.json
+credentials/
+
+# Generated outputs
+logs/
+data/
+tmp/
+
