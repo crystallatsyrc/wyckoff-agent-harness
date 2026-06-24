@@ -6,7 +6,6 @@
 
 [![PyPI](https://img.shields.io/pypi/v/youngcan-wyckoff-analysis?color=blue)](https://pypi.org/project/youngcan-wyckoff-analysis/)
 [![Python](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/)
-[![License](https://img.shields.io/badge/license-AGPL--3.0-green.svg)](../LICENSE)
 [![Web App](https://img.shields.io/badge/Web-React%20App-0ea5e9.svg)](https://wyckoff-analysis.pages.dev/)
 [![Homepage](https://img.shields.io/badge/homepage-Wyckoff%20Homepage-0ea5e9.svg)](https://youngcan-wang.github.io/wyckoff-homepage/)
 
@@ -300,27 +299,9 @@ claude mcp add wyckoff -- wyckoff-mcp
 
 AIアシスタントに「ワイコフ視点」を素早く装着するのに最適。
 
-## コミュニティ
-
-| Feishu グループ 1 | Feishu グループ 2 | QQ グループ | Feishu 個人 |
-|:---:|:---:|:---:|:---:|
-| <img src="../attach/飞书群二维码.png" width="200" /> | <img src="../attach/飞书二群二维码.png" width="200" /> | <img src="../attach/QQ群二维码.jpg" width="200" /><br/>グループ番号: 761348919 | <img src="../attach/飞书个人二维码.png" width="200" /> |
-
-## スポンサー
-
-役に立ったら Star をお願いします。利益が出たら作者にハンバーガーをおごってください。
-
-| Alipay | WeChat |
-|:---:|:---:|
-| <img src="../attach/支付宝收款码.jpg" width="200" /> | <img src="../attach/微信收款码.png" width="200" /> |
-
 ## リスク警告
 
 > **本ツールは過去の出来高・価格パターンに基づき潜在的な銘柄を発見するものです。過去のパフォーマンスは将来の成果を保証するものではなく、すべてのスクリーニング・推奨・バックテスト結果は投資助言を構成するものではありません。投資はご自身の判断で行ってください。**
-
-## ライセンス
-
-[AGPL-3.0](../LICENSE) &copy; 2024-2026 youngcan
 
 ---
 

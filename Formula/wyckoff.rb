@@ -5,7 +5,6 @@ class Wyckoff < Formula
   homepage "https://github.com/YoungCan-Wang/WyckoffTradingAgent"
   url "https://files.pythonhosted.org/packages/46/77/ef9bd7a7e19e49196c12b49312a1ae0d80631c7265a8b4e60cd9db10d87e/youngcan_wyckoff_analysis-0.7.13.tar.gz"
   sha256 "241bdeeb37f65542cf595bcae512a7ebf30d23a40bdc7548bebb477f577141b2"
-  license "AGPL-3.0-only"
 
   resource "akshare" do
     url "https://files.pythonhosted.org/packages/96/cc/965a0162a0d5cfe4ad22f685e8467d99e9a9f653267e16afc537e6f2e4b8/akshare-1.18.60.tar.gz"

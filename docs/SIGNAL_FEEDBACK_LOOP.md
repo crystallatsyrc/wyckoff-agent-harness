@@ -11,7 +11,7 @@
 ```mermaid
 flowchart LR
   A["本轮漏斗<br/>选股 + AI + OMS"] --> B["写 signal_observations"]
-  X["外部观察名单<br/>人工/社区/其它系统"] --> B
+  X["外部观察名单<br/>人工/外部系统"] --> B
   X --> Y["写 external_seed_observations"]
   B --> C["盘后 feedback<br/>计算 outcomes"]
   C --> D["更新 health / registry"]

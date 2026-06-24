@@ -6,7 +6,6 @@
 
 [![PyPI](https://img.shields.io/pypi/v/youngcan-wyckoff-analysis?color=blue)](https://pypi.org/project/youngcan-wyckoff-analysis/)
 [![Python](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/)
-[![License](https://img.shields.io/badge/license-AGPL--3.0-green.svg)](../LICENSE)
 [![Web App](https://img.shields.io/badge/Web-React%20App-0ea5e9.svg)](https://wyckoff-analysis.pages.dev/)
 [![Homepage](https://img.shields.io/badge/homepage-Wyckoff%20Homepage-0ea5e9.svg)](https://youngcan-wang.github.io/wyckoff-homepage/)
 
@@ -300,27 +299,9 @@ Lightweight reuse of the Wyckoff analysis capability: [`YoungCan-Wang/wyckoff_sk
 
 Ideal for giving any AI assistant a quick "Wyckoff lens."
 
-## Community
-
-| Feishu Group 1 | Feishu Group 2 | QQ Group | Feishu Contact |
-|:---:|:---:|:---:|:---:|
-| <img src="../attach/飞书群二维码.png" width="200" /> | <img src="../attach/飞书二群二维码.png" width="200" /> | <img src="../attach/QQ群二维码.jpg" width="200" /><br/>Group: 761348919 | <img src="../attach/飞书个人二维码.png" width="200" /> |
-
-## Sponsor
-
-If this project helps, a GitHub Star is appreciated. If it helps you make money, buy the author a burger.
-
-| Alipay | WeChat |
-|:---:|:---:|
-| <img src="../attach/支付宝收款码.jpg" width="200" /> | <img src="../attach/微信收款码.png" width="200" /> |
-
 ## Disclaimer
 
 > **This tool identifies potential based on historical volume-price patterns. Past performance does not guarantee future results. All screening, recommendation, and backtest outputs do not constitute investment advice. Invest at your own risk.**
-
-## License
-
-[AGPL-3.0](../LICENSE) &copy; 2024-2026 youngcan
 
 ---
 

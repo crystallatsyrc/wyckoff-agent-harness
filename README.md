@@ -6,7 +6,6 @@
 
 [![PyPI](https://img.shields.io/pypi/v/youngcan-wyckoff-analysis?color=blue)](https://pypi.org/project/youngcan-wyckoff-analysis/)
 [![Python](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/)
-[![License](https://img.shields.io/badge/license-AGPL--3.0-green.svg)](LICENSE)
 [![Web App](https://img.shields.io/badge/Web-React%20App-0ea5e9.svg)](https://wyckoff-analysis.pages.dev/)
 [![Homepage](https://img.shields.io/badge/homepage-Wyckoff%20Homepage-0ea5e9.svg)](https://youngcan-wang.github.io/wyckoff-homepage/)
 
@@ -21,19 +20,6 @@
 React Web、CLI、MCP 与 GitHub Actions 共同组成当前产品形态；日线行情通过 TickFlow 实时拉取（无 Supabase 行情缓存），Supabase 仅用于用户配置、持仓、形态复盘、市场信号、信号反馈与任务结果。
 
 > Risk disclosure: WyckoffAgent is for educational, research, and informational use. It does not provide investment advice, does not account for every personal financial circumstance, and does not guarantee future performance.
-
----
-
-## 云端运行成本透明
-
-WyckoffAgent 会始终保持开源，欢迎 fork 自行部署、提交 Issue 和 PR。  
-从 **2026-06-03** 起，项目的云端共享服务按付费基础设施运行：行情源、数据库、AI 报告、在线分析服务和自动化维护都会进入显性成本模型。下面的 Supabase 配额提示是这类成本边界的例子，完整成本明细与风险边界见 [docs/COST_MODEL.md](docs/COST_MODEL.md)。
-
-<p align="center">
-  <img src="docs/screenshots/supabase-quota-grace-2026-06-03.svg" alt="Supabase quota grace period until 03 Jun, 2026" width="900" />
-</p>
-
----
 
 ## Special Thanks
 
@@ -212,7 +198,6 @@ wyckoff dashboard
 | **A 股主漏斗执行流程（上下游 + 流程图）** | [docs/A_SHARE_FUNNEL_FLOW.md](docs/A_SHARE_FUNNEL_FLOW.md) |
 | 信号反馈闭环、shadow/on 动态策略 | [docs/SIGNAL_FEEDBACK_LOOP.md](docs/SIGNAL_FEEDBACK_LOOP.md) |
 | 系统迭代策略与落地状态 | [docs/ITERATION_STRATEGY.md](docs/ITERATION_STRATEGY.md) |
-| 运营成本、规模化预算 | [docs/COST_MODEL.md](docs/COST_MODEL.md) |
 | 漏斗、AI 研报、OMS、回测 | [README_STRATEGY.md](README_STRATEGY.md) |
 | 术语速查 | [GLOSSARY.md](GLOSSARY.md) |
 | MCP Server 配置 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md#mcp-server) |
@@ -229,34 +214,6 @@ wyckoff dashboard
 进阶配置见 [架构文档](docs/ARCHITECTURE.md)。
 
 > 数据源购买：[TickFlow →](https://tickflow.org/auth/register?ref=5N4NKTCPL4) ｜ 大模型购买：[1Route →](https://www.1route.dev/register?aff=359904261)
-
----
-
-## 交流
-
-如果你希望免去行情数据源、数据库、云服务器、AI API 和自动化任务的运维成本，可以加入 **「威科夫策略交流学习」知识星球**，使用云端共享入口：多端同步、每日全市场漏斗推送、自动 AI 研报和专属交流社区都由共享基础设施统一承载。
-
-年费 **CNY 518/年**，折合每天约 **1.4 元**。518 取“我要发”的好彩头；这笔费用主要用于共同平摊系统运维硬成本，不是投资顾问费，也不构成任何收益承诺。成本明细与风险边界见 [docs/COST_MODEL.md](docs/COST_MODEL.md)。
-
-<p align="center">
-  <img src="attach/知识星球二维码.jpg" alt="威科夫策略交流学习 知识星球二维码" width="260" />
-</p>
-
-| 飞书一群 | 飞书二群 | QQ群 | 飞书个人 |
-|:---:|:---:|:---:|:---:|
-| <img src="attach/飞书群二维码.png" width="200" /> | <img src="attach/飞书二群二维码.png" width="200" /> | <img src="attach/QQ群二维码.jpg" width="200" /><br/>群号: 761348919 | <img src="attach/飞书个人二维码.png" width="200" /> |
-
-## 赞助
-
-觉得有帮助？给个 Star。赚到钱了？请作者吃个汉堡。
-
-| 支付宝 | 微信 |
-|:---:|:---:|
-| <img src="attach/支付宝收款码.jpg" width="200" /> | <img src="attach/微信收款码.png" width="200" /> |
-
-## License
-
-[AGPL-3.0](LICENSE) &copy; 2024-2026 youngcan
 
 ---
 

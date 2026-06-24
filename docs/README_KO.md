@@ -6,7 +6,6 @@
 
 [![PyPI](https://img.shields.io/pypi/v/youngcan-wyckoff-analysis?color=blue)](https://pypi.org/project/youngcan-wyckoff-analysis/)
 [![Python](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/)
-[![License](https://img.shields.io/badge/license-AGPL--3.0-green.svg)](../LICENSE)
 [![Web App](https://img.shields.io/badge/Web-React%20App-0ea5e9.svg)](https://wyckoff-analysis.pages.dev/)
 [![Homepage](https://img.shields.io/badge/homepage-Wyckoff%20Homepage-0ea5e9.svg)](https://youngcan-wang.github.io/wyckoff-homepage/)
 
@@ -300,27 +299,9 @@ claude mcp add wyckoff -- wyckoff-mcp
 
 AI 어시스턴트에 빠르게 "와이코프 시각"을 장착하기에 적합합니다.
 
-## 커뮤니티
-
-| Feishu 그룹 1 | Feishu 그룹 2 | QQ 그룹 | Feishu 연락처 |
-|:---:|:---:|:---:|:---:|
-| <img src="../attach/飞书群二维码.png" width="200" /> | <img src="../attach/飞书二群二维码.png" width="200" /> | <img src="../attach/QQ群二维码.jpg" width="200" /><br/>그룹 번호: 761348919 | <img src="../attach/飞书个人二维码.png" width="200" /> |
-
-## 후원
-
-프로젝트가 도움이 되었다면 Star를 부탁드립니다. 돈을 벌었다면 저자에게 햄버거를 사 주세요.
-
-| Alipay | WeChat |
-|:---:|:---:|
-| <img src="../attach/支付宝收款码.jpg" width="200" /> | <img src="../attach/微信收款码.png" width="200" /> |
-
 ## 위험 경고
 
 > **이 도구는 과거 거래량-가격 패턴을 기반으로 잠재적 종목을 발견합니다. 과거 실적이 미래 수익을 보장하지 않으며, 모든 스크리닝, 추천, 백테스트 결과는 투자 조언을 구성하지 않습니다. 투자는 본인의 판단하에 진행하십시오.**
-
-## License
-
-[AGPL-3.0](../LICENSE) &copy; 2024-2026 youngcan
 
 ---
 

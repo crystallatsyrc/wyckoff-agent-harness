@@ -200,7 +200,7 @@ flowchart TD
 
 ### 外部观察名单
 
-`external_seeds` 用于把人工关注、社区反馈或其它系统给出的股票加入同一套漏斗观察，而不是作为正式候选来源：
+`external_seeds` 用于把人工关注、外部反馈或其它系统给出的股票加入同一套漏斗观察，而不是作为正式候选来源：
 
 - 配置来源：`config/profiles/a_share_prod.yml`、`FUNNEL_EXTERNAL_SEED_SYMBOLS`、`FUNNEL_EXTRA_SYMBOLS` 或 `symbols_file`
 - 默认只做 shadow 观察：记录是否通过 L1/L2、是否在 L2 后触发 L4、是否过期
