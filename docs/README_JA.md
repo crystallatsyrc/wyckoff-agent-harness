@@ -304,5 +304,3 @@ AIアシスタントに「ワイコフ視点」を素早く装着するのに最
 > **本ツールは過去の出来高・価格パターンに基づき潜在的な銘柄を発見するものです。過去のパフォーマンスは将来の成果を保証するものではなく、すべてのスクリーニング・推奨・バックテスト結果は投資助言を構成するものではありません。投資はご自身の判断で行ってください。**
 
 ---
-
-[![Star History Chart](https://api.star-history.com/svg?repos=YoungCan-Wang/WyckoffTradingAgent&type=Date)](https://star-history.com/#YoungCan-Wang/WyckoffTradingAgent&Date)

@@ -304,5 +304,3 @@ Ideal para dar a cualquier asistente IA una rapida "perspectiva Wyckoff."
 > **Esta herramienta identifica potencial basandose en patrones historicos de volumen y precio. El rendimiento pasado no garantiza resultados futuros. Todos los resultados de filtrado, recomendacion y backtesting no constituyen asesoramiento de inversion. Invierta bajo su propia responsabilidad.**
 
 ---
-
-[![Star History Chart](https://api.star-history.com/svg?repos=YoungCan-Wang/WyckoffTradingAgent&type=Date)](https://star-history.com/#YoungCan-Wang/WyckoffTradingAgent&Date)
