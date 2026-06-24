@@ -12,7 +12,7 @@ import pandas as pd
 
 from core.hist_dates import latest_trade_date_from_hist
 from core.holding_diagnostic import diagnose_one_stock, format_diagnostic_for_llm
-from core.wyckoff_engine import FunnelConfig, normalize_hist_from_fetch
+from core.quantevolens_engine import FunnelConfig, normalize_hist_from_fetch
 from integrations.fetch_a_share_csv import TradingWindow, fetch_hist
 from tools.report_builder import generate_stock_payload
 from tools.spot_patch import append_spot_bar_if_needed
@@ -379,7 +379,7 @@ def _position_diagnostic_payload(pos: PositionItem, df_qfq: pd.DataFrame) -> tup
         payload = generate_stock_payload(
             stock_code=pos.code,
             stock_name=pos.name,
-            wyckoff_tag="持仓",
+            quantevolens_tag="持仓",
             df=df_qfq,
             track=diag.track if diag.track != "Unknown" else None,
             stage=diag.accum_stage,
@@ -390,7 +390,7 @@ def _position_diagnostic_payload(pos: PositionItem, df_qfq: pd.DataFrame) -> tup
         return f"- {format_diagnostic_for_llm(diag)}\n", payload
     except Exception:
         logger.debug("%s diagnostic formatting failed, using fallback", pos.code, exc_info=True)
-        payload = generate_stock_payload(stock_code=pos.code, stock_name=pos.name, wyckoff_tag="持仓", df=df_qfq)
+        payload = generate_stock_payload(stock_code=pos.code, stock_name=pos.name, quantevolens_tag="持仓", df=df_qfq)
         return "", payload
 
 
@@ -468,7 +468,7 @@ def _process_one_candidate(
         payload = generate_stock_payload(
             stock_code=code,
             stock_name=name,
-            wyckoff_tag=clean_text(item.get("tag")) or "漏斗候选",
+            quantevolens_tag=clean_text(item.get("tag")) or "漏斗候选",
             df=df_qfq,
             industry=clean_text(item.get("industry")) or None,
             track=clean_text(item.get("track")) or None,

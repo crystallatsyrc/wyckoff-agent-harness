@@ -120,7 +120,7 @@ def send_step3_final_report(
 
 def _empty_step3_report(rag_veto_preview: str, rag_veto_lines: list[str]) -> str:
     report = (
-        "# 🏛️ Alpha 投委会机密电报：威科夫盘面审判\n\n"
+        "# 🏛️ Alpha 投委会机密电报：QuantEvoLens盘面审判\n\n"
         "## 💀 逻辑破产\n"
         "- 无（本轮无明确失效标的可判定）\n\n"
         "## ⏳ 储备营地\n"

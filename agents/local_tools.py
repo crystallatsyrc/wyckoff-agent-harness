@@ -123,7 +123,7 @@ def web_fetch(url: str, tool_context: Any = None) -> dict:
         return safe_url
 
     try:
-        resp = requests.get(safe_url, timeout=(3, 15), headers={"User-Agent": "Wyckoff-Agent/1.0"}, stream=True)
+        resp = requests.get(safe_url, timeout=(3, 15), headers={"User-Agent": "QuantEvoLens-Agent/1.0"}, stream=True)
         resp.raise_for_status()
         ctype = resp.headers.get("content-type", "").lower()
         if ctype and not any(ctype.startswith(prefix) for prefix in SAFE_WEB_CONTENT_TYPE_PREFIXES):

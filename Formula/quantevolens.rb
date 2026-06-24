@@ -1,9 +1,9 @@
-class Wyckoff < Formula
+class Quantevolens < Formula
   include Language::Python::Virtualenv
 
-  desc "Wyckoff method quantitative analysis agent for A-shares"
-  homepage "https://github.com/YoungCan-Wang/WyckoffTradingAgent"
-  url "https://files.pythonhosted.org/packages/46/77/ef9bd7a7e19e49196c12b49312a1ae0d80631c7265a8b4e60cd9db10d87e/youngcan_wyckoff_analysis-0.7.13.tar.gz"
+  desc "QuantEvoLens method quantitative analysis agent for A-shares"
+  homepage "https://github.com/crystallatsyrc/QuantEvoLens"
+  url "https://files.pythonhosted.org/packages/46/77/ef9bd7a7e19e49196c12b49312a1ae0d80631c7265a8b4e60cd9db10d87e/quantevolens-0.7.13.tar.gz"
   sha256 "241bdeeb37f65542cf595bcae512a7ebf30d23a40bdc7548bebb477f577141b2"
 
   resource "akshare" do
@@ -553,6 +553,6 @@ class Wyckoff < Formula
   end
 
   test do
-    assert_match version.to_s, shell_output("#{bin}/wyckoff --version")
+    assert_match version.to_s, shell_output("#{bin}/quantevolens --version")
   end
 end

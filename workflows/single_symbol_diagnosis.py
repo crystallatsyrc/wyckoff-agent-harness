@@ -12,7 +12,7 @@ import pandas as pd
 
 from core.candidate_ranker import TRIGGER_LABELS, TRIGGER_SHORT_LABELS
 from core.signal_confirmation import score_springboard_abc
-from core.wyckoff_engine import (
+from core.quantevolens_engine import (
     FunnelConfig,
     layer1_filter,
     layer2_strength_detailed,

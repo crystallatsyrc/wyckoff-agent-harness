@@ -23,7 +23,7 @@ class StrategyReflectionRequest:
 
 
 def strategy_reflection_enabled() -> bool:
-    return os.getenv("WYCKOFF_STRATEGY_REFLECTION", "off").strip().lower() == "shadow"
+    return os.getenv("QUANTEVOLENS_STRATEGY_REFLECTION", "off").strip().lower() == "shadow"
 
 
 def build_strategy_reflection_payloads(request: StrategyReflectionRequest) -> tuple[dict, dict | None]:
@@ -41,7 +41,7 @@ def build_strategy_reflection_payloads(request: StrategyReflectionRequest) -> tu
 
 def run_strategy_reflection_job(request: StrategyReflectionRequest) -> int:
     if not strategy_reflection_enabled():
-        print("[strategy_reflection] disabled; set WYCKOFF_STRATEGY_REFLECTION=shadow to enable")
+        print("[strategy_reflection] disabled; set QUANTEVOLENS_STRATEGY_REFLECTION=shadow to enable")
         return 0
     reflection, candidate = build_strategy_reflection_payloads(request)
     if request.dry_run:

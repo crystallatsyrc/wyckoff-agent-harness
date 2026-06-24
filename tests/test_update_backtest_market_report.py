@@ -9,7 +9,7 @@ def test_market_report_includes_cash_account_metrics(tmp_path):
     (artifact / "summary_20211213_20221031_h5_n4.md").write_text(
         "\n".join(
             [
-                "# Wyckoff Funnel Daily Backtest",
+                "# QuantEvoLens Funnel Daily Backtest",
                 "",
                 "- 区间: 2021-12-13 ~ 2022-10-31",
                 "- 持有周期: 5 交易日",
@@ -69,7 +69,7 @@ def test_market_report_groups_multi_period_grid(tmp_path):
         (artifact / f"summary_{start.replace('-', '')}_{end.replace('-', '')}_h10_n4.md").write_text(
             "\n".join(
                 [
-                    "# Wyckoff Funnel Daily Backtest",
+                    "# QuantEvoLens Funnel Daily Backtest",
                     "",
                     f"- 区间: {start} ~ {end}",
                     "- 每日候选上限: Top 4",
@@ -197,7 +197,7 @@ def test_market_report_expands_cash_portfolio_styles(tmp_path):
     (artifact / "summary_20251201_20260531_h10_n4.md").write_text(
         "\n".join(
             [
-                "# Wyckoff Funnel Daily Backtest",
+                "# QuantEvoLens Funnel Daily Backtest",
                 "",
                 "- 区间: 2025-12-01 ~ 2026-05-31",
                 "- 每日候选上限: Top 4",
@@ -271,7 +271,7 @@ def test_market_report_loads_merged_tp_artifact_layout(tmp_path):
         (cell_dir / f"summary_20251201_20260531_h10_tp{tp}.md").write_text(
             "\n".join(
                 [
-                    "# Wyckoff Funnel Daily Backtest",
+                    "# QuantEvoLens Funnel Daily Backtest",
                     "",
                     "- 区间: 2025-12-01 ~ 2026-05-31",
                     "- 每日候选上限: Top 4",
@@ -310,7 +310,7 @@ def test_market_report_labels_zero_stop_loss_as_disabled(tmp_path):
     (artifact / "summary_20251201_20260531_h5_n4.md").write_text(
         "\n".join(
             [
-                "# Wyckoff Funnel Daily Backtest",
+                "# QuantEvoLens Funnel Daily Backtest",
                 "",
                 "- 区间: 2025-12-01 ~ 2026-05-31",
                 "- 每日候选上限: Top 4",

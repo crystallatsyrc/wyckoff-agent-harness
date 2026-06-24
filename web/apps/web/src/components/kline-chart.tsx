@@ -26,7 +26,7 @@ interface KlineData {
   volume: number
 }
 
-interface WyckoffMarkerInput {
+interface QuantEvoLensMarkerInput {
   date: string
   type: 'spring' | 'sos' | 'lps' | 'evr'
   label: string
@@ -36,7 +36,7 @@ interface WyckoffMarkerInput {
 interface KlineChartProps {
   data: KlineData[]
   height?: number
-  wyckoffMarkers?: WyckoffMarkerInput[]
+  quantevolensMarkers?: QuantEvoLensMarkerInput[]
   tradingRange?: { support: number; resistance: number }
   stage?: string
   showIndicators?: boolean
@@ -66,7 +66,7 @@ interface ChartRefs {
 
 type ChartTheme = ReturnType<typeof readChartTheme>
 
-export function KlineChart({ data, height = 400, wyckoffMarkers, tradingRange, stage, showIndicators = false }: KlineChartProps) {
+export function KlineChart({ data, height = 400, quantevolensMarkers, tradingRange, stage, showIndicators = false }: KlineChartProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const chartRefs = useRef<ChartRefs | null>(null)
   const themeRef = useRef(readChartTheme())
@@ -74,7 +74,7 @@ export function KlineChart({ data, height = 400, wyckoffMarkers, tradingRange, s
   const [indicators, setIndicators] = useState({ boll: false, rsi: false, macd: false })
 
   useChartInit(containerRef, chartRefs, themeRef, height)
-  useChartData(chartRefs, themeRef, data, wyckoffMarkers, tradingRange)
+  useChartData(chartRefs, themeRef, data, quantevolensMarkers, tradingRange)
   useBollingerOverlay(chartRefs, data, indicators.boll)
 
   const closes = useMemo(() => data.map((d) => d.close), [data])
@@ -91,7 +91,7 @@ export function KlineChart({ data, height = 400, wyckoffMarkers, tradingRange, s
       {showIndicators && <IndicatorBar indicators={indicators} setIndicators={setIndicators} />}
       {indicators.rsi && <RSISubChart closes={closes} dates={dates} />}
       {indicators.macd && <MACDSubChart closes={closes} dates={dates} />}
-      <ChartLegend boll={indicators.boll} wyckoffMarkers={!!wyckoffMarkers} />
+      <ChartLegend boll={indicators.boll} quantevolensMarkers={!!quantevolensMarkers} />
     </div>
   )
 }
@@ -137,7 +137,7 @@ function useChartData(
   chartRefs: React.MutableRefObject<ChartRefs | null>,
   themeRef: React.MutableRefObject<ChartTheme>,
   data: KlineData[],
-  wyckoffMarkers: WyckoffMarkerInput[] | undefined,
+  quantevolensMarkers: QuantEvoLensMarkerInput[] | undefined,
   tradingRange: { support: number; resistance: number } | undefined,
 ) {
   useEffect(() => {
@@ -153,13 +153,13 @@ function useChartData(
     refs.ma20.setData(movingAverage(data, 20))
     refs.ma50.setData(movingAverage(data, 50))
     refs.volume.setData(volumes)
-    const markers = wyckoffMarkers ? toSeriesMarkers(wyckoffMarkers) : buildMarkers(data)
+    const markers = quantevolensMarkers ? toSeriesMarkers(quantevolensMarkers) : buildMarkers(data)
     if (refs.markers) refs.markers.setMarkers(markers)
     else refs.markers = createSeriesMarkers(refs.candle, markers)
     refs.candle.priceLines().forEach((line) => refs.candle.removePriceLine(line))
     addPriceLines(refs.candle, tradingRange ?? buildPriceLevels(data), theme)
     refs.chart.timeScale().fitContent()
-  }, [chartRefs, themeRef, data, wyckoffMarkers, tradingRange])
+  }, [chartRefs, themeRef, data, quantevolensMarkers, tradingRange])
 }
 
 function useBollingerOverlay(chartRefs: React.MutableRefObject<ChartRefs | null>, data: KlineData[], active: boolean) {
@@ -202,14 +202,14 @@ function IndicatorBar({ indicators, setIndicators }: { indicators: { boll: boole
   )
 }
 
-function ChartLegend({ boll, wyckoffMarkers }: { boll: boolean; wyckoffMarkers: boolean }) {
+function ChartLegend({ boll, quantevolensMarkers }: { boll: boolean; quantevolensMarkers: boolean }) {
   return (
     <div className="flex flex-wrap gap-3 text-[11px] text-muted-foreground">
       <Legend color="#f59e0b" label="MA5" />
       <Legend color="#2563eb" label="MA20" />
       <Legend color="#7c3aed" label="MA50" />
       {boll && <Legend color="#94a3b8" label="BOLL" />}
-      {wyckoffMarkers ? (
+      {quantevolensMarkers ? (
         <>
           <Legend color="#f59e0b" label="Spring" />
           <Legend color="#ef4444" label="SOS" />
@@ -372,7 +372,7 @@ const MARKER_STYLES: Record<string, { shape: 'arrowUp' | 'arrowDown' | 'circle';
   evr: { shape: 'arrowDown', color: '#7c3aed' },
 }
 
-function toSeriesMarkers(markers: WyckoffMarkerInput[]): SeriesMarker<Time>[] {
+function toSeriesMarkers(markers: QuantEvoLensMarkerInput[]): SeriesMarker<Time>[] {
   return markers.map((m) => {
     const style = MARKER_STYLES[m.type] ?? { shape: 'circle' as const, color: '#6b7280' }
     return { time: m.date as Time, position: m.position, shape: style.shape, color: style.color, text: m.label, size: 1.2 }

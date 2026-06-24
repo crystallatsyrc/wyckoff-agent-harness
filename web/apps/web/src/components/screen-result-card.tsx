@@ -1,7 +1,7 @@
 import { memo, useState } from 'react'
 import { Link } from 'react-router'
 import { BellPlus, ChevronRight } from 'lucide-react'
-import type { ScreenResult, ScreenStockItem } from '@wyckoff/shared'
+import type { ScreenResult, ScreenStockItem } from '@quantevolens/shared'
 
 function StockRow({ s, onPinStock }: { s: ScreenStockItem; onPinStock?: (stock: ScreenStockItem) => void }) {
   const chgColor = s.change_pct != null && s.change_pct >= 0 ? 'text-red-500' : 'text-green-600'

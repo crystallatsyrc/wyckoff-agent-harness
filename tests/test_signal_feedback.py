@@ -412,7 +412,7 @@ def test_signal_feedback_upsert_errors_propagate(monkeypatch):
     from integrations import supabase_signal_feedback
 
     closed = []
-    monkeypatch.setenv("WYCKOFF_WRITE_CONTEXT", "server_job")
+    monkeypatch.setenv("QUANTEVOLENS_WRITE_CONTEXT", "server_job")
     monkeypatch.setattr(supabase_signal_feedback, "_configured", lambda: True)
     monkeypatch.setattr(supabase_signal_feedback, "_admin", _FailingUpsertClient)
     monkeypatch.setattr(supabase_signal_feedback, "_close", closed.append)
@@ -426,7 +426,7 @@ def test_signal_feedback_upsert_errors_propagate(monkeypatch):
 def test_signal_feedback_upsert_rejects_cli_context(monkeypatch):
     from integrations import supabase_signal_feedback
 
-    monkeypatch.delenv("WYCKOFF_WRITE_CONTEXT", raising=False)
+    monkeypatch.delenv("QUANTEVOLENS_WRITE_CONTEXT", raising=False)
     monkeypatch.setattr(supabase_signal_feedback, "_configured", lambda: True)
 
     with pytest.raises(PermissionError, match="server_job"):
@@ -437,7 +437,7 @@ def test_signal_observations_conflict_keeps_daily_tags(monkeypatch):
     from integrations import supabase_signal_feedback
 
     client = _CapturingUpsertClient()
-    monkeypatch.setenv("WYCKOFF_WRITE_CONTEXT", "server_job")
+    monkeypatch.setenv("QUANTEVOLENS_WRITE_CONTEXT", "server_job")
     monkeypatch.setattr(supabase_signal_feedback, "_configured", lambda: True)
     monkeypatch.setattr(supabase_signal_feedback, "_admin", lambda: client)
     monkeypatch.setattr(supabase_signal_feedback, "_close", lambda _client: None)
@@ -456,7 +456,7 @@ def test_signal_observations_drop_features_json_when_schema_missing(monkeypatch)
     from integrations import supabase_signal_feedback
 
     client = _SchemaMissThenCaptureClient()
-    monkeypatch.setenv("WYCKOFF_WRITE_CONTEXT", "server_job")
+    monkeypatch.setenv("QUANTEVOLENS_WRITE_CONTEXT", "server_job")
     monkeypatch.setattr(supabase_signal_feedback, "_configured", lambda: True)
     monkeypatch.setattr(supabase_signal_feedback, "_admin", lambda: client)
     monkeypatch.setattr(supabase_signal_feedback, "_close", lambda _client: None)

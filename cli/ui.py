@@ -36,7 +36,7 @@ def _insert_newline(event):
 def _get_session() -> PromptSession:
     global _session
     if _session is None:
-        history_path = Path.home() / ".wyckoff" / "input_history"
+        history_path = Path.home() / ".quantevolens" / "input_history"
         history_path.parent.mkdir(parents=True, exist_ok=True)
         _session = PromptSession(
             history=FileHistory(str(history_path)),
@@ -91,7 +91,7 @@ def print_banner(email: str = "", model: str = "", version: str = "") -> None:
         try:
             from importlib.metadata import version as _v
 
-            version = _v("youngcan-wyckoff-analysis")
+            version = _v("quantevolens")
         except Exception:
             version = "dev"
 
@@ -100,7 +100,7 @@ def print_banner(email: str = "", model: str = "", version: str = "") -> None:
     # Logo + 标题行
     logo_lines = _LOGO.split("\n")
     info_lines = [
-        f"[bold]Wyckoff CLI[/bold] v{version}",
+        f"[bold]QuantEvoLens CLI[/bold] v{version}",
         "",
         "",
     ]

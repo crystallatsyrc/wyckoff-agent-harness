@@ -1,4 +1,4 @@
-"""Wyckoff MCP Server — 将 Wyckoff 分析能力通过 MCP 协议对外暴露。"""
+"""QuantEvoLens MCP Server — 将 QuantEvoLens 分析能力通过 MCP 协议对外暴露。"""
 
 from __future__ import annotations
 
@@ -9,7 +9,7 @@ from mcp.server.fastmcp import FastMCP
 
 from tools.funnel_public import public_funnel_details
 
-mcp = FastMCP("wyckoff")
+mcp = FastMCP("quantevolens")
 
 
 # ---------------------------------------------------------------------------
@@ -94,7 +94,7 @@ def analyze_stock(
     """分析单只 A 股。
 
     **调用时机**：用户问某只股票怎么样、做个诊断、查价格时调用。
-    - mode='diagnose'：Wyckoff 结构诊断（阶段、支撑压力、趋势强度、操作建议）
+    - mode='diagnose'：QuantEvoLens 结构诊断（阶段、支撑压力、趋势强度、操作建议）
     - mode='price'：返回近 N 天 OHLCV 数据
     **结果处理**：诊断结果较专业，请用通俗语言解释给用户。
     """
@@ -113,7 +113,7 @@ def get_market_overview() -> dict:
 
 @mcp.tool()
 def screen_stocks(board: Literal["all", "main_chinext", "main", "chinext", "star"] = "all") -> dict:
-    """运行 Wyckoff 五层漏斗筛选，从全市场筛选结构性机会股票。
+    """运行 QuantEvoLens 五层漏斗筛选，从全市场筛选结构性机会股票。
 
     **调用时机**：用户说"帮我选股"、"今天有什么机会"、"跑一下漏斗"时调用。
     **注意**：耗时 2-3 分钟，请提前告知用户需要等待。
@@ -132,7 +132,7 @@ def run_backtest(
     stop_loss_pct: float = -7.0,
     take_profit_pct: float = 18.0,
 ) -> dict:
-    """回测威科夫五层漏斗策略的历史表现。
+    """回测QuantEvoLens五层漏斗策略的历史表现。
 
     **调用时机**：用户说"回测一下"、"看看历史表现"时调用。
     **注意**：耗时 3-10 分钟，请提前告知用户。
@@ -166,7 +166,7 @@ def market_regime() -> dict:
     from datetime import date as _date
     from datetime import timedelta
 
-    from core.wyckoff_engine import FunnelConfig
+    from core.quantevolens_engine import FunnelConfig
     from integrations.data_source import fetch_index_hist
     from tools.market_regime import analyze_benchmark_and_tune_cfg
 
@@ -178,10 +178,10 @@ def market_regime() -> dict:
 
 
 @mcp.tool()
-def wyckoff_diagnose(code: str) -> dict:
-    """单股 Wyckoff 结构诊断。纯引擎计算，不经过 LLM，返回结构化数据。
+def quantevolens_diagnose(code: str) -> dict:
+    """单股 QuantEvoLens 结构诊断。纯引擎计算，不经过 LLM，返回结构化数据。
 
-    **调用时机**：需要精确的 Wyckoff 阶段判定和触发信号检测时调用（比 analyze_stock 更底层）。
+    **调用时机**：需要精确的 QuantEvoLens 阶段判定和触发信号检测时调用（比 analyze_stock 更底层）。
     返回交易区间(TR)、触发信号(Spring/SOS/LPS/EVR)、阶段和事件分类。
     **结果处理**：trading_range 和 triggers 是核心，请结合阶段判断当前是吸筹/派发/标记。
     """
@@ -189,9 +189,9 @@ def wyckoff_diagnose(code: str) -> dict:
     from datetime import date as _date
     from datetime import timedelta
 
-    from core.wyckoff_engine import FunnelConfig
-    from core.wyckoff_events import classify_wyckoff_event
-    from core.wyckoff_v2_structure import detect_structure_triggers, identify_trading_range
+    from core.quantevolens_engine import FunnelConfig
+    from core.quantevolens_events import classify_quantevolens_event
+    from core.quantevolens_v2_structure import detect_structure_triggers, identify_trading_range
     from integrations.stock_hist_repository import get_stock_hist, normalize_hist_df
 
     end = _date.today()
@@ -212,7 +212,7 @@ def wyckoff_diagnose(code: str) -> dict:
                 stock_triggers.append(trig_type)
 
     stage = result.stage_map.get(code, "")
-    event = classify_wyckoff_event(stock_triggers, stage=stage)
+    event = classify_quantevolens_event(stock_triggers, stage=stage)
 
     return {
         "code": code,
@@ -277,7 +277,7 @@ def intraday_rescue_check(code: str) -> dict:
 
 @mcp.tool()
 def run_funnel_simulation(board: Literal["all", "main_chinext", "main", "chinext", "star"] = "all") -> dict:
-    """运行 Wyckoff 五层漏斗仿真，返回原始结构数据。
+    """运行 QuantEvoLens 五层漏斗仿真，返回原始结构数据。
 
     **调用时机**：用户说"今天有什么机会"、"帮我复盘并推荐"时调用。与 screen_stocks 类似但返回更底层的原始数据。
     **注意**：耗时 30-60 秒，请耐心等待。
@@ -290,7 +290,7 @@ def run_funnel_simulation(board: Literal["all", "main_chinext", "main", "chinext
     if board_name not in {"all", "main", "chinext", "star"}:
         return {"error": f"不支持的 board 值 '{board}'，可选: all / main / chinext / star"}
 
-    from workflows.wyckoff_funnel import run as run_funnel
+    from workflows.quantevolens_funnel import run as run_funnel
 
     ok, symbols, bench_ctx, details = run_funnel(
         "",
@@ -326,7 +326,7 @@ def portfolio(mode: Literal["view", "diagnose"] = "view") -> dict:
 
     **调用时机**：用户问"我的持仓"、"帮我体检一下"时调用。
     - mode='view'：仅列出持仓明细和盈亏
-    - mode='diagnose'：对每只持仓股做 Wyckoff 结构诊断
+    - mode='diagnose'：对每只持仓股做 QuantEvoLens 结构诊断
     """
     return _portfolio(mode=mode, tool_context=_ctx)
 
@@ -364,7 +364,7 @@ def update_portfolio(
 
 @mcp.tool()
 def generate_ai_report(stock_codes: list[str]) -> dict:
-    """对指定股票列表生成威科夫三阵营 AI 深度研报。
+    """对指定股票列表生成QuantEvoLens三阵营 AI 深度研报。
 
     **调用时机**：用户说"出个研报"、"深度分析这几只"时调用。
     **注意**：耗时约 1 分钟，需要 LLM API 配额。

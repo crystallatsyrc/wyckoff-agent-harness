@@ -5,7 +5,7 @@ import pandas as pd
 from core.backtest_metrics import calc_stratified_stats
 from core.backtest_selection import select_ai_input_codes
 from core.candidate_policy import CandidatePolicyConfig, apply_regime_position_filter, loss_guard_reason
-from core.wyckoff_engine import FunnelResult
+from core.quantevolens_engine import FunnelResult
 
 
 def _daily_position_df(closes: list[float]) -> pd.DataFrame:

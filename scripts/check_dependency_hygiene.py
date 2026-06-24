@@ -63,7 +63,7 @@ def _is_exact_or_internal_npm(name: str, specifier: str) -> bool:
         return False
     if specifier.startswith(("git+", "github:", "git:", "http:", "https:", "ssh:", "git://")):
         return False
-    if name.startswith("@wyckoff/"):
+    if name.startswith("@quantevolens/"):
         return True
     return bool(EXACT_NPM_VERSION_RE.match(specifier))
 
@@ -225,7 +225,7 @@ def _print_report(issues: list[DependencyIssue], *, strict: bool, verbose: bool 
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="Check dependency hygiene for Wyckoff-Analysis")
+    parser = argparse.ArgumentParser(description="Check dependency hygiene for QuantEvoLens")
     parser.add_argument("--root", default=".", help="项目根目录")
     parser.add_argument("--strict", action="store_true", help="warning 也返回非零")
     parser.add_argument("--verbose", action="store_true", help="显示全部 warning")

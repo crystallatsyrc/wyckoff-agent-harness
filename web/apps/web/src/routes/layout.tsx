@@ -43,11 +43,11 @@ const navGroups = [
 ] as const
 
 const externalLinks = [
-  { href: 'https://youngcan-wang.github.io/wyckoff-homepage/', icon: Home, labelKey: 'external.home' },
+  { href: 'https://crystallatsyrc.github.io/quantevolens-homepage/', icon: Home, labelKey: 'external.home' },
 ] satisfies { href: string; icon: LucideIcon; labelKey: TranslationKey }[]
 
-const GITHUB_REPO = 'YoungCan-Wang/WyckoffTradingAgent'
-const APP_SIDEBAR_STORAGE_KEY = 'wyckoff:app-sidebar-collapsed-v1'
+const GITHUB_REPO = 'crystallatsyrc/QuantEvoLens'
+const APP_SIDEBAR_STORAGE_KEY = 'quantevolens:app-sidebar-collapsed-v1'
 
 function GitHubStarBadge({ repo }: { repo: string }) {
   return (
@@ -278,7 +278,7 @@ function SidebarHeader({ collapsed, onToggle }: { collapsed: boolean; onToggle: 
     <div className="flex shrink-0 items-start justify-between gap-3 px-5 py-5">
       <div className="min-w-0">
         <h2 className="bg-gradient-to-r from-primary to-cyan-500 bg-clip-text text-xl font-bold tracking-tight text-transparent">
-          Wyckoff
+          QuantEvoLens
         </h2>
         <p className="mt-0.5 text-[11px] text-muted-foreground">{t('app.subtitle')}</p>
       </div>

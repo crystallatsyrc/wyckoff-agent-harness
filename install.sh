@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Wyckoff Trading Agent — 一键安装脚本
-# curl -fsSL https://raw.githubusercontent.com/YoungCan-Wang/Wyckoff-Analysis/main/install.sh | bash
+# QuantEvoLens — 一键安装脚本
+# curl -fsSL https://raw.githubusercontent.com/crystallatsyrc/QuantEvoLens/main/install.sh | bash
 
-PACKAGE="youngcan-wyckoff-analysis"
-INSTALL_DIR="$HOME/.wyckoff/venv"
+PACKAGE="quantevolens"
+INSTALL_DIR="$HOME/.quantevolens/venv"
 BIN_DIR="$HOME/.local/bin"
 MIN_PYTHON="3.11"
 
@@ -76,14 +76,14 @@ uv pip install --python "$INSTALL_DIR/bin/python" --upgrade "$PACKAGE"
 # ---------------------------------------------------------------------------
 mkdir -p "$BIN_DIR"
 
-WYCKOFF_BIN="$INSTALL_DIR/bin/wyckoff"
-LINK_PATH="$BIN_DIR/wyckoff"
+QUANTEVOLENS_BIN="$INSTALL_DIR/bin/quantevolens"
+LINK_PATH="$BIN_DIR/quantevolens"
 
-if [ -f "$WYCKOFF_BIN" ]; then
-    ln -sf "$WYCKOFF_BIN" "$LINK_PATH"
-    ok "已链接: $LINK_PATH → $WYCKOFF_BIN"
+if [ -f "$QUANTEVOLENS_BIN" ]; then
+    ln -sf "$QUANTEVOLENS_BIN" "$LINK_PATH"
+    ok "已链接: $LINK_PATH → $QUANTEVOLENS_BIN"
 else
-    err "安装异常：未找到 $WYCKOFF_BIN"
+    err "安装异常：未找到 $QUANTEVOLENS_BIN"
 fi
 
 # ---------------------------------------------------------------------------
@@ -105,7 +105,7 @@ fi
 # ---------------------------------------------------------------------------
 ok "安装完成！"
 echo ""
-echo "  启动:   wyckoff"
-echo "  升级:   wyckoff update"
-echo "  卸载:   rm -rf ~/.wyckoff ~/.local/bin/wyckoff"
+echo "  启动:   quantevolens"
+echo "  升级:   quantevolens update"
+echo "  卸载:   rm -rf ~/.quantevolens ~/.local/bin/quantevolens"
 echo ""

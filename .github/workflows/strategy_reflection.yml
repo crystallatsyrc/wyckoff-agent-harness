@@ -15,8 +15,8 @@ jobs:
     runs-on: ubuntu-latest
     env:
       PYTHONUNBUFFERED: "1"
-      WYCKOFF_WRITE_CONTEXT: "server_job"
-      WYCKOFF_STRATEGY_REFLECTION: ${{ vars.WYCKOFF_STRATEGY_REFLECTION || 'shadow' }}
+      QUANTEVOLENS_WRITE_CONTEXT: "server_job"
+      QUANTEVOLENS_STRATEGY_REFLECTION: ${{ vars.QUANTEVOLENS_STRATEGY_REFLECTION || 'shadow' }}
       SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
       SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
       SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}

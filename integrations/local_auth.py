@@ -11,9 +11,9 @@ from integrations.supabase_public_config import SUPABASE_ANON_KEY, SUPABASE_ANON
 
 logger = logging.getLogger(__name__)
 
-SESSION_DIR = Path.home() / ".wyckoff"
+SESSION_DIR = Path.home() / ".quantevolens"
 SESSION_FILE = SESSION_DIR / "session.json"
-CONFIG_FILE = SESSION_DIR / "wyckoff.json"
+CONFIG_FILE = SESSION_DIR / "quantevolens.json"
 _OLD_CONFIG_FILE = SESSION_DIR / "config.json"
 
 

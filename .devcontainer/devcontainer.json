@@ -19,7 +19,7 @@
   },
   "updateContentCommand": "[ -f packages.txt ] && sudo apt update && sudo apt upgrade -y && sudo xargs apt install -y <packages.txt; [ -f requirements.txt ] && pip3 install --user -r requirements.txt; echo '✅ Packages installed and Requirements met'",
   "postAttachCommand": {
-    "status": "echo 'Streamlit is retired on main. Use wyckoff, wyckoff dashboard, or cd web/apps/web && pnpm dev.'"
+    "status": "echo 'Streamlit is retired on main. Use quantevolens, quantevolens dashboard, or cd web/apps/web && pnpm dev.'"
   },
   "portsAttributes": {
     "5173": {

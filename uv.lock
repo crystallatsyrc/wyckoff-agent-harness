@@ -3884,7 +3884,7 @@ wheels = [
 ]
 
 [[package]]
-name = "youngcan-wyckoff-analysis"
+name = "quantevolens"
 version = "0.9.19"
 source = { editable = "." }
 dependencies = [

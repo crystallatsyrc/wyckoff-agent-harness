@@ -9,7 +9,7 @@ from typing import Any
 import pandas as pd
 
 from core.funnel_etf import build_etf_funnel_config, rank_etf_candidates
-from core.wyckoff_engine import FunnelConfig, layer1_filter, layer2_strength_detailed
+from core.quantevolens_engine import FunnelConfig, layer1_filter, layer2_strength_detailed
 from integrations import funnel_etf_data
 from integrations.tickflow_notice import TICKFLOW_UPGRADE_URL
 from tools.data_fetcher import fetch_all_ohlcv

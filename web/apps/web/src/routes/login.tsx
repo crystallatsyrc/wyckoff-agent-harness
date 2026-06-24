@@ -5,7 +5,7 @@ import { supabase } from '@/lib/supabase'
 import { useAuthStore } from '@/stores/auth'
 import { usePreferences } from '@/lib/preferences'
 
-const REMEMBERED_EMAIL_KEY = 'wyckoff.login.email'
+const REMEMBERED_EMAIL_KEY = 'quantevolens.login.email'
 
 function readRememberedEmail() {
   try {
@@ -80,7 +80,7 @@ function LoginPageHeader() {
   return (
     <div className="mb-8 text-center">
       <h1 className="bg-gradient-to-r from-primary to-cyan-500 bg-clip-text text-3xl font-bold text-transparent">
-        Wyckoff
+        QuantEvoLens
       </h1>
       <p className="mt-1 text-sm text-muted-foreground">{t('app.subtitle')}</p>
     </div>

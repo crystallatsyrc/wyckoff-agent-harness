@@ -97,7 +97,7 @@ def _score_compression_factors(df: pd.DataFrame) -> pd.DataFrame:
     df = df.copy()
     df["rs_score"] = df["rs_10"].rank(pct=True, ascending=True, method="average")
     df["dry_score"] = df["min_vol_ratio_5d"].rank(pct=True, ascending=False, method="average")
-    df["base_wyckoff_score"] = 0.6 * df["rs_score"] + 0.4 * df["dry_score"]
+    df["base_quantevolens_score"] = 0.6 * df["rs_score"] + 0.4 * df["dry_score"]
     return df
 
 
@@ -126,15 +126,15 @@ def _apply_mainline_bonus(df: pd.DataFrame, hot_industries: set[str], bonus_rate
         axis=1,
     )
     df["dynamic_bonus"] = df["is_hot_mainline"].map(lambda v: float(bonus_rate) if bool(v) else 0.0)
-    df["wyckoff_score"] = df["base_wyckoff_score"] * (1.0 + df["dynamic_bonus"])
+    df["quantevolens_score"] = df["base_quantevolens_score"] * (1.0 + df["dynamic_bonus"])
     return df
 
 
 def _limit_by_industry(df: pd.DataFrame, max_total: int, max_per_industry: int) -> pd.DataFrame:
     total_cap = max_total if max_total > 0 else len(df)
     industry_cap = max_per_industry if max_per_industry > 0 else len(df)
-    df = df.sort_values("wyckoff_score", ascending=False).copy()
-    df["industry_rank"] = df.groupby("industry")["wyckoff_score"].rank(ascending=False, method="first").astype(int)
+    df = df.sort_values("quantevolens_score", ascending=False).copy()
+    df["industry_rank"] = df.groupby("industry")["quantevolens_score"].rank(ascending=False, method="first").astype(int)
     return df.groupby("industry", group_keys=False).head(industry_cap).head(total_cap).reset_index(drop=True)
 
 
@@ -142,9 +142,9 @@ def _fallback_candidates_when_compression_empty(candidates_df: pd.DataFrame, fal
     if candidates_df is None or candidates_df.empty:
         return pd.DataFrame()
     df = candidates_df.copy()
-    df["wyckoff_score"] = pd.to_numeric(df.get("funnel_score"), errors="coerce")
+    df["quantevolens_score"] = pd.to_numeric(df.get("funnel_score"), errors="coerce")
     df = df.sort_values(
-        by=["wyckoff_score", "rs_10", "min_vol_ratio_5d"],
+        by=["quantevolens_score", "rs_10", "min_vol_ratio_5d"],
         ascending=[False, False, True],
         na_position="last",
     ).reset_index(drop=True)

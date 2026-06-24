@@ -10,7 +10,7 @@ from typing import Any
 
 import pandas as pd
 
-from core.wyckoff_engine import normalize_hist_from_fetch
+from core.quantevolens_engine import normalize_hist_from_fetch
 from integrations.data_source import fetch_stock_hist
 from integrations.fetch_a_share_csv import get_stocks_by_board
 from integrations.index_data_source import fetch_index_hist

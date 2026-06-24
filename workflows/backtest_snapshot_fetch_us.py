@@ -10,7 +10,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from core.wyckoff_engine import normalize_hist_from_fetch
+from core.quantevolens_engine import normalize_hist_from_fetch
 from integrations.market_universe import load_us_symbols
 from integrations.tickflow_client import TickFlowClient
 

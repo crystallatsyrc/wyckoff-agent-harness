@@ -30,7 +30,7 @@ def test_attribution_report_no_write_falls_back_to_read_client(monkeypatch):
 def test_attribution_report_write_requires_server_context(monkeypatch):
     import workflows.strategy_attribution_report as report
 
-    monkeypatch.delenv("WYCKOFF_WRITE_CONTEXT", raising=False)
+    monkeypatch.delenv("QUANTEVOLENS_WRITE_CONTEXT", raising=False)
     with pytest.raises(PermissionError, match="server_job"):
         report.create_report_client(no_write=False)
 

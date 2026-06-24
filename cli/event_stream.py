@@ -7,7 +7,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-EVENT_SCHEMA = "wyckoff.agent_event.v1"
+EVENT_SCHEMA = "quantevolens.agent_event.v1"
 
 
 def _event_type(entry_type: str) -> str:

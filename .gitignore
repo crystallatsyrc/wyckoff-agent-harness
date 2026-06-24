@@ -66,8 +66,8 @@ tmp/
 *.key
 id_rsa*
 id_ed25519*
-wyckoff.json
-wyckoff.local.json
+quantevolens.json
+quantevolens.local.json
 config/private/
 config/secrets/
 config/profiles/*.local.yml
@@ -79,7 +79,7 @@ config/profiles/*private*.yaml
 *.db
 *.sqlite
 *.sqlite3
-.wyckoff/
+.quantevolens/
 .claude/settings.local.json
 
 # 回测产物与快照缓存（体积大，本地生成即可）

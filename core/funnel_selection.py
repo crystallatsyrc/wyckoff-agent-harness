@@ -1,4 +1,4 @@
-"""Candidate merge and promotion rules for the Wyckoff funnel."""
+"""Candidate merge and promotion rules for the QuantEvoLens funnel."""
 
 from __future__ import annotations
 

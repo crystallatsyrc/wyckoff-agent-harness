@@ -8,6 +8,6 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
     autoRefreshToken: true,
     detectSessionInUrl: true,
     persistSession: true,
-    storageKey: 'wyckoff-web-auth',
+    storageKey: 'quantevolens-web-auth',
   },
 })

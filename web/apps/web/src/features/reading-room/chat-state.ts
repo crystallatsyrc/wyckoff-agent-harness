@@ -21,7 +21,7 @@ import { scrollToMessage } from './run-records'
 import type { ChatConfig, QueuedMessage, ReadingRoomTab } from './types'
 import { writeBooleanStorage } from './utils'
 
-export const CONVERSATION_SIDEBAR_STORAGE_KEY = 'wyckoff:reading-room-sidebar-collapsed-v1'
+export const CONVERSATION_SIDEBAR_STORAGE_KEY = 'quantevolens:reading-room-sidebar-collapsed-v1'
 
 const MAX_QUEUED_MESSAGES = 5
 

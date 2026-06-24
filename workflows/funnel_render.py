@@ -136,7 +136,7 @@ def _trade_mode_report_line(regime: str) -> str:
 
 
 def _funnel_card_title() -> str:
-    return f"🔬 Wyckoff Funnel {date.today().strftime('%Y-%m-%d')}"
+    return f"🔬 QuantEvoLens Funnel {date.today().strftime('%Y-%m-%d')}"
 
 
 def _trigger_short_reasons(code: str, triggers: dict[str, list[tuple[str, float]]]) -> list[str]:

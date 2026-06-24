@@ -1,5 +1,5 @@
 """
-Wyckoff Dashboard — 本地可视化面板。
+QuantEvoLens Dashboard — 本地可视化面板。
 
 stdlib http.server 提供 JSON API + 嵌入式 HTML/CSS/JS SPA。
 金融终端风格（Bloomberg 深色主题）。
@@ -409,7 +409,7 @@ def start_dashboard(port: int = 8765):
 
     server = HTTPServer(("127.0.0.1", port), _Handler)
     server.allow_reuse_address = True
-    print(f"Wyckoff Dashboard: {url}")
+    print(f"QuantEvoLens Dashboard: {url}")
     print("按 Ctrl+C 停止")
 
     threading.Timer(0.5, lambda: webbrowser.open(url)).start()

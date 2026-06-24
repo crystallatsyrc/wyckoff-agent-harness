@@ -14,7 +14,7 @@ def test_preview_only_skips_persistence_and_keeps_llm_input_path(monkeypatch, tm
     import workflows.daily_job_step2 as daily_step2
     import workflows.step2_signal_confirmation as signal_confirmation
     import workflows.step3_batch_report as step3_batch_report
-    import workflows.wyckoff_funnel as wyckoff_funnel
+    import workflows.quantevolens_funnel as quantevolens_funnel
 
     captured: dict[str, object] = {}
 
@@ -68,7 +68,7 @@ def test_preview_only_skips_persistence_and_keeps_llm_input_path(monkeypatch, tm
     monkeypatch.setattr(daily_persistence, "upsert_recommendation_payload", forbidden_write)
     monkeypatch.setattr(daily_persistence, "mark_ai_recommendations", forbidden_write)
     monkeypatch.setattr(daily_step2, "run_springboard_scoring", lambda *_args, **_kwargs: 0)
-    monkeypatch.setattr(wyckoff_funnel, "run", fake_run_funnel)
+    monkeypatch.setattr(quantevolens_funnel, "run", fake_run_funnel)
     monkeypatch.setattr(step3_batch_report, "run", fake_run_step3)
     monkeypatch.setattr(report_parser, "extract_operation_pool_codes", lambda **_kwargs: ["000001"])
     monkeypatch.setattr(signal_confirmation, "run_step2_5", fake_run_step2_5)
@@ -268,7 +268,7 @@ def test_step3_input_preview_sends_summary_and_writes_artifact(monkeypatch, tmp_
     monkeypatch.setenv("STEP3_INPUT_PREVIEW_PATH", str(artifact_path))
     monkeypatch.setenv("FEISHU_INPUT_PREVIEW_AS_FILE", "1")
     monkeypatch.setenv("GITHUB_SERVER_URL", "https://github.com")
-    monkeypatch.setenv("GITHUB_REPOSITORY", "YoungCan-Wang/WyckoffTradingAgent")
+    monkeypatch.setenv("GITHUB_REPOSITORY", "crystallatsyrc/QuantEvoLens")
     monkeypatch.setenv("GITHUB_RUN_ID", "123")
     monkeypatch.setenv("GITHUB_RUN_NUMBER", "456")
 
@@ -295,7 +295,7 @@ def test_step3_input_preview_sends_summary_and_writes_artifact(monkeypatch, tmp_
     assert "VERY LONG USER MESSAGE" not in sent["content"]
     assert "step3_llm_input_preview.md" in sent["content"]
     assert "input-preview-logs-456" in sent["content"]
-    assert "https://github.com/YoungCan-Wang/WyckoffTradingAgent/actions/runs/123" in sent["content"]
+    assert "https://github.com/crystallatsyrc/QuantEvoLens/actions/runs/123" in sent["content"]
 
 
 def test_step3_input_preview_falls_back_to_original_when_file_send_fails(monkeypatch, tmp_path):

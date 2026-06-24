@@ -1,27 +1,27 @@
 """
-威科夫终端读盘室 — 入口。
+QuantEvoLens终端读盘室 — 入口。
 
 用法:
-    wyckoff                         # 启动 TUI
-    wyckoff update                  # 升级到最新版
-    wyckoff screen                  # 全市场漏斗筛选
-    wyckoff backtest                # 策略历史回测
-    wyckoff report 000001,600519    # AI 深度研报
-    wyckoff mcp                     # 启动 MCP Server
-    wyckoff memory                  # 查看 Agent 记忆
-    wyckoff log                     # 查看对话日志
-    wyckoff session                 # 会话列表 / 导出 / 分叉
-    wyckoff trace                   # 查看 JSONL 运行轨迹
-    wyckoff prompt                  # 查看/渲染 Prompt 模板
-    wyckoff diag                    # 导出会话诊断包
-    wyckoff dashboard               # 启动本地可视化面板
-    wyckoff auth <email>            # 登录
-    wyckoff model list/add/rm       # 模型管理
-    wyckoff config                  # 数据源配置
-    wyckoff portfolio list/add/rm   # 持仓管理
-    wyckoff signal                  # 信号确认池
-    wyckoff recommend               # 威科夫形态复盘
-    wyckoff sync                    # 同步 Supabase → SQLite
+    quantevolens                         # 启动 TUI
+    quantevolens update                  # 升级到最新版
+    quantevolens screen                  # 全市场漏斗筛选
+    quantevolens backtest                # 策略历史回测
+    quantevolens report 000001,600519    # AI 深度研报
+    quantevolens mcp                     # 启动 MCP Server
+    quantevolens memory                  # 查看 Agent 记忆
+    quantevolens log                     # 查看对话日志
+    quantevolens session                 # 会话列表 / 导出 / 分叉
+    quantevolens trace                   # 查看 JSONL 运行轨迹
+    quantevolens prompt                  # 查看/渲染 Prompt 模板
+    quantevolens diag                    # 导出会话诊断包
+    quantevolens dashboard               # 启动本地可视化面板
+    quantevolens auth <email>            # 登录
+    quantevolens model list/add/rm       # 模型管理
+    quantevolens config                  # 数据源配置
+    quantevolens portfolio list/add/rm   # 持仓管理
+    quantevolens signal                  # 信号确认池
+    quantevolens recommend               # QuantEvoLens形态复盘
+    quantevolens sync                    # 同步 Supabase → SQLite
 """
 
 from __future__ import annotations
@@ -68,7 +68,7 @@ def _get_version() -> str:
     try:
         from importlib.metadata import version
 
-        return version("youngcan-wyckoff-analysis")
+        return version("quantevolens")
     except Exception:
         return "dev"
 
@@ -84,7 +84,7 @@ def _check_update_async() -> None:
             local_ver = _get_version()
             if local_ver == "dev":
                 return
-            url = "https://pypi.org/pypi/youngcan-wyckoff-analysis/json"
+            url = "https://pypi.org/pypi/quantevolens/json"
             req = urllib.request.Request(url, headers={"Accept": "application/json"})
             with urllib.request.urlopen(req, timeout=5) as resp:
                 data = json.loads(resp.read())
@@ -94,7 +94,7 @@ def _check_update_async() -> None:
             local_parts = tuple(int(x) for x in local_ver.split("."))
             latest_parts = tuple(int(x) for x in latest.split("."))
             if latest_parts > local_parts:
-                print(f"\033[33m⬆ 新版本可用: {latest}（当前 {local_ver}），运行 wyckoff update 升级\033[0m")
+                print(f"\033[33m⬆ 新版本可用: {latest}（当前 {local_ver}），运行 quantevolens update 升级\033[0m")
         except Exception:
             logger.debug("version check failed", exc_info=True)
 
@@ -127,8 +127,8 @@ def _set_terminal_title(title: str) -> None:
 def _cmd_update(_args):
     import shutil
 
-    print("正在升级 youngcan-wyckoff-analysis ...")
-    pkg = "youngcan-wyckoff-analysis"
+    print("正在升级 quantevolens ...")
+    pkg = "quantevolens"
     uv = shutil.which("uv")
     if uv:
         cmd = [uv, "pip", "install", "--python", sys.executable, "--upgrade", pkg]
@@ -136,7 +136,7 @@ def _cmd_update(_args):
         cmd = [sys.executable, "-m", "pip", "install", "--upgrade", pkg]
     try:
         subprocess.check_call(cmd)
-        url = "https://wyckoff-analysis.pages.dev/"
+        url = "https://quantevolens-analysis.pages.dev/"
         try:
             subprocess.run(["pbcopy"], input=url.encode(), check=True)
         except FileNotFoundError:
@@ -144,7 +144,7 @@ def _cmd_update(_args):
                 subprocess.run(["xclip", "-selection", "clipboard"], input=url.encode(), check=True)
             except FileNotFoundError:
                 logger.debug("no clipboard tool available", exc_info=True)
-        print(f"\n✓ 升级完成！请重新运行 wyckoff。\n  Web 版已复制到剪切板: {url}")
+        print(f"\n✓ 升级完成！请重新运行 quantevolens。\n  Web 版已复制到剪切板: {url}")
     except subprocess.CalledProcessError as e:
         print(f"\n✗ 升级失败: {e}")
         sys.exit(1)
@@ -173,7 +173,7 @@ def _cmd_auth(args):
             print("⚠ 登录已过期，请重新登录")
         return
 
-    # wyckoff auth <email> <password>
+    # quantevolens auth <email> <password>
     email = sub
     password = args.password
     if not password:
@@ -201,7 +201,7 @@ def _model_list():
     default_id = load_default_model_id()
     fallback_id = load_fallback_model_id()
     if not configs:
-        print("尚无模型配置，使用 wyckoff model add 添加")
+        print("尚无模型配置，使用 quantevolens model add 添加")
         return
     for c in configs:
         marks = ""
@@ -285,7 +285,7 @@ def _cmd_model(args):
     if sub == "set":
         model_id, provider, api_key = args.model_id, args.provider, args.api_key
         if not all([model_id, provider, api_key]):
-            print("用法: wyckoff model set <id> <provider> <api_key> [--model X] [--base-url X]")
+            print("用法: quantevolens model set <id> <provider> <api_key> [--model X] [--base-url X]")
             sys.exit(1)
         save_model_entry(
             {
@@ -300,13 +300,13 @@ def _cmd_model(args):
         return
     if sub == "rm":
         if not args.model_id:
-            print("用法: wyckoff model rm <id>")
+            print("用法: quantevolens model rm <id>")
             sys.exit(1)
         print(f"✓ 模型 {args.model_id} 已删除" if remove_model_entry(args.model_id) else "✗ 至少保留一个模型")
         return
     if sub == "default":
         if not args.model_id:
-            print("用法: wyckoff model default <id>")
+            print("用法: quantevolens model default <id>")
             sys.exit(1)
         configs = load_model_configs()
         if not any(c["id"] == args.model_id for c in configs):
@@ -319,7 +319,7 @@ def _cmd_model(args):
         return _model_fallback_set(args)
     if sub == "cost":
         if not args.model_id:
-            print("用法: wyckoff model cost <id> --input-per-1m N --output-per-1m N [--context-window N]")
+            print("用法: quantevolens model cost <id> --input-per-1m N --output-per-1m N [--context-window N]")
             sys.exit(1)
         configs = load_model_configs()
         cfg = next((c for c in configs if c["id"] == args.model_id), None)
@@ -361,11 +361,11 @@ def _cmd_model(args):
         if total_known:
             print(f"\n估算合计: ${total_cost:.4f}")
         else:
-            print("\n成本未知：用 wyckoff model cost <id> --input-per-1m N --output-per-1m N 配置")
+            print("\n成本未知：用 quantevolens model cost <id> --input-per-1m N --output-per-1m N 配置")
         return
 
     print(f"未知子命令: {sub}")
-    print("用法: wyckoff model [list|add|set|rm|default|fallback|cost|usage]")
+    print("用法: quantevolens model [list|add|set|rm|default|fallback|cost|usage]")
     sys.exit(1)
 
 
@@ -382,14 +382,14 @@ def _cmd_config(args):
     if not sub:
         # 显示所有配置
         cfg = load_config()
-        print("数据源配置 (~/.wyckoff/wyckoff.json)")
+        print("数据源配置 (~/.quantevolens/quantevolens.json)")
         print()
         for _alias, (key, label, _) in CONFIG_KEYS.items():
             val = str(cfg.get(key, "") or "").strip()
             status = f"\033[32m{_mask(val)}\033[0m" if val else "\033[90m未配置\033[0m"
             print(f"  {label}: {status}")
         print()
-        print("使用 wyckoff config tushare <token> 或 wyckoff config tickflow <key> 配置")
+        print("使用 quantevolens config tushare <token> 或 quantevolens config tickflow <key> 配置")
         return
 
     if sub not in CONFIG_KEYS:
@@ -422,7 +422,7 @@ def _get_session_client():
 
     session = restore_session()
     if not session or not session.get("access_token"):
-        print("✗ 未登录，请先执行 wyckoff auth <email> <password>")
+        print("✗ 未登录，请先执行 quantevolens auth <email> <password>")
         sys.exit(1)
     from integrations.supabase_base import create_user_client
     from integrations.supabase_portfolio import build_user_live_portfolio_id
@@ -460,7 +460,7 @@ def _cmd_portfolio(args):
         client, uid, pid = _get_session_client()
         code = args.code
         if not code:
-            print("用法: wyckoff portfolio add <code> --name X --shares N --cost N [--buy-dt YYYYMMDD]")
+            print("用法: quantevolens portfolio add <code> --name X --shares N --cost N [--buy-dt YYYYMMDD]")
             sys.exit(1)
         from integrations.supabase_portfolio import upsert_position
 
@@ -479,7 +479,7 @@ def _cmd_portfolio(args):
         client, uid, pid = _get_session_client()
         code = args.code
         if not code:
-            print("用法: wyckoff portfolio rm <code>")
+            print("用法: quantevolens portfolio rm <code>")
             sys.exit(1)
         from integrations.supabase_portfolio import delete_position
 
@@ -504,7 +504,7 @@ def _cmd_portfolio(args):
         return
 
     print(f"未知子命令: {sub}")
-    print("用法: wyckoff portfolio [list|add|rm|cash]")
+    print("用法: quantevolens portfolio [list|add|rm|cash]")
     sys.exit(1)
 
 
@@ -547,7 +547,7 @@ def _cmd_recommend(args):
     if not records:
         print(result.get("message", "暂无复盘记录"))
         return
-    print(f"威科夫形态复盘 ({result.get('total', 0)} 条)")
+    print(f"QuantEvoLens形态复盘 ({result.get('total', 0)} 条)")
     print(
         f"{'代码':<8} {'名称':<8} {'阵营':<8} {'推荐日':<10} {'推荐价':>8} {'现价':>8} {'盈亏%':>7} {'最高%':>7} {'状态':<8}"
     )
@@ -565,7 +565,7 @@ def _cmd_recommend(args):
 
 
 # ---------------------------------------------------------------------------
-# wyckoff screen — 漏斗筛选
+# quantevolens screen — 漏斗筛选
 # ---------------------------------------------------------------------------
 
 
@@ -575,7 +575,7 @@ def _cmd_screen(args):
     init_db()
     board = args.board or "all"
     print(f"正在执行全市场漏斗筛选 (board={board}) ...")
-    from workflows.wyckoff_funnel import run_funnel_job
+    from workflows.quantevolens_funnel import run_funnel_job
 
     try:
         triggers, metrics = run_funnel_job()
@@ -596,7 +596,7 @@ def _cmd_screen(args):
 
 
 # ---------------------------------------------------------------------------
-# wyckoff backtest — 策略回测
+# quantevolens backtest — 策略回测
 # ---------------------------------------------------------------------------
 
 
@@ -639,14 +639,14 @@ def _cmd_backtest(args):
 
 
 # ---------------------------------------------------------------------------
-# wyckoff report — AI 研报
+# quantevolens report — AI 研报
 # ---------------------------------------------------------------------------
 
 
 def _cmd_report(args):
     codes = [c.strip() for c in args.codes.split(",") if c.strip()]
     if not codes:
-        print("用法: wyckoff report 000001,600519")
+        print("用法: quantevolens report 000001,600519")
         sys.exit(1)
     from integrations.local_db import init_db
 
@@ -657,7 +657,7 @@ def _cmd_report(args):
     configs = load_model_configs()
     default_id = load_default_model_id()
     if not configs:
-        print("✗ 未配置模型，请先 wyckoff model add")
+        print("✗ 未配置模型，请先 quantevolens model add")
         sys.exit(1)
     cfg = next((c for c in configs if c["id"] == default_id), configs[0])
     env_map = {"gemini": "GEMINI_API_KEY", "claude": "ANTHROPIC_API_KEY", "openai": "OPENAI_API_KEY"}
@@ -693,12 +693,12 @@ def _cmd_report(args):
 
 
 # ---------------------------------------------------------------------------
-# wyckoff mcp — 启动 MCP Server
+# quantevolens mcp — 启动 MCP Server
 # ---------------------------------------------------------------------------
 
 
 def _cmd_mcp(_args):
-    print("启动 Wyckoff MCP Server ...")
+    print("启动 QuantEvoLens MCP Server ...")
     print("按 Ctrl+C 停止\n")
     from mcp_server import main as mcp_main
 
@@ -709,7 +709,7 @@ def _cmd_mcp(_args):
 
 
 # ---------------------------------------------------------------------------
-# wyckoff memory — 查看/清除 Agent 记忆
+# quantevolens memory — 查看/清除 Agent 记忆
 # ---------------------------------------------------------------------------
 
 
@@ -785,7 +785,7 @@ def _cmd_memory_list(args, level: str, since: str) -> None:
 def _cmd_memory_search(args, level: str, since: str) -> None:
     keyword = args.keyword
     if not keyword:
-        print("用法: wyckoff memory search <关键词>")
+        print("用法: quantevolens memory search <关键词>")
         sys.exit(1)
     from integrations.local_db import search_memory
 
@@ -827,7 +827,7 @@ def _cmd_memory(args):
     if sub == "delete":
         mid = _memory_id_arg(args)
         if not mid:
-            print("用法: wyckoff memory delete <id>")
+            print("用法: quantevolens memory delete <id>")
             sys.exit(1)
         _delete_memory_by_id(mid)
         return
@@ -835,7 +835,7 @@ def _cmd_memory(args):
     if sub == "trace":
         mid = _memory_id_arg(args)
         if not mid:
-            print("用法: wyckoff memory trace <id>")
+            print("用法: quantevolens memory trace <id>")
             sys.exit(1)
         try:
             _print_memory_trace(int(mid))
@@ -845,7 +845,7 @@ def _cmd_memory(args):
         return
 
     print(f"未知子命令: {sub}")
-    print("用法: wyckoff memory [list|search|clear|delete|trace]")
+    print("用法: quantevolens memory [list|search|clear|delete|trace]")
     sys.exit(1)
 
 
@@ -886,7 +886,7 @@ def _add_memory_parser(sub) -> None:
 
 
 # ---------------------------------------------------------------------------
-# wyckoff log — 查看对话日志
+# quantevolens log — 查看对话日志
 # ---------------------------------------------------------------------------
 
 
@@ -917,7 +917,7 @@ def _cmd_log(args):
 
 
 # ---------------------------------------------------------------------------
-# wyckoff workflow — 动态 workflow 状态
+# quantevolens workflow — 动态 workflow 状态
 # ---------------------------------------------------------------------------
 
 
@@ -928,7 +928,7 @@ def _cmd_workflow(args):
         return
     run_id = args.run_id
     if not run_id:
-        print("用法: wyckoff workflow show <run_id>")
+        print("用法: quantevolens workflow show <run_id>")
         sys.exit(1)
     if sub == "events":
         _cmd_workflow_events(run_id, args.limit)
@@ -990,7 +990,7 @@ def _cmd_workflow_resume(run_id: str) -> None:
 
 
 # ---------------------------------------------------------------------------
-# wyckoff session — 会话管理
+# quantevolens session — 会话管理
 # ---------------------------------------------------------------------------
 
 
@@ -1048,20 +1048,20 @@ def _cmd_session(args):
         print(f"  messages={result.message_count}")
         return
 
-    print("用法: wyckoff session [list|export|fork]")
+    print("用法: quantevolens session [list|export|fork]")
 
 
 # ---------------------------------------------------------------------------
-# wyckoff trace — 查看 append-only 运行轨迹
+# quantevolens trace — 查看 append-only 运行轨迹
 # ---------------------------------------------------------------------------
 
 
 def _cmd_trace(args):
     from pathlib import Path
 
-    from cli.scratchpad import wyckoff_home
+    from cli.scratchpad import quantevolens_home
 
-    trace_dir = wyckoff_home() / "scratchpad"
+    trace_dir = quantevolens_home() / "scratchpad"
     if args.path:
         print(trace_dir)
         return
@@ -1122,7 +1122,7 @@ def _cmd_trace(args):
 
 
 # ---------------------------------------------------------------------------
-# wyckoff prompt — 查看/渲染投研 Prompt 模板
+# quantevolens prompt — 查看/渲染投研 Prompt 模板
 # ---------------------------------------------------------------------------
 
 
@@ -1138,12 +1138,12 @@ def _cmd_prompt(args):
         for tpl in templates.values():
             hint = f" {tpl.argument_hint}" if tpl.argument_hint else ""
             print(f"  {tpl.name:<14} {tpl.description}{hint}")
-        print("\n用法: wyckoff prompt render <name> [补充说明]")
+        print("\n用法: quantevolens prompt render <name> [补充说明]")
         return
 
     if sub == "show":
         if not args.name:
-            print("用法: wyckoff prompt show <name>")
+            print("用法: quantevolens prompt show <name>")
             return
         tpl = templates.get(args.name)
         if not tpl:
@@ -1158,7 +1158,7 @@ def _cmd_prompt(args):
 
     if sub == "render":
         if not args.name:
-            print("用法: wyckoff prompt render <name> [补充说明]")
+            print("用法: quantevolens prompt render <name> [补充说明]")
             return
         tpl = templates.get(args.name)
         if not tpl:
@@ -1168,11 +1168,11 @@ def _cmd_prompt(args):
         print(render_prompt_template(tpl, user_input))
         return
 
-    print("用法: wyckoff prompt [list|show|render]")
+    print("用法: quantevolens prompt [list|show|render]")
 
 
 # ---------------------------------------------------------------------------
-# wyckoff diag — 导出可检查的会话诊断包
+# quantevolens diag — 导出可检查的会话诊断包
 # ---------------------------------------------------------------------------
 
 
@@ -1198,7 +1198,7 @@ def _cmd_diag(args):
 
 
 # ---------------------------------------------------------------------------
-# wyckoff sync — 手动同步 Supabase → SQLite
+# quantevolens sync — 手动同步 Supabase → SQLite
 # ---------------------------------------------------------------------------
 
 
@@ -1362,9 +1362,9 @@ def _cleanup_tui_runtime() -> None:
 
 
 def _run_tui_app(tools, state: dict[str, Any], system_prompt: str, session_expired: bool) -> None:
-    from cli.tui import WyckoffTUI
+    from cli.tui import QuantEvoLensTUI
 
-    app = WyckoffTUI(
+    app = QuantEvoLensTUI(
         provider=state["provider"],
         tools=tools,
         state=state,
@@ -1455,10 +1455,10 @@ def _dispatch_command(args) -> None:
 
 def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="wyckoff",
-        description="威科夫终端读盘室 — Wyckoff 量价分析 Agent",
+        prog="quantevolens",
+        description="QuantEvoLens终端读盘室 — QuantEvoLens 量价分析 Agent",
     )
-    parser.add_argument("-v", "--version", action="version", version=f"wyckoff {_get_version()}")
+    parser.add_argument("-v", "--version", action="version", version=f"quantevolens {_get_version()}")
     sub = parser.add_subparsers(dest="cmd")
 
     sub.add_parser("update", help="升级到最新版")
@@ -1487,7 +1487,7 @@ def _add_auth_model_config_parsers(sub) -> None:
     p_model.add_argument("--context-window", type=int, default=None, help="上下文窗口 token 数（cost 时）")
     p_model.add_argument("--days", type=int, default=7, help="usage 统计天数")
 
-    # wyckoff config
+    # quantevolens config
     p_config = sub.add_parser("config", help="数据源配置")
     p_config.add_argument("config_cmd", nargs="?", default="", help="tushare/tickflow")
     p_config.add_argument("value", nargs="?", default="", help="值（可省略，交互输入）")
@@ -1503,13 +1503,13 @@ def _add_portfolio_history_parsers(sub) -> None:
     p_port.add_argument("--buy-dt", dest="buy_dt", default="", help="买入日期 YYYYMMDD")
     p_port.add_argument("--amount", type=float, default=None, help="可用资金金额 (cash 时)")
 
-    # wyckoff signal
+    # quantevolens signal
     p_signal = sub.add_parser("signal", help="信号确认池")
     p_signal.add_argument("status", nargs="?", default="all", help="all/pending/confirmed/expired")
     p_signal.add_argument("-n", "--limit", type=int, default=30, help="返回条数")
 
-    # wyckoff recommend
-    p_rec = sub.add_parser("recommend", help="威科夫形态复盘", aliases=["rec"])
+    # quantevolens recommend
+    p_rec = sub.add_parser("recommend", help="QuantEvoLens形态复盘", aliases=["rec"])
     p_rec.add_argument("-n", "--limit", type=int, default=20, help="返回条数")
 
 
@@ -1517,48 +1517,48 @@ def _add_analysis_job_parsers(sub) -> None:
     p_dash = sub.add_parser("dashboard", help="启动本地可视化面板", aliases=["dash"])
     p_dash.add_argument("--port", type=int, default=8765, help="HTTP 端口 (默认 8765)")
 
-    # wyckoff screen
+    # quantevolens screen
     p_screen = sub.add_parser("screen", help="全市场漏斗筛选")
     p_screen.add_argument("--board", default="all", help="板块 (all/main/gem/star)")
 
-    # wyckoff backtest
+    # quantevolens backtest
     p_bt = sub.add_parser("backtest", help="策略历史回测", aliases=["bt"])
     p_bt.add_argument("--hold-days", type=int, default=10, help="持有天数 (默认 10)")
     p_bt.add_argument("--months", type=int, default=18, help="回测月数 (默认 18)")
     p_bt.add_argument("--top-n", type=int, default=4, help="每批取前N只 (默认 4)")
 
-    # wyckoff report
+    # quantevolens report
     p_report = sub.add_parser("report", help="AI 深度研报")
     p_report.add_argument("codes", help="股票代码，逗号分隔 (如 000001,600519)")
 
-    # wyckoff mcp
+    # quantevolens mcp
     sub.add_parser("mcp", help="启动 MCP Server")
 
 
 def _add_session_debug_parsers(sub) -> None:
     _add_memory_parser(sub)
 
-    # wyckoff log
+    # quantevolens log
     p_log = sub.add_parser("log", help="查看对话日志")
     p_log.add_argument("--session", default="", help="指定会话 ID")
     p_log.add_argument("-n", "--limit", type=int, default=30, help="返回条数")
 
-    # wyckoff workflow
+    # quantevolens workflow
     p_wf = sub.add_parser("workflow", help="查看动态 workflow", aliases=["wf"])
     p_wf.add_argument("workflow_cmd", nargs="?", default="list", help="list/show/events/resume")
     p_wf.add_argument("run_id", nargs="?", default="", help="workflow run id")
     p_wf.add_argument("-n", "--limit", type=int, default=20, help="返回条数")
 
-    # wyckoff session
+    # quantevolens session
     p_session = sub.add_parser("session", help="会话列表 / 导出 / 分叉", aliases=["sess"])
     p_session.add_argument("session_cmd", nargs="?", default="list", help="list/export/fork")
     p_session.add_argument("session_id", nargs="?", default="", help="会话 ID；留空时使用最近会话")
     p_session.add_argument("-n", "--limit", type=int, default=20, help="list 返回条数")
-    p_session.add_argument("--out", default="", help="export 输出路径；默认 ~/.wyckoff/sessions/exports/")
+    p_session.add_argument("--out", default="", help="export 输出路径；默认 ~/.quantevolens/sessions/exports/")
     p_session.add_argument("--format", choices=["md", "json"], default="md", help="export 输出格式")
     p_session.add_argument("--new-id", default="", help="fork 新会话 ID；默认自动生成")
 
-    # wyckoff trace
+    # quantevolens trace
     p_trace = sub.add_parser("trace", help="查看 JSONL 运行轨迹")
     p_trace.add_argument("-n", "--limit", type=int, default=10, help="返回条数")
     p_trace.add_argument("--show", default="", help="显示指定轨迹文件（文件名或绝对路径）")
@@ -1567,31 +1567,31 @@ def _add_session_debug_parsers(sub) -> None:
     p_trace.add_argument("--events", default="", help="将指定 scratchpad JSONL 转成标准事件流")
     p_trace.add_argument("--out", default="", help="--events 输出路径；留空则打印到 stdout")
 
-    # wyckoff prompt
+    # quantevolens prompt
     p_prompt = sub.add_parser("prompt", help="查看/渲染 Prompt 模板")
     p_prompt.add_argument("prompt_cmd", nargs="?", default="list", help="list/show/render")
     p_prompt.add_argument("name", nargs="?", default="", help="模板名")
     p_prompt.add_argument("extra", nargs=argparse.REMAINDER, help="render 时传入的补充说明")
 
-    # wyckoff diag
+    # quantevolens diag
     p_diag = sub.add_parser("diag", help="导出会话诊断包", aliases=["diagnostic"])
     p_diag.add_argument("--session", default="", help="指定会话 ID；默认最近一个会话")
-    p_diag.add_argument("--out", default="", help="输出路径；默认 ~/.wyckoff/diagnostics/")
+    p_diag.add_argument("--out", default="", help="输出路径；默认 ~/.quantevolens/diagnostics/")
     p_diag.add_argument("--format", choices=["zip", "json"], default="zip", help="输出格式")
 
 
 def _add_maintenance_parsers(sub) -> None:
-    # wyckoff sync
+    # quantevolens sync
     p_sync = sub.add_parser("sync", help="同步 Supabase → 本地 SQLite")
     p_sync.add_argument("sync_cmd", nargs="?", default="", help="status: 查看同步状态")
 
-    # wyckoff cleanup
+    # quantevolens cleanup
     p_cleanup = sub.add_parser("cleanup", help="清理过期本地数据")
     p_cleanup.add_argument("--days", type=int, default=30, help="保留天数 (默认 30)")
 
 
 def main():
-    _set_terminal_title("Wyckoff-Analysis")
+    _set_terminal_title("QuantEvoLens")
     parser = _build_parser()
     args = parser.parse_args()
     _dispatch_command(args)

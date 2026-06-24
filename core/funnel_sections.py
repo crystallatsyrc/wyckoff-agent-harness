@@ -1,4 +1,4 @@
-"""Renderable report sections for Wyckoff funnel notifications."""
+"""Renderable report sections for QuantEvoLens funnel notifications."""
 
 from __future__ import annotations
 

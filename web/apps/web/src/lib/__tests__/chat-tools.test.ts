@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
-import type { ToolDeps, KlineRow } from '@wyckoff/shared'
+import type { ToolDeps, KlineRow } from '@quantevolens/shared'
 import {
   buildValueAgentDigest,
   buildKlineDigest,
@@ -12,7 +12,7 @@ import {
   execScreenStocks,
   execAnalyzeStock,
   execMarketHistory,
-} from '@wyckoff/shared'
+} from '@quantevolens/shared'
 
 function createMockChain(resolvedData: unknown = null, error: unknown = null) {
   const chain: Record<string, unknown> = {}

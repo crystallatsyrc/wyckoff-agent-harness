@@ -1,4 +1,4 @@
-# Wyckoff 系统迭代策略
+# QuantEvoLens 系统迭代策略
 
 > 当前阶段：**一期已落地，建议先 shadow 验证**。
 > 目标不是让模型“每天换脑袋”，而是让系统长期知道哪些信号正在变强、变弱、该观察还是该退役。
@@ -151,9 +151,9 @@ gantt
 - 不同 regime 下样本会被进一步切薄，`ALL` 汇总和具体 regime 都要看。
 - Shadow 优于静态不是看“选得不一样”，而是看 `diff_added` 的后续收益是否长期好于 `diff_removed`。
 
-## Wyckoff 系统的天然优势
+## QuantEvoLens 系统的天然优势
 
-Wyckoff 体系属于衰减较慢的一侧：
+QuantEvoLens 体系属于衰减较慢的一侧：
 - 中长期持仓（日线级别），不是毫秒级套利。
 - 多因子复合系统：量价结构、阶段、板块、regime 共同确认。
 - 自研事件库：Spring / SOS / LPS / EVR / Compression 的识别口径不是公开单因子。

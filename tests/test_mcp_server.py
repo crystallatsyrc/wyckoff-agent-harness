@@ -45,9 +45,9 @@ def test_run_funnel_simulation_maps_main_chinext_without_mutating_env(monkeypatc
             },
         )
 
-    fake_funnel = ModuleType("workflows.wyckoff_funnel")
+    fake_funnel = ModuleType("workflows.quantevolens_funnel")
     fake_funnel.run = fake_run
-    monkeypatch.setitem(sys.modules, "workflows.wyckoff_funnel", fake_funnel)
+    monkeypatch.setitem(sys.modules, "workflows.quantevolens_funnel", fake_funnel)
     monkeypatch.setenv("FUNNEL_POOL_MODE", "manual")
     monkeypatch.setenv("FUNNEL_POOL_BOARD", "chinext")
     monkeypatch.setenv("FUNNEL_EXECUTOR_MODE", "process")

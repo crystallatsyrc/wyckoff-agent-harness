@@ -1,4 +1,4 @@
-"""Structure-aware Wyckoff diagnostics."""
+"""Structure-aware QuantEvoLens diagnostics."""
 
 from __future__ import annotations
 
@@ -7,7 +7,7 @@ from typing import NamedTuple
 
 import pandas as pd
 
-from core.wyckoff_engine import FunnelConfig, sort_by_date_if_needed
+from core.quantevolens_engine import FunnelConfig, sort_by_date_if_needed
 
 
 @dataclass(frozen=True)
@@ -221,7 +221,7 @@ def identify_trading_range(
     swing_window: int = 3,
     exclude_last: int = 1,
 ) -> TradingRange | None:
-    """Identify a recent Wyckoff trading range from swing highs/lows.
+    """Identify a recent QuantEvoLens trading range from swing highs/lows.
 
     `exclude_last=1` is the default because trigger detection should compare
     today's bar against the range that was visible before today's close.

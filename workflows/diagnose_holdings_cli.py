@@ -14,7 +14,7 @@ from core.holding_diagnostic import (
     diagnose_holdings,
     format_diagnostic_text,
 )
-from core.wyckoff_engine import FunnelConfig, normalize_hist_from_fetch
+from core.quantevolens_engine import FunnelConfig, normalize_hist_from_fetch
 from integrations.fetch_a_share_csv import fetch_hist, resolve_trading_window
 from integrations.index_data_source import fetch_index_hist
 from utils.trading_clock import resolve_end_calendar_day
@@ -204,7 +204,7 @@ def _diagnose(holdings: list[tuple[str, str, float]]) -> list[HoldingDiagnostic]
     df_map = _fetch_holding_frames(holdings, window)
 
     # ── 执行诊断 ──
-    print("\n⚙ 执行 Wyckoff 健康诊断...\n")
+    print("\n⚙ 执行 QuantEvoLens 健康诊断...\n")
     cfg = FunnelConfig()
     return diagnose_holdings(holdings, df_map, bench_df, cfg)
 

@@ -39,9 +39,9 @@ class DecisionItem:
     reason: str
     confidence: float | None
     funnel_score: float | None = None
-    wyckoff_track: str = ""
-    wyckoff_stage: str = ""
-    wyckoff_tag: str = ""
+    quantevolens_track: str = ""
+    quantevolens_stage: str = ""
+    quantevolens_tag: str = ""
     source_type: str = ""
 
 
@@ -68,7 +68,7 @@ class ExecutionTicket:
     audit: str
     max_entry_price: float | None = None
     chase_profile: str = ""
-    wyckoff_context: str = ""
+    quantevolens_context: str = ""
 
 
 @dataclass

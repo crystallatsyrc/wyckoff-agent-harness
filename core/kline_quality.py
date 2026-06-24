@@ -1,4 +1,4 @@
-"""K-line quality checks for Wyckoff pipelines."""
+"""K-line quality checks for QuantEvoLens pipelines."""
 
 from __future__ import annotations
 

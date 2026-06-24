@@ -11,7 +11,7 @@ def _init_tmp_db(monkeypatch, tmp_path: Path):
     if local_db._conn is not None:
         local_db._conn.close()
     local_db._conn = None
-    monkeypatch.setattr("core.constants.LOCAL_DB_PATH", tmp_path / "wyckoff.db")
+    monkeypatch.setattr("core.constants.LOCAL_DB_PATH", tmp_path / "quantevolens.db")
     local_db.init_db()
     return local_db
 

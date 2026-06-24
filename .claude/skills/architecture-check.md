@@ -35,7 +35,7 @@ user_invocable: true
 
 | 目录 | 职责 | 什么该放这里 |
 |------|------|-------------|
-| `core/` | 业务逻辑核心 | Wyckoff 引擎、策略、诊断 |
+| `core/` | 业务逻辑核心 | QuantEvoLens 引擎、策略、诊断 |
 | `tools/` | 可复用工具函数 | 数据获取、排名、筛选 |
 | `integrations/` | 外部系统对接 | Supabase、LLM、数据源 |
 | `agents/` | Agent 工具逻辑 | Web、CLI、MCP 共享工具 |

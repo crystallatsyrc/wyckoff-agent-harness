@@ -1,4 +1,4 @@
-"""Shared report-row builders for Wyckoff funnel candidates."""
+"""Shared report-row builders for QuantEvoLens funnel candidates."""
 
 from __future__ import annotations
 
@@ -60,7 +60,7 @@ def candidate_reason_text(code: str, code_to_reasons: dict[str, list[str]], badg
     badge = badge_map.get(code, "")
     if badge and badge not in reasons:
         reasons.append(badge)
-    return "、".join(reasons) or "威科夫候选"
+    return "、".join(reasons) or "QuantEvoLens候选"
 
 
 def theme_report_fields(code: str, candidate_map: dict[str, dict], bonus_map: dict[str, float]) -> dict[str, Any]:

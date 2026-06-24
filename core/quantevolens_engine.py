@@ -1,12 +1,12 @@
 """
-Wyckoff Funnel 5 层漏斗筛选引擎
+QuantEvoLens Funnel 5 层漏斗筛选引擎
 
 Layer 1: 剥离垃圾（ST / 北交所 / 市值 / 成交额）
 Layer 2: 七通道甄选（主升/潜伏/吸筹/地量/暗中护盘/趋势延续/点火破局）
 Layer 2.5: Markup 加速检测
 Layer 2.7: Alpha 候选板（潜在大涨结构 + 龙头跟踪）
 Layer 3: 板块共振（行业分布 Top-N + RPS 动量）
-Layer 4: 威科夫狙击（Spring / SOS / LPS / Effort vs Result）
+Layer 4: QuantEvoLens狙击（Spring / SOS / LPS / Effort vs Result）
 """
 
 from __future__ import annotations
@@ -146,7 +146,7 @@ class FunnelConfig:
     ambush_bias_200_abs_max: float = 0.08
     ambush_ret20_max: float = -3.0
 
-    # Layer 2 低位吸筹通道（Wyckoff Accumulation Channel）
+    # Layer 2 低位吸筹通道（QuantEvoLens Accumulation Channel）
     # 不依赖 RPS 强势排名，专门捕捉"已止跌横盘蓄势"的 Phase A/B/C 股票。
     # 触发条件：低位区间 + 横盘振幅小 + 量能萎缩 + 均线胶着（尚未多头排列）。
     # 这类股票应与 L4 Spring/LPS 配合使用，单独出现时仅进观察池。
@@ -342,7 +342,7 @@ class FunnelResult(NamedTuple):
     layer3_symbols: list[str]
     top_sectors: list[str]
     triggers: dict[str, list[tuple[str, float]]]
-    # 威科夫阶段细节
+    # QuantEvoLens阶段细节
     stage_map: dict[str, str]  # code -> stage_name（如 "Accumulation A"、"Markup"、"Distribution"）
     markup_symbols: list[str]  # 已进入 Markup 的股票
     exit_signals: dict[str, dict]  # code -> {"signal": "stop_loss|distribution_warning", "price": xxx, "reason": xxx}
@@ -757,7 +757,7 @@ def _bias_200_exceeds_limit(close: pd.Series, cfg: FunnelConfig, max_bias_200: f
     return bias_200 > _entry_bias_limit(cfg, max_bias_200)
 
 
-# Layer 4: 威科夫狙击
+# Layer 4: QuantEvoLens狙击
 
 
 def _is_trading_range_context(zone: pd.DataFrame, cfg: FunnelConfig, df_full: pd.DataFrame = None) -> bool:

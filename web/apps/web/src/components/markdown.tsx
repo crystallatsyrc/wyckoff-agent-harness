@@ -2,7 +2,7 @@ import { memo } from 'react'
 import ReactMarkdown, { type Components } from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 
-const WYCKOFF_TERMS: Record<string, { bg: string; text: string; border: string }> = {
+const QUANTEVOLENS_TERMS: Record<string, { bg: string; text: string; border: string }> = {
   // Positive markers / strength
   'spring': { bg: 'bg-emerald-500/10 dark:bg-emerald-500/20', text: 'text-emerald-700 dark:text-emerald-400', border: 'border-emerald-500/20 dark:border-emerald-500/30' },
   'sos': { bg: 'bg-emerald-500/10 dark:bg-emerald-500/20', text: 'text-emerald-700 dark:text-emerald-400', border: 'border-emerald-500/20 dark:border-emerald-500/30' },
@@ -60,11 +60,11 @@ const WYCKOFF_TERMS: Record<string, { bg: string; text: string; border: string }
   'e阶段': { bg: 'bg-emerald-500/10 dark:bg-emerald-500/20', text: 'text-emerald-700 dark:text-emerald-400', border: 'border-emerald-500/20 dark:border-emerald-500/30' },
 }
 
-function renderWyckoffTerm(children: React.ReactNode, fallback: React.ReactNode) {
+function renderQuantEvoLensTerm(children: React.ReactNode, fallback: React.ReactNode) {
   if (typeof children === 'string') {
     const term = children.trim()
     const normalized = term.toLowerCase()
-    const style = WYCKOFF_TERMS[normalized]
+    const style = QUANTEVOLENS_TERMS[normalized]
     if (style) {
       return (
         <span className={`inline-flex items-center rounded-full border px-2 py-0.5 text-[11px] font-bold ${style.bg} ${style.text} ${style.border}`}>
@@ -85,7 +85,7 @@ const MD_COMPONENTS: Components = {
   ol: ({ children }) => <ol className="ml-4 mb-2 list-decimal">{children}</ol>,
   li: ({ children }) => <li className="mb-0.5">{children}</li>,
   code: ({ children }) => {
-    return renderWyckoffTerm(
+    return renderQuantEvoLensTerm(
       children,
       <code className="rounded bg-black/5 px-1 py-0.5 text-xs font-mono dark:bg-white/10">{children}</code>
     )
@@ -102,7 +102,7 @@ const MD_COMPONENTS: Components = {
     return safe ? <a href={href} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">{children}</a> : <span>{children}</span>
   },
   strong: ({ children }) => {
-    return renderWyckoffTerm(children, <strong>{children}</strong>)
+    return renderQuantEvoLensTerm(children, <strong>{children}</strong>)
   },
   em: ({ children }) => <em>{children}</em>,
 }

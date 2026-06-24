@@ -1,10 +1,10 @@
-"""core/wyckoff_engine.py 冒烟测试。"""
+"""core/quantevolens_engine.py 冒烟测试。"""
 
 from __future__ import annotations
 
 import pandas as pd
 
-from core.wyckoff_engine import (
+from core.quantevolens_engine import (
     FunnelConfig,
     _compute_stop_loss,
     _detect_compression,

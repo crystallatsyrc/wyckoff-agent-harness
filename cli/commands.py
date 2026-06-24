@@ -17,8 +17,8 @@ def _template_commands() -> list[tuple[str, str, str]]:
     return [(f"/{t.name}", f"run_template('{t.name}')", t.description) for t in load_prompt_templates().values()]
 
 
-class WyckoffCommands(Provider):
-    """Wyckoff CLI 命令面板。"""
+class QuantEvoLensCommands(Provider):
+    """QuantEvoLens CLI 命令面板。"""
 
     async def search(self, query: str) -> Hits:
         commands = (
@@ -31,7 +31,7 @@ class WyckoffCommands(Provider):
                 ("清屏", "clear_chat", "清空聊天记录"),
                 ("模型列表", "list_models", "查看已配置的模型"),
                 ("添加模型", "add_model", "配置新的 LLM 模型"),
-                ("登录", "start_login", "登录 Wyckoff 账号"),
+                ("登录", "start_login", "登录 QuantEvoLens 账号"),
                 ("退出登录", "do_logout", "退出当前账号"),
                 ("Token 用量", "show_token", "查看本次会话 Token 用量"),
                 ("Prompt 模板", "show_prompt_templates", "查看可复用投研 Prompt 模板"),

@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 _SESSION_SUMMARY_PROMPT = """从以下对话中提取值得跨会话记忆的信息（中文）。
 
 只提取这两类：
-- [偏好] 用户表达的投资风格、禁忌、操作习惯（如"不追涨"、"只做威科夫形态"）
+- [偏好] 用户表达的投资风格、禁忌、操作习惯（如"不追涨"、"只做QuantEvoLens形态"）
 - [决策] 用户非显而易见的决策逻辑/原因（如"因为板块轮动加速所以缩短持仓周期"）
 
 不要提取：
@@ -84,7 +84,7 @@ _LAYER_TYPES = {
 
 DEFAULT_MAX_CHARS_PER_MEMORY = 200
 DEFAULT_MAX_TOTAL_RECALL_CHARS = 1200
-_RECALL_TRUNCATION_SUFFIX = "…（已截断，可用 wyckoff memory trace 查看来源）"
+_RECALL_TRUNCATION_SUFFIX = "…（已截断，可用 quantevolens memory trace 查看来源）"
 _LAYER_SOURCE_LIMIT = 30
 _LAYER_MIN_ATOMS = 3
 _LAYER_VERSION = 3

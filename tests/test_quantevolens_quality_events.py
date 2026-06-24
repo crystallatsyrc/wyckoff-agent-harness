@@ -4,11 +4,11 @@ import pandas as pd
 
 from core.kline_quality import check_kline_quality, check_kline_quality_map, summarize_quality_reports
 from core.signal_lifecycle import evaluate_signal_lifecycle
-from core.wyckoff_events import classify_wyckoff_event
+from core.quantevolens_events import classify_quantevolens_event
 
 
-def test_classify_wyckoff_event_right_side_ignition():
-    event = classify_wyckoff_event(
+def test_classify_quantevolens_event_right_side_ignition():
+    event = classify_quantevolens_event(
         ("sos",),
         stage="Markup",
         channel="点火破局+结构TR",
@@ -24,18 +24,18 @@ def test_classify_wyckoff_event_right_side_ignition():
     assert "水温=RISK_ON" in event.reasons
 
 
-def test_classify_wyckoff_event_core_branches():
+def test_classify_quantevolens_event_core_branches():
     cases = [
         (("spring", "lps"), "", 6.0, "accumulation_repair_resonance", "Accum", "high"),
         (("spring",), "", 0.0, "spring_reclaim", "Accum", "medium"),
         (("lps",), "", 0.0, "lps_pullback_confirm", "Accum", "medium"),
         (("evr",), "Markup", 0.0, "volume_absorption", "Trend", "medium"),
         (("sos",), "", 0.0, "sos_watch", "Trend", "medium"),
-        ((), "", 0.0, "wyckoff_watch", "Watch", "low"),
+        ((), "", 0.0, "quantevolens_watch", "Watch", "low"),
     ]
 
     for triggers, stage, score, event_id, track, confidence in cases:
-        event = classify_wyckoff_event(triggers, stage=stage, score=score)
+        event = classify_quantevolens_event(triggers, stage=stage, score=score)
 
         assert event.event_id == event_id
         assert event.track == track

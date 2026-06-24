@@ -185,7 +185,7 @@ def rank_l3_candidates(
 
     打分权重：
       0.25 * q20 (20日动量) + 0.20 * q5 (5日) + 0.05 * q3 (3日)
-      + 0.20 * dry_q (缩量程度) + 0.30 * trigger_q (Wyckoff 触发强度)
+      + 0.20 * dry_q (缩量程度) + 0.30 * trigger_q (QuantEvoLens 触发强度)
       + hot_bonus (热门板块) + sector_bonus (板块轮动状态)
     """
     if not l3_symbols:

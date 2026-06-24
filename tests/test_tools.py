@@ -284,7 +284,7 @@ class TestMarketRegime:
 
     def test_holiday_grace_extends_when_money_flow_is_not_retreat(self, monkeypatch):
         import tools.market_regime as market_regime
-        from core.wyckoff_engine import FunnelConfig
+        from core.quantevolens_engine import FunnelConfig
 
         monkeypatch.setattr(market_regime, "_generate_pv_outlook", lambda **_kwargs: "次日推演：测试")
         closes = list(pd.Series(range(220), dtype=float).map(lambda x: 100.0 + x * 0.2))
@@ -305,7 +305,7 @@ class TestMarketRegime:
         assert result["holiday_grace_dynamic"]["extended"] is True
 
     def test_market_pv_policy_shadow_structures_defensive_outlook(self):
-        from core.wyckoff_engine import FunnelConfig
+        from core.quantevolens_engine import FunnelConfig
         from tools.market_regime import derive_market_pv_policy_shadow
 
         cfg = FunnelConfig()
@@ -324,7 +324,7 @@ class TestMarketRegime:
 
     def test_breadth_risk_on_without_bull_structure_is_bear_rebound(self, monkeypatch):
         import tools.market_regime as market_regime
-        from core.wyckoff_engine import FunnelConfig
+        from core.quantevolens_engine import FunnelConfig
 
         monkeypatch.setattr(market_regime, "_generate_pv_outlook", lambda **_kwargs: "次日推演：测试")
         closes = list(pd.Series(range(220), dtype=float).map(lambda x: 100.0 - x * 0.12))
@@ -344,7 +344,7 @@ class TestMarketRegime:
 
     def test_breadth_risk_on_with_bull_structure_stays_risk_on(self, monkeypatch):
         import tools.market_regime as market_regime
-        from core.wyckoff_engine import FunnelConfig
+        from core.quantevolens_engine import FunnelConfig
 
         monkeypatch.setattr(market_regime, "_generate_pv_outlook", lambda **_kwargs: "次日推演：测试")
         closes = list(pd.Series(range(220), dtype=float).map(lambda x: 100.0 + x * 0.2))
@@ -625,14 +625,14 @@ class TestSymbolPool:
         from agents import screen_tools
 
         captured_kwargs = {}
-        fake_pipeline = ModuleType("workflows.wyckoff_funnel")
+        fake_pipeline = ModuleType("workflows.quantevolens_funnel")
 
         def fake_run_funnel(*args, **kwargs):
             captured_kwargs.update(kwargs)
             return True, [], {}, {"metrics": {}, "triggers": {}, "name_map": {}}
 
         fake_pipeline.run = fake_run_funnel
-        monkeypatch.setitem(sys.modules, "workflows.wyckoff_funnel", fake_pipeline)
+        monkeypatch.setitem(sys.modules, "workflows.quantevolens_funnel", fake_pipeline)
         monkeypatch.setattr(screen_tools, "ensure_tushare_token", lambda tool_context: None)
         monkeypatch.setenv("FUNNEL_POOL_MODE", "manual")
         monkeypatch.setenv("FUNNEL_POOL_BOARD", "chinext")

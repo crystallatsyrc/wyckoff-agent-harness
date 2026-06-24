@@ -38,14 +38,14 @@ def run_step2_stage(run_step2, webhook: str, preview_only: bool, logs_path: str 
         step2_err = str(e)
     elapsed = (datetime.now(TZ) - t0).total_seconds()
     summary_item = {
-        "step": "Wyckoff Funnel",
+        "step": "QuantEvoLens Funnel",
         "ok": step2_ok and step2_err is None,
         "err": step2_err,
         "elapsed_s": round(elapsed, 1),
         "output": f"{len(symbols_info)} symbols",
     }
     log_line(
-        f"Step2 Wyckoff Funnel: ok={step2_ok}, symbols={len(symbols_info)}, elapsed={elapsed:.1f}s, err={step2_err}",
+        f"Step2 QuantEvoLens Funnel: ok={step2_ok}, symbols={len(symbols_info)}, elapsed={elapsed:.1f}s, err={step2_err}",
         logs_path,
     )
     return Step2StageResult(

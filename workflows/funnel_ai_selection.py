@@ -22,7 +22,7 @@ from core.dynamic_policy import (
 from core.funnel_selection import promote_bypass_groups, should_force_quota_selection, split_selected_tracks
 from core.funnel_theme import apply_theme_bonus_to_scores, promote_theme_l4_for_ai
 from core.market_trade_mode import resolve_market_trade_mode
-from core.wyckoff_engine import FunnelResult
+from core.quantevolens_engine import FunnelResult
 from integrations.supabase_signal_feedback import (
     load_signal_health_snapshot,
     load_signal_registry,

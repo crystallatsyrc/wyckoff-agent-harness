@@ -1,7 +1,7 @@
 """
-TickFlow 港股/美股 Wyckoff 漏斗工作流。
+TickFlow 港股/美股 QuantEvoLens 漏斗工作流。
 
-流程：标的池实时行情 -> 流动性预筛 -> 批量历史日 K -> Wyckoff 漏斗。
+流程：标的池实时行情 -> 流动性预筛 -> 批量历史日 K -> QuantEvoLens 漏斗。
 结果写入本地 artifact / GitHub Summary；US/HK 生产任务会写推荐表供 Web 复盘页读取。
 """
 
@@ -14,7 +14,7 @@ from typing import Any
 import pandas as pd
 
 from core.candidate_ranker import TRIGGER_LABELS
-from core.wyckoff_engine import (
+from core.quantevolens_engine import (
     FunnelConfig,
     detect_leader_radar,
     layer1_filter,

@@ -214,5 +214,5 @@ def sync_all_background() -> None:
         except Exception as e:
             logger.debug("background sync failed: %s", e)
 
-    t = threading.Thread(target=_run, daemon=True, name="wyckoff-sync")
+    t = threading.Thread(target=_run, daemon=True, name="quantevolens-sync")
     t.start()

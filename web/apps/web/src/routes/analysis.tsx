@@ -9,7 +9,7 @@ import { MarkdownContent } from '@/components/markdown'
 import { KlineChart } from '@/components/kline-chart'
 import { usePreferences } from '@/lib/preferences'
 import { AIDisclaimer } from '@/components/ai-disclaimer'
-import { detectWyckoffAnnotations } from '@/lib/wyckoff-detect'
+import { detectQuantEvoLensAnnotations } from '@/lib/quantevolens-detect'
 import { TICKFLOW_PURCHASE, fetchKline, fetchValueSnapshot, getUserDataKeys, checkWhitelist, isCnSymbol, isSupportedKlineCode, type KlineData, type ValueSnapshot } from '@/lib/kline'
 import { avg } from '@/lib/math'
 import { marketLabel, resolveStockQuery, searchStocks, type StockSearchResult } from '@/lib/market-search'
@@ -407,14 +407,14 @@ function AnalysisContent({ runner }: { runner: AnalysisRunnerState }) {
 
 function KlineSection({ klineData, compact = false }: { klineData: KlineData[]; compact?: boolean }) {
   const { t } = usePreferences()
-  const wyckoff = useMemo(() => detectWyckoffAnnotations(klineData), [klineData])
+  const quantevolens = useMemo(() => detectQuantEvoLensAnnotations(klineData), [klineData])
   return (
     <section>
       <div className="mb-3 flex flex-wrap items-end justify-between gap-2">
         <div><h2 className="text-base font-semibold">{t('analysis.chartTitle')}</h2><p className="mt-1 text-xs text-muted-foreground">{t('analysis.chartSubtitle')}</p></div>
         <span className="rounded-full border border-border px-2.5 py-1 text-xs text-muted-foreground">{klineData.length} {t('common.rows')}</span>
       </div>
-      <KlineChart data={klineData} height={compact ? 320 : 430} wyckoffMarkers={wyckoff?.markers} tradingRange={wyckoff?.tradingRange ?? undefined} stage={wyckoff?.stage} showIndicators />
+      <KlineChart data={klineData} height={compact ? 320 : 430} quantevolensMarkers={quantevolens?.markers} tradingRange={quantevolens?.tradingRange ?? undefined} stage={quantevolens?.stage} showIndicators />
     </section>
   )
 }
@@ -609,7 +609,7 @@ function buildKlinePayload(data: KlineData[]): string {
 
 async function callLLM(config: Parameters<typeof streamLLMResponse>[0], code: string, name: string, klinePayload: string, valueSnapshot: ValueSnapshot, signal?: AbortSignal, onDelta?: (chunk: string) => void): Promise<string> {
   const result = await streamLLMResponse(config, [
-    { role: 'system', content: '你是威科夫分析大师，主框架是量价与威科夫阶段判断。若用户提供价值面摘要，只把它作为质量、风险和仓位置信度校准：技术面负责时机，价值面负责是否值得提高/降低结论置信度。不要用基本面替代 K 线事实，也不要因为单个指标给出过度确定结论。\n\n输出结构：\n1. 技术面结论：威科夫阶段、量价供需、支撑阻力、主力意图。\n2. 价值面校准：只引用给定摘要中的关键指标，说明它如何影响风险/置信度。\n3. 综合策略：观察/试错/持有/减仓等动作条件，包含失效位和风险提示。\n\n请用简洁、专业的中文 markdown 回答。' },
+    { role: 'system', content: '你是QuantEvoLens分析大师，主框架是量价与QuantEvoLens阶段判断。若用户提供价值面摘要，只把它作为质量、风险和仓位置信度校准：技术面负责时机，价值面负责是否值得提高/降低结论置信度。不要用基本面替代 K 线事实，也不要因为单个指标给出过度确定结论。\n\n输出结构：\n1. 技术面结论：QuantEvoLens阶段、量价供需、支撑阻力、主力意图。\n2. 价值面校准：只引用给定摘要中的关键指标，说明它如何影响风险/置信度。\n3. 综合策略：观察/试错/持有/减仓等动作条件，包含失效位和风险提示。\n\n请用简洁、专业的中文 markdown 回答。' },
     { role: 'user', content: `请分析股票 ${code} ${name}。\n\n${buildValuePrompt(valueSnapshot)}\n\n${klinePayload}` },
   ], { temperature: 0.7, signal, onDelta })
   if (!result) throw new Error('模型未返回结果，请重试')

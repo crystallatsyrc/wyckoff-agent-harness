@@ -1,5 +1,5 @@
 """
-威科夫终端读盘室 — Textual TUI。
+QuantEvoLens终端读盘室 — Textual TUI。
 
 全屏布局：上方可滚动聊天区 + 下方固定输入框。
 """
@@ -136,7 +136,7 @@ def _pop_lines(log_widget, n: int) -> None:
 
 
 def _get_agent_logger() -> logging.Logger:
-    agent_log = logging.getLogger("wyckoff.agent")
+    agent_log = logging.getLogger("quantevolens.agent")
     agent_log.setLevel(logging.DEBUG)
     if not agent_log.handlers:
         try:
@@ -852,10 +852,10 @@ def _friendly_error(e: Exception) -> str:
 # ---------------------------------------------------------------------------
 
 
-class WyckoffTUI(App):
-    """威科夫终端读盘室。"""
+class QuantEvoLensTUI(App):
+    """QuantEvoLens终端读盘室。"""
 
-    TITLE = "Wyckoff 读盘室"
+    TITLE = "QuantEvoLens 读盘室"
     CSS = """
     Screen {
         layout: vertical;
@@ -946,7 +946,7 @@ class WyckoffTUI(App):
         log = self.query_one("#chat-log", ChatLog)
         log.write(
             Text.from_markup(
-                "[bold]Wyckoff 读盘室[/bold]\n"
+                "[bold]QuantEvoLens 读盘室[/bold]\n"
                 "[dim]直接输入问题开始对话  ·  /help 查看命令  ·  Ctrl+P 命令面板  ·  Ctrl+C 复制/退出[/dim]\n"
             )
         )
@@ -963,10 +963,10 @@ class WyckoffTUI(App):
         from importlib.metadata import version as _ver
 
         try:
-            ver = _ver("youngcan-wyckoff-analysis")
+            ver = _ver("quantevolens")
         except Exception:
             ver = "?"
-        parts = [f"Wyckoff CLI v{ver}"]
+        parts = [f"QuantEvoLens CLI v{ver}"]
         prov = self._state.get("provider_name", "")
         model = self._state.get("model", "")
         if prov and model:
@@ -1942,9 +1942,9 @@ class WyckoffTUI(App):
             import os
             from pathlib import Path
 
-            from cli.scratchpad import wyckoff_home
+            from cli.scratchpad import quantevolens_home
 
-            scratch_dir = wyckoff_home() / "scratchpad"
+            scratch_dir = quantevolens_home() / "scratchpad"
             if not scratch_dir.exists():
                 return None
 
@@ -2025,7 +2025,7 @@ class WyckoffTUI(App):
         log = self.query_one("#chat-log", ChatLog)
         log.write(Text.from_markup(f"\n[bold yellow]⏰ 定时触发：{sched.name}[/bold yellow]"))
         if sched.notify:
-            self._desktop_notify(f"Wyckoff: {sched.name}")
+            self._desktop_notify(f"QuantEvoLens: {sched.name}")
         action = sched.action.strip()
         if action.startswith("/"):
             self._handle_command(action)
@@ -2042,13 +2042,13 @@ class WyckoffTUI(App):
         try:
             if sys.platform == "darwin":
                 subprocess.Popen(
-                    ["osascript", "-e", f'display notification "{message}" with title "Wyckoff 读盘室"'],
+                    ["osascript", "-e", f'display notification "{message}" with title "QuantEvoLens 读盘室"'],
                     stdout=subprocess.DEVNULL,
                     stderr=subprocess.DEVNULL,
                 )
             else:
                 subprocess.Popen(
-                    ["notify-send", "Wyckoff 读盘室", message],
+                    ["notify-send", "QuantEvoLens 读盘室", message],
                     stdout=subprocess.DEVNULL,
                     stderr=subprocess.DEVNULL,
                 )
@@ -2551,9 +2551,9 @@ class WyckoffTUI(App):
 
 # 注册命令面板（class 定义完成后）
 try:
-    from cli.commands import WyckoffCommands
+    from cli.commands import QuantEvoLensCommands
 
-    WyckoffTUI.COMMANDS = {WyckoffCommands}
+    QuantEvoLensTUI.COMMANDS = {QuantEvoLensCommands}
 except ImportError:
     pass
 

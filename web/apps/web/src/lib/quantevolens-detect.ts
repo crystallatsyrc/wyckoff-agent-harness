@@ -9,7 +9,7 @@ interface KlineRow {
   volume: number
 }
 
-export interface WyckoffMarker {
+export interface QuantEvoLensMarker {
   date: string
   type: 'spring' | 'sos' | 'lps' | 'evr'
   label: string
@@ -23,13 +23,13 @@ export interface TradingRangeResult {
   widthPct: number
 }
 
-export interface WyckoffAnnotation {
+export interface QuantEvoLensAnnotation {
   tradingRange: TradingRangeResult | null
-  markers: WyckoffMarker[]
+  markers: QuantEvoLensMarker[]
   stage: string
 }
 
-export function detectWyckoffAnnotations(data: KlineRow[]): WyckoffAnnotation {
+export function detectQuantEvoLensAnnotations(data: KlineRow[]): QuantEvoLensAnnotation {
   const tr = identifyTradingRange(data)
   const markers = tr ? detectTriggers(data, tr) : []
   const stage = inferStage(data, tr, markers)
@@ -67,8 +67,8 @@ function identifyTradingRange(data: KlineRow[], lookback = 90): TradingRangeResu
   return { support, resistance, mid, widthPct }
 }
 
-function detectTriggers(data: KlineRow[], tr: TradingRangeResult): WyckoffMarker[] {
-  const markers: WyckoffMarker[] = []
+function detectTriggers(data: KlineRow[], tr: TradingRangeResult): QuantEvoLensMarker[] {
+  const markers: QuantEvoLensMarker[] = []
   const start = Math.max(20, data.length - 60)
 
   for (let i = start; i < data.length; i++) {
@@ -136,7 +136,7 @@ function detectEVR(bar: KlineRow, tr: TradingRangeResult, pctChange: number, vol
   return highVol && inLowerHalf && narrowChange && aboveFloor
 }
 
-function inferStage(data: KlineRow[], tr: TradingRangeResult | null, markers: WyckoffMarker[]): string {
+function inferStage(data: KlineRow[], tr: TradingRangeResult | null, markers: QuantEvoLensMarker[]): string {
   if (!tr || data.length === 0) return ''
   const last = data[data.length - 1]!
   const hasSOS = markers.some((m) => m.type === 'sos')

@@ -33,7 +33,7 @@ from workflows.backtest_defaults import (
 
 
 def build_backtest_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="Wyckoff Funnel 日线轻量回测器")
+    parser = argparse.ArgumentParser(description="QuantEvoLens Funnel 日线轻量回测器")
     _add_window_args(parser)
     _add_universe_args(parser)
     _add_exit_args(parser)

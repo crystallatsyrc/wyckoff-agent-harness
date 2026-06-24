@@ -7,7 +7,7 @@ import re
 from dataclasses import dataclass
 from pathlib import Path
 
-PROMPTS_DIR = Path(os.path.expanduser("~/.wyckoff/prompts"))
+PROMPTS_DIR = Path(os.path.expanduser("~/.quantevolens/prompts"))
 
 _VALID_NAME_RE = re.compile(r"^[a-z][a-z0-9_-]{0,63}$")
 
@@ -26,7 +26,7 @@ BUILTIN_PROMPT_TEMPLATES: dict[str, PromptTemplate] = {
         description="每日盘面复盘：大盘水温、机会池、持仓风险",
         argument_hint="[关注方向/持仓]",
         prompt=(
-            "做一次每日 Wyckoff 投研复盘。\n"
+            "做一次每日 QuantEvoLens 投研复盘。\n"
             "用户补充：{user_input}\n\n"
             "请按这个顺序执行：\n"
             "1. 调用 get_market_overview() 判断大盘水温。\n"
@@ -96,7 +96,7 @@ BUILTIN_PROMPT_TEMPLATES: dict[str, PromptTemplate] = {
 
 
 def _parse_prompt_md(path: Path) -> PromptTemplate | None:
-    """Parse ~/.wyckoff/prompts/<name>.md with optional YAML frontmatter."""
+    """Parse ~/.quantevolens/prompts/<name>.md with optional YAML frontmatter."""
 
     try:
         text = path.read_text(encoding="utf-8")
@@ -135,7 +135,7 @@ def _parse_prompt_md(path: Path) -> PromptTemplate | None:
 
 
 def load_user_prompt_templates() -> dict[str, PromptTemplate]:
-    """Load user prompt templates from ~/.wyckoff/prompts/."""
+    """Load user prompt templates from ~/.quantevolens/prompts/."""
 
     templates: dict[str, PromptTemplate] = {}
     if not PROMPTS_DIR.is_dir():

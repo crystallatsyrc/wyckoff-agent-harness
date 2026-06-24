@@ -1,4 +1,4 @@
-"""Session export and fork helpers for local Wyckoff chat logs."""
+"""Session export and fork helpers for local QuantEvoLens chat logs."""
 
 from __future__ import annotations
 
@@ -9,7 +9,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-from cli.scratchpad import wyckoff_home
+from cli.scratchpad import quantevolens_home
 
 
 class SessionToolError(RuntimeError):
@@ -40,11 +40,11 @@ def _latest_session_id() -> str:
 
 
 def _default_export_path(session_id: str, output_format: str) -> Path:
-    out_dir = wyckoff_home() / "sessions" / "exports"
+    out_dir = quantevolens_home() / "sessions" / "exports"
     out_dir.mkdir(parents=True, exist_ok=True)
     stamp = datetime.now().strftime("%Y-%m-%d-%H%M%S")
     suffix = "json" if output_format == "json" else "md"
-    return out_dir / f"wyckoff-session-{session_id[:8]}-{stamp}.{suffix}"
+    return out_dir / f"quantevolens-session-{session_id[:8]}-{stamp}.{suffix}"
 
 
 def _loads_json_maybe(text: str) -> Any:
@@ -64,7 +64,7 @@ def _normalize_row(row: dict[str, Any]) -> dict[str, Any]:
 
 
 def session_transcript_markdown(session_id: str, rows: list[dict[str, Any]]) -> str:
-    lines = ["# Wyckoff Session Transcript", "", f"- session_id: `{session_id}`", f"- messages: `{len(rows)}`", ""]
+    lines = ["# QuantEvoLens Session Transcript", "", f"- session_id: `{session_id}`", f"- messages: `{len(rows)}`", ""]
     for row in rows:
         role = str(row.get("role", "") or "unknown")
         created_at = str(row.get("created_at", "") or "")
@@ -115,7 +115,7 @@ def export_session_transcript(
         if path.suffix.lower() != ".json":
             path = path.with_suffix(".json")
         payload = {
-            "schema": "wyckoff.session_export.v1",
+            "schema": "quantevolens.session_export.v1",
             "session_id": resolved_session_id,
             "exported_at": datetime.now().isoformat(timespec="seconds"),
             "messages": [_normalize_row(row) for row in rows],

@@ -9,7 +9,7 @@ import pandas as pd
 
 from core.hist_dates import latest_trade_date_from_hist
 from core.sector_rotation import SECTOR_STATE_LABELS
-from core.wyckoff_engine import normalize_hist_from_fetch
+from core.quantevolens_engine import normalize_hist_from_fetch
 from integrations.fetch_a_share_csv import fetch_hist, resolve_trading_window
 from integrations.index_data_source import fetch_index_hist
 from integrations.market_metadata import fetch_market_cap_map, fetch_sector_map

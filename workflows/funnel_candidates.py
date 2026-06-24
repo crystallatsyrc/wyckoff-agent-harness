@@ -10,7 +10,7 @@ import pandas as pd
 
 from core.candidate_ranker import rank_l3_candidates
 from core.funnel_theme import strategic_bypass_seed_codes
-from core.wyckoff_engine import (
+from core.quantevolens_engine import (
     FunnelConfig,
     build_candidate_entries,
     detect_accum_stage,

@@ -12,7 +12,7 @@ from dataclasses import dataclass, field, replace
 import pandas as pd
 
 from core.hist_dates import latest_trade_date_from_hist
-from core.wyckoff_engine import normalize_hist_from_fetch
+from core.quantevolens_engine import normalize_hist_from_fetch
 from tools.spot_patch import append_spot_bar_if_needed
 
 logger = logging.getLogger(__name__)

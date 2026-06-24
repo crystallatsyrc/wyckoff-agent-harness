@@ -28,7 +28,7 @@ const QUOTES = {
   ],
 } as const
 
-export function WyckoffLoading({ size = 'md' }: { size?: 'sm' | 'md' }) {
+export function QuantEvoLensLoading({ size = 'md' }: { size?: 'sm' | 'md' }) {
   const { locale } = usePreferences()
   const quotes = QUOTES[locale]
   const [idx, setIdx] = useState(() => Math.floor(Math.random() * quotes.length))

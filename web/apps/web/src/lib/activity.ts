@@ -169,7 +169,7 @@ function localDateKey(now: Date): string {
 function browserSessionId(): string {
   if (typeof window === 'undefined') return randomId()
   try {
-    const key = 'wyckoff.activity.session_id'
+    const key = 'quantevolens.activity.session_id'
     const existing = window.sessionStorage.getItem(key)
     if (existing) return existing
     const created = randomId()
@@ -183,7 +183,7 @@ function browserSessionId(): string {
 function markSessionSeen(activityDate: string, sessionId: string): boolean {
   if (typeof window === 'undefined') return true
   try {
-    const key = `wyckoff.activity.seen.${activityDate}.${sessionId}`
+    const key = `quantevolens.activity.seen.${activityDate}.${sessionId}`
     if (window.sessionStorage.getItem(key)) return false
     window.sessionStorage.setItem(key, '1')
     return true

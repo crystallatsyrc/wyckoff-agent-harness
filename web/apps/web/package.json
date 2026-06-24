@@ -1,5 +1,5 @@
 {
-  "name": "@wyckoff/web",
+  "name": "@quantevolens/web",
   "private": true,
   "type": "module",
   "scripts": {
@@ -15,7 +15,7 @@
     "@ai-sdk/react": "^3.0.207",
     "@supabase/supabase-js": "^2.49.0",
     "@tanstack/react-query": "^5.62.0",
-    "@wyckoff/shared": "workspace:*",
+    "@quantevolens/shared": "workspace:*",
     "ai": "^6.0.205",
     "lightweight-charts": "^5.2.0",
     "lucide-react": "^0.468.0",

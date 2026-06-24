@@ -1,7 +1,7 @@
 """
 持仓健康诊断模块
 
-复用 wyckoff_engine 已有的 L2 通道分类、L4 触发检测、L5 退出信号、
+复用 quantevolens_engine 已有的 L2 通道分类、L4 触发检测、L5 退出信号、
 吸筹阶段分析、派发识别等能力，对任意持仓个股做结构化健康诊断。
 
 用法:
@@ -22,7 +22,7 @@ from dataclasses import dataclass, field, replace
 
 import pandas as pd
 
-from core.wyckoff_engine import (
+from core.quantevolens_engine import (
     FunnelConfig,
     _detect_evr,
     _detect_lps,
@@ -55,7 +55,7 @@ class HoldingDiagnostic:
     ma_pattern: str = "数据不足"  # 多头排列 / 空头排列 / MA50>MA200 / MA50<MA200
     ma200_bias_pct: float | None = None
 
-    # Wyckoff 定位
+    # QuantEvoLens 定位
     l2_channel: str = "未入选"  # 主升通道 / 潜伏通道 / 吸筹通道 / ...
     accum_stage: str | None = None  # Accum_A / Accum_B / Accum_C
     track: str = "Unknown"  # Trend / Accum / Unknown
@@ -105,7 +105,7 @@ class _MaSnapshot:
 
 
 @dataclass(frozen=True)
-class _WyckoffSnapshot:
+class _QuantEvoLensSnapshot:
     l2_channel: str
     track: str
     accum_stage: str | None
@@ -234,16 +234,16 @@ def _exit_snapshot(
         return None, None, ""
 
 
-def _wyckoff_snapshot(
+def _quantevolens_snapshot(
     code: str,
     series: _SeriesSnapshot,
     bench_df: pd.DataFrame | None,
     cfg: FunnelConfig,
-) -> _WyckoffSnapshot:
+) -> _QuantEvoLensSnapshot:
     l2_channel = _l2_channel(code, series.df, bench_df, cfg)
     accum_stage = _accum_stage(series.df, cfg)
     exit_signal, exit_price, exit_reason = _exit_snapshot(code, series.df, accum_stage, cfg)
-    return _WyckoffSnapshot(
+    return _QuantEvoLensSnapshot(
         l2_channel=l2_channel,
         track=_classify_track(l2_channel),
         accum_stage=accum_stage,
@@ -288,14 +288,14 @@ def _risk_snapshot(series: _SeriesSnapshot, cost: float) -> _RiskSnapshot:
 
 def _health_rating(
     ma: _MaSnapshot,
-    wyckoff: _WyckoffSnapshot,
+    quantevolens: _QuantEvoLensSnapshot,
     risk: _RiskSnapshot,
     pnl_pct: float,
 ) -> tuple[str, list[str]]:
     reasons: list[str] = []
     if risk.stop_status == "已穿止损":
         reasons.append("已穿止损线(-7%)")
-    if wyckoff.exit_signal == "stop_loss":
+    if quantevolens.exit_signal == "stop_loss":
         reasons.append("结构止损（从高点回撤>10%）")
     if ma.pattern == "空头排列":
         reasons.append("均线空头排列")
@@ -304,7 +304,7 @@ def _health_rating(
     if risk.ret_10d < -15:
         reasons.append(f"近10日暴跌({risk.ret_10d:+.1f}%)")
 
-    if wyckoff.exit_signal == "distribution_warning":
+    if quantevolens.exit_signal == "distribution_warning":
         reasons.append("高位派发预警")
     if risk.stop_status == "逼近止损(<2%)":
         reasons.append("逼近止损线")
@@ -315,7 +315,7 @@ def _health_rating(
     if risk.vol_ratio < 0.5:
         reasons.append("量能严重萎缩")
 
-    positive = _positive_reasons(ma, wyckoff)
+    positive = _positive_reasons(ma, quantevolens)
     danger_count = sum(1 for r in reasons if any(k in r for k in ["已穿", "暴跌", "空头排列", "结构止损"]))
     warn_count = len(reasons) - danger_count
     if danger_count >= 1:
@@ -325,14 +325,14 @@ def _health_rating(
     return "🟢健康", positive if positive and not reasons else reasons
 
 
-def _positive_reasons(ma: _MaSnapshot, wyckoff: _WyckoffSnapshot) -> list[str]:
+def _positive_reasons(ma: _MaSnapshot, quantevolens: _QuantEvoLensSnapshot) -> list[str]:
     positive = []
     if ma.pattern == "多头排列":
         positive.append("多头排列")
-    if any(t in wyckoff.l2_channel for t in _TREND_CHANNELS):
-        positive.append(f"L2通道:{wyckoff.l2_channel}")
-    if wyckoff.l4_triggers:
-        positive.append(f"L4信号:{'+'.join(wyckoff.l4_triggers)}")
+    if any(t in quantevolens.l2_channel for t in _TREND_CHANNELS):
+        positive.append(f"L2通道:{quantevolens.l2_channel}")
+    if quantevolens.l4_triggers:
+        positive.append(f"L4信号:{'+'.join(quantevolens.l4_triggers)}")
     return positive
 
 
@@ -345,7 +345,7 @@ def diagnose_one_stock(
     cfg: FunnelConfig | None = None,
 ) -> HoldingDiagnostic:
     """
-    对单只股票执行全面 Wyckoff 健康诊断。
+    对单只股票执行全面 QuantEvoLens 健康诊断。
 
     Parameters
     ----------
@@ -361,9 +361,9 @@ def diagnose_one_stock(
 
     series = _series_snapshot(df, cost)
     ma = _ma_snapshot(series.close, series.latest_close)
-    wyckoff = _wyckoff_snapshot(code, series, bench_df, cfg)
+    quantevolens = _quantevolens_snapshot(code, series, bench_df, cfg)
     risk = _risk_snapshot(series, cost)
-    health, reasons = _health_rating(ma, wyckoff, risk, series.pnl_pct)
+    health, reasons = _health_rating(ma, quantevolens, risk, series.pnl_pct)
 
     return HoldingDiagnostic(
         code=code,
@@ -377,13 +377,13 @@ def diagnose_one_stock(
         ma200=ma.ma200,
         ma_pattern=ma.pattern,
         ma200_bias_pct=ma.ma200_bias_pct,
-        l2_channel=wyckoff.l2_channel,
-        accum_stage=wyckoff.accum_stage,
-        track=wyckoff.track,
-        l4_triggers=wyckoff.l4_triggers,
-        exit_signal=wyckoff.exit_signal,
-        exit_price=wyckoff.exit_price,
-        exit_reason=wyckoff.exit_reason,
+        l2_channel=quantevolens.l2_channel,
+        accum_stage=quantevolens.accum_stage,
+        track=quantevolens.track,
+        l4_triggers=quantevolens.l4_triggers,
+        exit_signal=quantevolens.exit_signal,
+        exit_price=quantevolens.exit_price,
+        exit_reason=quantevolens.exit_reason,
         stop_loss_7pct=risk.stop_loss_7pct,
         stop_loss_status=risk.stop_status,
         vol_ratio_20_60=risk.vol_ratio,
@@ -447,7 +447,7 @@ def format_diagnostic_text(d: HoldingDiagnostic) -> str:
         ma_parts.append(f"MA200乖离: {d.ma200_bias_pct:+.1f}%")
     lines.append("  " + " | ".join(ma_parts))
 
-    # Wyckoff 定位
+    # QuantEvoLens 定位
     wy_parts = [f"通道: {d.l2_channel}", f"轨道: {d.track}"]
     if d.accum_stage:
         wy_parts.append(f"阶段: {d.accum_stage}")

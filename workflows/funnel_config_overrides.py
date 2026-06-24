@@ -6,7 +6,7 @@ import logging
 import os
 from dataclasses import fields as dataclass_fields
 
-from core.wyckoff_engine import FunnelConfig
+from core.quantevolens_engine import FunnelConfig
 from utils.env import parse_bool
 
 logger = logging.getLogger(__name__)

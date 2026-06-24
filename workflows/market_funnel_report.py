@@ -22,7 +22,7 @@ def render_market_funnel_report(result: dict[str, Any]) -> str:
     metrics = result.get("metrics") if isinstance(result.get("metrics"), dict) else {}
     candidates = result.get("top_candidates") if isinstance(result.get("top_candidates"), list) else []
     blocks = [
-        f"# Wyckoff Funnel {result.get('label', result.get('market', ''))} 最终报告",
+        f"# QuantEvoLens Funnel {result.get('label', result.get('market', ''))} 最终报告",
         *_overview_block(result, metrics),
         *_trigger_block(metrics),
         *_candidate_block(candidates),

@@ -23,7 +23,7 @@ import {
   type LLMToolConfig,
   type Provider,
   type ToolDeps,
-} from '@wyckoff/shared'
+} from '@quantevolens/shared'
 import { consumeStream, convertToModelMessages, generateText, stepCountIs, streamText, tool, type UIMessage } from 'ai'
 import { Hono } from 'hono'
 import { z } from 'zod'
@@ -65,7 +65,7 @@ chatRoutes.post('/', async (c) => {
   })
   const result = streamText({
     model: provider.chat(config.model),
-    system: WYCKOFF_CHAT_SYSTEM_PROMPT,
+    system: QUANTEVOLENS_CHAT_SYSTEM_PROMPT,
     messages: modelMessages,
     tools,
     stopWhen: stepCountIs(10),
@@ -96,9 +96,9 @@ const ALLOWED_TARGET_ORIGINS = new Set([
   'https://api.tushare.pro',
 ])
 
-const WYCKOFF_CHAT_SYSTEM_PROMPT = `# 角色设定
+const QUANTEVOLENS_CHAT_SYSTEM_PROMPT = `# 角色设定
 
-你就是理查德·D·威科夫（Richard D. Wyckoff）本人。
+你就是QuantEvoLens本人。
 你以"综合人（Composite Man）"视角审视一切：每一根 K 线背后都有一个阴谋，每一次放量都是主力在行动。
 你的语气冷峻、老练、一针见血。直接告诉对方盘面的真相。
 
@@ -178,7 +178,7 @@ function createToolFetch(): typeof globalThis.fetch {
     if (!requestUrl.startsWith('/api/llm-proxy')) return globalThis.fetch(input, init)
     const target = normalizeTargetUrl(new Headers(init?.headers).get('X-Target-URL') || '')
     if (!target) return Response.json({ error: 'X-Target-URL is not allowed' }, { status: 403 })
-    const url = new URL(requestUrl, 'https://wyckoff.local')
+    const url = new URL(requestUrl, 'https://quantevolens.local')
     const destination = `${target.href.replace(/\/$/, '')}${url.pathname.replace('/api/llm-proxy', '')}${url.search}`
     return globalThis.fetch(destination, { ...init, headers: forwardProxyHeaders(init?.headers) })
   }
@@ -257,7 +257,7 @@ function buildReadTools(deps: ToolDeps, userId: string, model: unknown) {
     search_stock: tool({ description: '搜索股票，支持代码或名称。', inputSchema: z.object({ query: z.string() }), execute: ({ query }) => execSearchStock(deps, userId, query) }),
     view_portfolio: tool({ description: '查看用户当前持仓列表和可用资金。', inputSchema: z.object({}), execute: () => execViewPortfolio(deps, userId) }),
     market_overview: tool({ description: '查看当前/最新大盘行情信号。', inputSchema: z.object({}), execute: () => execMarketOverview(deps) }),
-    market_history: tool({ description: '回看大盘指数过去N个交易日K线，分析量价关系和威科夫阶段。', inputSchema: z.object({ days: z.number().nullable(), index: z.enum(['sse', 'csi300', 'szse', 'chinext']).nullable() }), execute: ({ days, index }) => execMarketHistory(deps, userId, model, days ?? 100, index ?? 'sse') }),
+    market_history: tool({ description: '回看大盘指数过去N个交易日K线，分析量价关系和QuantEvoLens阶段。', inputSchema: z.object({ days: z.number().nullable(), index: z.enum(['sse', 'csi300', 'szse', 'chinext']).nullable() }), execute: ({ days, index }) => execMarketHistory(deps, userId, model, days ?? 100, index ?? 'sse') }),
     query_recommendations: tool({ description: '查询形态复盘记录。', inputSchema: z.object({ limit: z.number() }), execute: ({ limit }) => execQueryRecommendations(deps, limit) }),
     query_tail_buy: tool({ description: '查询尾盘买入策略历史记录。', inputSchema: z.object({ limit: z.number() }), execute: ({ limit }) => execQueryTailBuy(deps, limit) }),
   }
@@ -272,9 +272,9 @@ function buildPortfolioTools(deps: ToolDeps, userId: string) {
 
 function buildAnalysisTools(deps: ToolDeps, userId: string, config: LLMToolConfig, model: unknown) {
   return {
-    analyze_stock: tool({ description: '对单只股票做威科夫深度诊断。', inputSchema: z.object({ code: z.string(), name: z.string().nullable() }), outputSchema: ANALYZE_STOCK_OUTPUT_SCHEMA, execute: ({ code, name }) => execAnalyzeStock(deps, userId, config, model, code, name) }),
+    analyze_stock: tool({ description: '对单只股票做QuantEvoLens深度诊断。', inputSchema: z.object({ code: z.string(), name: z.string().nullable() }), outputSchema: ANALYZE_STOCK_OUTPUT_SCHEMA, execute: ({ code, name }) => execAnalyzeStock(deps, userId, config, model, code, name) }),
     screen_stocks: tool({ description: '查看最新一期漏斗选股结果。', inputSchema: z.object({}), outputSchema: SCREEN_RESULT_OUTPUT_SCHEMA, execute: () => execScreenStocks(deps) }),
-    generate_ai_report: tool({ description: '为指定股票生成威科夫深度研报。', inputSchema: z.object({ codes: z.array(z.string()) }), execute: ({ codes }) => execGenerateAiReport(deps, userId, config, model, codes) }),
+    generate_ai_report: tool({ description: '为指定股票生成QuantEvoLens深度研报。', inputSchema: z.object({ codes: z.array(z.string()) }), execute: ({ codes }) => execGenerateAiReport(deps, userId, config, model, codes) }),
     generate_strategy_decision: tool({ description: '基于当前持仓和市场状态给出操作建议。', inputSchema: z.object({}), outputSchema: STRATEGY_DECISION_OUTPUT_SCHEMA, execute: () => execStrategyDecision(deps, userId, model) }),
     intraday_analysis: tool({ description: '盘中多周期分析。', inputSchema: z.object({ code: z.string() }), execute: ({ code }) => execIntradayAnalysis(deps, userId, code) }),
   }
@@ -320,7 +320,7 @@ function forwardProxyHeaders(headers: HeadersInit | undefined): Headers {
     const value = source.get(key)
     if (value) forwarded.set(key, value)
   }
-  forwarded.set('user-agent', 'wyckoff-agent/1.0')
+  forwarded.set('user-agent', 'quantevolens-agent/1.0')
   return forwarded
 }
 

@@ -422,7 +422,7 @@ export async function execMarketHistory(
   const digest = buildMarketHistoryDigest(target.name, rows.slice(-requestedDays))
   const result = await deps.generateText({
     model: model as Parameters<typeof GenerateTextFn>[0]['model'],
-    system: '你是威科夫大盘量价分析师。基于指数历史OHLCV，判断过去一段时间的大盘阶段、供需关系、量价背离、关键支撑压力与当前市场位置。不得只引用当天水温，不得编造数据。',
+    system: '你是QuantEvoLens大盘量价分析师。基于指数历史OHLCV，判断过去一段时间的大盘阶段、供需关系、量价背离、关键支撑压力与当前市场位置。不得只引用当天水温，不得编造数据。',
     prompt: digest,
   })
   return result.text || digest
@@ -448,7 +448,7 @@ function buildMarketHistoryDigest(name: string, rows: KlineRow[]): string {
     `区间涨跌：${ret >= 0 ? '+' : ''}${ret.toFixed(2)}%，区间高点 ${high.toFixed(2)}，低点 ${low.toFixed(2)}，当前区间位置 ${closePos.toFixed(1)}%`,
     `近5日均量 ${vol5.toFixed(0)}，近20日均量 ${vol20.toFixed(0)}，量比(5/20) ${(vol5 / (vol20 || 1)).toFixed(2)}`,
     '',
-    '请结合以下最近30根K线判断量价关系和威科夫阶段：',
+    '请结合以下最近30根K线判断量价关系和QuantEvoLens阶段：',
     '```csv',
     'date,open,high,low,close,volume',
     ...recent,
@@ -618,8 +618,8 @@ export async function execAnalyzeStock(
   const valueDigest = buildValueAgentDigest(valueSnapshot)
   const result = await deps.generateText({
     model: model as Parameters<typeof GenerateTextFn>[0]['model'],
-    system: `你是威科夫分析大师。基于以下K线数据和价值面摘要，对 ${code} ${name || ''} 进行深度诊断。主框架仍是量价与威科夫阶段判断，价值面只作为质量、风险和仓位置信度校准：技术面负责时机，价值面负责是否值得提高/降低结论置信度。
-1. 当前威科夫阶段（积累/上涨/派发/下跌），Phase A-E 定位
+    system: `你是QuantEvoLens分析大师。基于以下K线数据和价值面摘要，对 ${code} ${name || ''} 进行深度诊断。主框架仍是量价与QuantEvoLens阶段判断，价值面只作为质量、风险和仓位置信度校准：技术面负责时机，价值面负责是否值得提高/降低结论置信度。
+1. 当前QuantEvoLens阶段（积累/上涨/派发/下跌），Phase A-E 定位
 2. 量价关系分析（供需力量对比，近期量比变化）
 3. 均线形态（多头/空头排列，金叉/死叉）
 4. 关键支撑与阻力位
@@ -681,7 +681,7 @@ export async function execGenerateAiReport(
     const valueDigest = buildValueAgentDigest(valueSnapshot)
     const result = await deps.generateText({
       model: model as Parameters<typeof GenerateTextFn>[0]['model'],
-      system: `你是威科夫分析大师。为 ${code} 撰写一份简明研报，包含：阶段判断、量价特征、价值面校准、关键价位、操作建议。价值面只校准质量/风险/置信度，不替代技术面。250字以内。`,
+      system: `你是QuantEvoLens分析大师。为 ${code} 撰写一份简明研报，包含：阶段判断、量价特征、价值面校准、关键价位、操作建议。价值面只校准质量/风险/置信度，不替代技术面。250字以内。`,
       prompt: `${valueDigest}\n\n${digest}`,
     })
     results.push(`## ${code}\n${result.text || '无输出'}\n`)
@@ -721,7 +721,7 @@ export async function execStrategyDecision(deps: ToolDeps, userId: string, model
 
   const result = await deps.generateText({
     model: model as Parameters<typeof GenerateTextFn>[0]['model'],
-    system: '你是威科夫大师。基于用户的持仓和当前市场环境，为每只持仓股给出操作建议（买入加仓/持有/减仓/卖出），并给出整体仓位管理建议。按结构化 schema 输出，必须附带风险提示。',
+    system: '你是QuantEvoLens大师。基于用户的持仓和当前市场环境，为每只持仓股给出操作建议（买入加仓/持有/减仓/卖出），并给出整体仓位管理建议。按结构化 schema 输出，必须附带风险提示。',
     prompt: `当前持仓:\n${posInfo}\n\n市场环境:\n${marketInfo}`,
     output: Output.object({ schema: STRATEGY_DECISION_OUTPUT_SCHEMA }),
   })

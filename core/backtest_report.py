@@ -8,7 +8,7 @@ from core.cash_portfolio import STYLE_LABELS
 
 def build_summary_md(summary: dict) -> str:
     lines = [
-        "# Wyckoff Funnel Daily Backtest",
+        "# QuantEvoLens Funnel Daily Backtest",
         "",
         *_overview_lines(summary),
         "",

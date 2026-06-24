@@ -1,11 +1,11 @@
-# Wyckoff Web 基建迭代计划（历史路线图）
+# QuantEvoLens Web 基建迭代计划（历史路线图）
 
 > 更新于 2026-06-13 | 当前状态：React Web 已承担主要交互入口；Supabase 仍是 Auth、用户配置、持仓、推荐、信号反馈和策略观察的事实数据库。本文保留迁移路线与后续方向，不作为当前架构事实源。当前事实请看 [`ARCHITECTURE.md`](ARCHITECTURE.md)。
 
 ## 当前架构
 
 ```
-React SPA (Cloudflare Pages)              wyckoff-analysis.pages.dev
+React SPA (Cloudflare Pages)              quantevolens-analysis.pages.dev
   ├─ Vercel AI SDK (generateText + tools)
   ├─ Supabase JS SDK (Auth + DB)
   │
@@ -86,7 +86,7 @@ Supabase Auth (仅保留登录认证)
 - [ ] Auth 中间件（验证 Supabase JWT）
 - [ ] Portfolio 页（持仓 CRUD）
 - [ ] Settings 页（用户配置）
-- [ ] Wyckoff Pattern Replay 页（形态复盘表格）
+- [ ] QuantEvoLens Pattern Replay 页（形态复盘表格）
 
 ### Phase 3 — Cloudflare 存储迁移
 
@@ -119,7 +119,7 @@ Supabase Auth (仅保留登录认证)
 - [ ] `/api/chat` SSE endpoint（Vercel AI SDK + tool calling）
 - [ ] 5 个基础工具：search_stock, portfolio, market_overview, query_history, update_portfolio
 - [ ] Chat UI（useChat hook + streaming + tool call 展示）
-- [ ] analyze_stock 工具（TickFlow OHLCV + Wyckoff 判定）
+- [ ] analyze_stock 工具（TickFlow OHLCV + QuantEvoLens 判定）
 - [ ] K 线图组件（TradingView Lightweight Charts）
 - [ ] generate_ai_report / generate_strategy_decision 工具
 

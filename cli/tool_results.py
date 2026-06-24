@@ -9,7 +9,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-from cli.scratchpad import wyckoff_home
+from cli.scratchpad import quantevolens_home
 
 INLINE_TOOL_RESULT_MAX_CHARS = 8_000
 PREVIEW_CHARS = 2_000
@@ -64,7 +64,7 @@ def persist_large_tool_result(
 ) -> Path:
     """Persist a large tool result and return the file path."""
 
-    results_dir = wyckoff_home() / "tool-results"
+    results_dir = quantevolens_home() / "tool-results"
     results_dir.mkdir(parents=True, exist_ok=True)
     digest = hashlib.sha1(content.encode("utf-8", errors="ignore")).hexdigest()[:10]
     stamp = datetime.now().strftime("%Y-%m-%d-%H%M%S")

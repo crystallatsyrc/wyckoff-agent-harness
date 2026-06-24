@@ -7,7 +7,7 @@ from core.ai_candidate_allocation import (
     allocate_ai_candidates,
     resolve_ai_candidate_policy,
 )
-from core.wyckoff_engine import FunnelResult
+from core.quantevolens_engine import FunnelResult
 from workflows.ai_candidate_allocation_config import ai_candidate_allocation_config_from_env
 
 

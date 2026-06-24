@@ -213,7 +213,7 @@ def _html_shell(snapshot: dict, body: str) -> str:
 <body>
   <main>
     <header class="hero">
-      <p class="kicker">WYCKOFF THEME RADAR</p>
+      <p class="kicker">QUANTEVOLENS THEME RADAR</p>
       <h1>中长线主线雷达</h1>
       <p class="subtitle">按主题拆解市场已经投票的长期方向，日报漏斗只消费标签和旁路，不把买点和主线混成一张表。</p>
       <div class="date-chip">交易日 {date_text}</div>

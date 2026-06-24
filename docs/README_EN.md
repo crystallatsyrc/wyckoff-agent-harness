@@ -1,13 +1,13 @@
 <div align="center">
 
-# Wyckoff Trading Agent
+# QuantEvoLens
 
-**Wyckoff Volume-Price Analysis Agent for A-shares / Hong Kong stocks / US stocks — Talk to it like a human, it reads the tape**
+**QuantEvoLens Volume-Price Analysis Agent for A-shares / Hong Kong stocks / US stocks — Talk to it like a human, it reads the tape**
 
-[![PyPI](https://img.shields.io/pypi/v/youngcan-wyckoff-analysis?color=blue)](https://pypi.org/project/youngcan-wyckoff-analysis/)
+[![PyPI](https://img.shields.io/pypi/v/quantevolens?color=blue)](https://pypi.org/project/quantevolens/)
 [![Python](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/)
-[![Web App](https://img.shields.io/badge/Web-React%20App-0ea5e9.svg)](https://wyckoff-analysis.pages.dev/)
-[![Homepage](https://img.shields.io/badge/homepage-Wyckoff%20Homepage-0ea5e9.svg)](https://youngcan-wang.github.io/wyckoff-homepage/)
+[![Web App](https://img.shields.io/badge/Web-React%20App-0ea5e9.svg)](https://quantevolens-analysis.pages.dev/)
+[![Homepage](https://img.shields.io/badge/homepage-QuantEvoLens%20Homepage-0ea5e9.svg)](https://crystallatsyrc.github.io/quantevolens-homepage/)
 
 [中文](../README.md) | [日本語](README_JA.md) | [Español](README_ES.md) | [한국어](README_KO.md) | [Architecture](ARCHITECTURE.md)
 
@@ -15,13 +15,13 @@
 
 ---
 
-Talk to a Wyckoff master in natural language. He commands 10 professional tools + 5 general capabilities, chains multi-step reasoning, and tells you whether to strike.
+Talk to a QuantEvoLens master in natural language. He commands 10 professional tools + 5 general capabilities, chains multi-step reasoning, and tells you whether to strike.
 
 Web + CLI + MCP triple channel, Gemini / Claude / OpenAI / DeepSeek multi-model switching, GitHub Actions for fully automated daily runs.
 
-Project homepage: **[youngcan-wang.github.io/wyckoff-homepage](https://youngcan-wang.github.io/wyckoff-homepage/)**
+Project homepage: **[crystallatsyrc.github.io/quantevolens-homepage](https://crystallatsyrc.github.io/quantevolens-homepage/)**
 
-> Risk disclosure: WyckoffAgent is for educational, research, and informational use. It does not provide investment advice, does not account for every personal financial circumstance, and does not guarantee future performance.
+> Risk disclosure: QuantEvoLens is for educational, research, and informational use. It does not provide investment advice, does not account for every personal financial circumstance, and does not guarantee future performance.
 
 ## Documentation
 
@@ -44,7 +44,7 @@ Project homepage: **[youngcan-wang.github.io/wyckoff-homepage](https://youngcan-
     </td>
     <td>
       <strong><a href="https://tickflow.org/auth/register?ref=5N4NKTCPL4">TickFlow</a></strong><br />
-      Thanks to TickFlow for high-quality A-share / US stock / Hong Kong stock market data support for WyckoffAgent.
+      Thanks to TickFlow for high-quality A-share / US stock / Hong Kong stock market data support for QuantEvoLens.
     </td>
   </tr>
 </table>
@@ -53,7 +53,7 @@ Project homepage: **[youngcan-wang.github.io/wyckoff-homepage](https://youngcan-
 
 No installation required.
 
-**React Web App**: **[wyckoff-analysis.pages.dev](https://wyckoff-analysis.pages.dev/)**
+**React Web App**: **[quantevolens-analysis.pages.dev](https://quantevolens-analysis.pages.dev/)**
 
 Modern React SPA with AI Agent chat, portfolio management, funnel screening, recommendation tracking, data export, streaming output, and tool-call visualization.
 
@@ -61,7 +61,7 @@ Modern React SPA with AI Agent chat, portfolio management, funnel screening, rec
 |:---:|:---:|
 | <img src="screenshots/web-chat.png" width="450" /> | <img src="screenshots/web-screen.png" width="450" /> |
 
-| Wyckoff Pattern Replay | Portfolio |
+| QuantEvoLens Pattern Replay | Portfolio |
 |:---:|:---:|
 | <img src="screenshots/web-track.png" width="450" /> | <img src="screenshots/web-portfolio.png" width="450" /> |
 
@@ -72,17 +72,17 @@ Modern React SPA with AI Agent chat, portfolio management, funnel screening, rec
 | Capability | Description |
 |---|---|
 | Conversational Agent | Trigger diagnosis, screening, and reports in plain language; the LLM orchestrates tools autonomously; also reads/writes files, executes commands, and fetches web pages |
-| Skills | Built-in slash commands (`/screen`, `/checkup`, `/report`, `/strategy`, `/backtest`) for one-tap complex workflows; user-extensible via `~/.wyckoff/skills/*.md` |
+| Skills | Built-in slash commands (`/screen`, `/checkup`, `/report`, `/strategy`, `/backtest`) for one-tap complex workflows; user-extensible via `~/.quantevolens/skills/*.md` |
 | Five-Layer Funnel | A-share full-market scan plus independent Hong Kong / US universes via six channels + sector resonance + micro triggers |
 | AI Three-Camp Report | Logic Bankrupt / Reserve Camp / Springboard — LLM renders an independent verdict |
 | Portfolio Diagnosis | Batch health check: MA structure, accumulation phase, trigger signals, stop-loss status |
 | Private Rebalance | Synthesizes holdings + candidates, outputs EXIT / TRIM / HOLD / PROBE / ATTACK orders, pushes to Telegram |
 | Tail-Buy Strategy | Executes at 13:50, two-stage evaluation (rule scoring + LLM review) for end-of-day entries |
 | Signal Confirmation Pool | L4 trigger signals must pass 1-3 day price confirmation before becoming actionable |
-| Wyckoff Pattern Replay | Historical picks auto-sync closing prices and compute cumulative returns |
+| QuantEvoLens Pattern Replay | Historical picks auto-sync closing prices and compute cumulative returns |
 | Daily-Bar Backtest | Replays post-funnel N-day returns; reports win rate / Sharpe / max drawdown |
 | Pre-Market Risk | A50 futures + VIX monitoring with four alert levels |
-| Local Dashboard | `wyckoff dashboard` — recommendations, signals, portfolio, agent memory, chat logs; dark/light theme, bilingual CN/EN |
+| Local Dashboard | `quantevolens dashboard` — recommendations, signals, portfolio, agent memory, chat logs; dark/light theme, bilingual CN/EN |
 | Agent Memory | Cross-session memory: auto-extracts session conclusions, injects relevant context on next query |
 | Context Compaction | Remaining-window budget auto-compresses long conversations, smart tool result summarization preserves key data |
 | Tool Confirmation | `exec_command`, `write_file`, `update_portfolio` require user approval before execution |
@@ -112,24 +112,24 @@ Native terminal workflow with the most complete feature set. Supports background
 ### One-line Install (recommended)
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/YoungCan-Wang/WyckoffTradingAgent/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/crystallatsyrc/QuantEvoLens/main/install.sh | bash
 ```
 
-Detects Python, installs uv, creates an isolated environment. Run `wyckoff` when done.
+Detects Python, installs uv, creates an isolated environment. Run `quantevolens` when done.
 
 ### Homebrew
 
 ```bash
-brew tap YoungCan-Wang/wyckoff
-brew install wyckoff
+brew tap crystallatsyrc/quantevolens
+brew install quantevolens
 ```
 
 ### pip
 
 ```bash
 uv venv && source .venv/bin/activate
-uv pip install youngcan-wyckoff-analysis
-wyckoff
+uv pip install quantevolens
+quantevolens
 ```
 
 ### Start Using — One-Click Agent Setup
@@ -146,7 +146,7 @@ Just two steps after launch:
 
 > Optional: `/login` to sync portfolio to cloud for multi-device access. All features work without login.
 
-Upgrade: `wyckoff update`
+Upgrade: `quantevolens update`
 
 | Launch Screen | Portfolio Query |
 |:---:|:---:|
@@ -159,7 +159,7 @@ Upgrade: `wyckoff update`
 ### Local Dashboard
 
 ```bash
-wyckoff dashboard
+quantevolens dashboard
 ```
 
 Starts a local HTTP dashboard (default port 8765) and opens the browser automatically. All data stays in local SQLite.
@@ -188,7 +188,7 @@ pnpm install
 pnpm dev
 ```
 
-Web App: **[wyckoff-analysis.pages.dev](https://wyckoff-analysis.pages.dev/)**
+Web App: **[quantevolens-analysis.pages.dev](https://quantevolens-analysis.pages.dev/)**
 
 ## Tools
 
@@ -197,7 +197,7 @@ The agent's arsenal — 10 quant tools + 5 general capabilities:
 | Tool | Capability |
 |---|---|
 | `search_stock_by_name` | Fuzzy search by name, ticker, or pinyin |
-| `analyze_stock` | Wyckoff diagnosis / recent OHLCV quotes (mode switch) |
+| `analyze_stock` | QuantEvoLens diagnosis / recent OHLCV quotes (mode switch) |
 | `portfolio` | View holdings / batch portfolio health scan (mode switch) |
 | `update_portfolio` | Add / modify / delete holdings, set available cash, delete tracking records |
 | `get_market_overview` | Broad market temperature overview |
@@ -265,14 +265,14 @@ See the [Architecture doc](ARCHITECTURE.md) for the full config reference and Gi
 
 ## MCP Server
 
-Expose Wyckoff analysis capabilities via the [MCP protocol](https://modelcontextprotocol.io/), enabling Claude Code / Cursor / any MCP client to call 10 tools directly.
+Expose QuantEvoLens analysis capabilities via the [MCP protocol](https://modelcontextprotocol.io/), enabling Claude Code / Cursor / any MCP client to call 10 tools directly.
 
 ```bash
 # Install MCP dependency
-uv pip install youngcan-wyckoff-analysis[mcp]
+uv pip install quantevolens[mcp]
 
 # Register with Claude Code
-claude mcp add wyckoff -- wyckoff-mcp
+claude mcp add quantevolens -- quantevolens-mcp
 ```
 
 Or add manually in your MCP client config:
@@ -280,8 +280,8 @@ Or add manually in your MCP client config:
 ```json
 {
   "mcpServers": {
-    "wyckoff": {
-      "command": "wyckoff-mcp",
+    "quantevolens": {
+      "command": "quantevolens-mcp",
       "env": {
         "TUSHARE_TOKEN": "your_token",
         "TICKFLOW_API_KEY": "your_key"
@@ -291,13 +291,13 @@ Or add manually in your MCP client config:
 }
 ```
 
-Once registered, just ask "diagnose 000001" in Claude Code / Cursor to invoke Wyckoff tools.
+Once registered, just ask "diagnose 000001" in Claude Code / Cursor to invoke QuantEvoLens tools.
 
-## Wyckoff Skills
+## QuantEvoLens Skills
 
-Lightweight reuse of the Wyckoff analysis capability: [`YoungCan-Wang/wyckoff_skill`](https://github.com/YoungCan-Wang/wyckoff_skill.git)
+Lightweight reuse of the QuantEvoLens analysis capability: [`crystallatsyrc/quantevolens_skill`](https://github.com/crystallatsyrc/quantevolens_skill.git)
 
-Ideal for giving any AI assistant a quick "Wyckoff lens."
+Ideal for giving any AI assistant a quick "QuantEvoLens lens."
 
 ## Disclaimer
 

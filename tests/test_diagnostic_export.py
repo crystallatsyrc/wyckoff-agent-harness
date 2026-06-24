@@ -13,7 +13,7 @@ def _init_tmp_db(monkeypatch, tmp_path: Path):
     if local_db._conn is not None:
         local_db._conn.close()
     local_db._conn = None
-    monkeypatch.setattr("core.constants.LOCAL_DB_PATH", tmp_path / "wyckoff.db")
+    monkeypatch.setattr("core.constants.LOCAL_DB_PATH", tmp_path / "quantevolens.db")
     local_db.init_db()
     return local_db
 
@@ -26,7 +26,7 @@ def _close_tmp_db(local_db) -> None:
 
 def test_export_diagnostic_package_zip_includes_session_evidence(tmp_path: Path, monkeypatch):
     home = tmp_path / "home"
-    monkeypatch.setenv("WYCKOFF_HOME", str(home))
+    monkeypatch.setenv("QUANTEVOLENS_HOME", str(home))
     local_db = _init_tmp_db(monkeypatch, tmp_path)
     try:
         scratchpad = home / "scratchpad" / "run.jsonl"
@@ -92,14 +92,14 @@ def test_export_diagnostic_package_zip_includes_session_evidence(tmp_path: Path,
             transcript = zf.read("transcript.md").decode("utf-8")
             assert "看看 000001" in transcript
             events = [json.loads(line) for line in zf.read("events.jsonl").decode("utf-8").splitlines()]
-            assert events[0]["schema"] == "wyckoff.agent_event.v1"
+            assert events[0]["schema"] == "quantevolens.agent_event.v1"
             assert events[0]["type"] == "user_message"
     finally:
         _close_tmp_db(local_db)
 
 
 def test_export_diagnostic_package_errors_when_session_missing(tmp_path: Path, monkeypatch):
-    monkeypatch.setenv("WYCKOFF_HOME", str(tmp_path / "home"))
+    monkeypatch.setenv("QUANTEVOLENS_HOME", str(tmp_path / "home"))
     local_db = _init_tmp_db(monkeypatch, tmp_path)
     try:
         try:

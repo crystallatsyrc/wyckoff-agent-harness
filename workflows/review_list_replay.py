@@ -11,12 +11,12 @@ from datetime import date, timedelta
 import pandas as pd
 
 from core.candidate_ranker import TRIGGER_LABELS
-from core.wyckoff_engine import FunnelConfig, sort_by_date_if_needed
+from core.quantevolens_engine import FunnelConfig, sort_by_date_if_needed
 from utils.feishu import send_feishu_notification
 from workflows.review_big_gainers import is_target_cn_board, load_today_review_codes
 from workflows.review_recommendation_lookup import format_recommendation_history, load_recommendation_lookup
 from workflows.review_report_render import build_report_lines
-from workflows.wyckoff_funnel import run_funnel_job
+from workflows.quantevolens_funnel import run_funnel_job
 
 
 @dataclass(frozen=True)
@@ -214,7 +214,7 @@ def explain_l1_fail(
 
 
 def explain_l2_fail(code: str, cfg: FunnelConfig, df_map: dict[str, pd.DataFrame], ctx: dict) -> str:
-    from core.wyckoff_engine import layer2_strength_detailed
+    from core.quantevolens_engine import layer2_strength_detailed
 
     df = df_map.get(code)
     if df is None or len(df) < cfg.ma_long:

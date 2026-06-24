@@ -199,15 +199,15 @@ def test_agent_loop_does_not_retry_non_mandatory_plain_text_turn():
     harness = AgentLoopHarness(
         rounds=[
             [
-                {"type": "text_delta", "text": "威科夫核心是供需与主力行为。"},
+                {"type": "text_delta", "text": "QuantEvoLens核心是供需与主力行为。"},
                 {"type": "usage", "input_tokens": 8, "output_tokens": 7},
             ]
         ]
     )
 
-    outcome = harness.run_turn([{"role": "user", "content": "简单讲讲威科夫方法"}])
+    outcome = harness.run_turn([{"role": "user", "content": "简单讲讲QuantEvoLens方法"}])
 
-    assert outcome["result"]["text"] == "威科夫核心是供需与主力行为。"
+    assert outcome["result"]["text"] == "QuantEvoLens核心是供需与主力行为。"
     assert outcome["tool_calls"] == []
     assert len(outcome["provider_calls"]) == 1
 
@@ -296,7 +296,7 @@ class TestCheckDoomLoop:
         recent: list[tuple[str, int]] = []
         recent_texts: list[str] = []
 
-        base = "请基于威科夫方法分析成交量结构、关键支撑压力、筹码吸收以及供需转换，场景编号 "
+        base = "请基于QuantEvoLens方法分析成交量结构、关键支撑压力、筹码吸收以及供需转换，场景编号 "
         for code in ("A", "B"):
             assert not check_doom_loop(
                 recent,

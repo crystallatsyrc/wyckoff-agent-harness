@@ -1,4 +1,4 @@
-"""Static HTML asset for the local Wyckoff dashboard."""
+"""Static HTML asset for the local QuantEvoLens dashboard."""
 
 from __future__ import annotations
 
@@ -7,7 +7,7 @@ DASHBOARD_HTML = r"""<!DOCTYPE html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Wyckoff Dashboard</title>
+<title>QuantEvoLens Dashboard</title>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -185,7 +185,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;b
 <body>
 <div class="shell">
   <div class="sidebar">
-    <div class="logo">WYCKOFF<span>Terminal Dashboard</span></div>
+    <div class="logo">QUANTEVOLENS<span>Terminal Dashboard</span></div>
     <div class="nav-item active" data-page="overview" data-i18n="nav_overview"></div>
     <div class="nav-item" data-page="recommendations" data-i18n="nav_recommendations"></div>
     <div class="nav-item" data-page="signals" data-i18n="nav_signals"></div>
@@ -221,7 +221,7 @@ zh:{
   overview:'总览',recommendations:'形态复盘',signals:'信号池',tailbuy:'尾盘记录',portfolio:'持仓',
   memory:'Agent 记忆',config:'配置',bgtasks:'后台任务',chatlog:'对话日志',sync:'同步状态',
   no_tailbuy:'暂无尾盘买入记录',th_run_date:'执行日',th_signal_type:'信号',th_rule_score:'规则分',th_priority:'优先级',th_llm:'LLM',confirm_del_tailbuy:'确认删除尾盘记录：',
-  card_recs:'威科夫形态复盘',card_signals:'信号确认池',card_portfolio:'持仓',card_memory:'Agent 记忆',card_sync:'同步状态',
+  card_recs:'QuantEvoLens形态复盘',card_signals:'信号确认池',card_portfolio:'持仓',card_memory:'Agent 记忆',card_sync:'同步状态',
   tracked:'只跟踪中',pending_confirm:'条待确认',positions:'持仓',cash:'可用资金',stored:'条记忆',synced:'表已同步',
   recent_recs:'最近复盘',no_data:'暂无数据',loading:'加载中...',
   th_code:'代码',th_name:'名称',th_camp:'阵营',th_date:'日期',th_init_price:'推荐价',th_cur_price:'现价',th_ai:'来源',

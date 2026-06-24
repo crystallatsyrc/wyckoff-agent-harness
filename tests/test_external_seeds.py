@@ -13,7 +13,7 @@ from tools.external_seeds import (
 def test_external_seed_config_env_symbols_auto_enable(monkeypatch, tmp_path):
     profile = tmp_path / "profile.yml"
     profile.write_text("external_seeds:\n  enabled: false\n  max_symbols: 2\n", encoding="utf-8")
-    monkeypatch.setenv("WYCKOFF_CONFIG_PATH", str(profile))
+    monkeypatch.setenv("QUANTEVOLENS_CONFIG_PATH", str(profile))
     monkeypatch.setenv("FUNNEL_EXTERNAL_SEED_SYMBOLS", "000001, bad, 000002, 000003")
 
     cfg = load_external_seed_config()
@@ -61,7 +61,7 @@ def test_external_seed_rows_track_status_and_expiry():
 def test_external_seed_upsert_rejects_cli_context(monkeypatch):
     from integrations import supabase_external_seeds
 
-    monkeypatch.delenv("WYCKOFF_WRITE_CONTEXT", raising=False)
+    monkeypatch.delenv("QUANTEVOLENS_WRITE_CONTEXT", raising=False)
     monkeypatch.setattr(supabase_external_seeds, "is_admin_configured", lambda: True)
 
     with pytest.raises(PermissionError, match="server_job"):

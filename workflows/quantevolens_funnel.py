@@ -1,11 +1,11 @@
 """
-Wyckoff Funnel 定时任务：5 层漏斗筛选 → 多渠道推送
+QuantEvoLens Funnel 定时任务：5 层漏斗筛选 → 多渠道推送
 
 Layer 1: 剥离垃圾（ST/北交所/市值/成交额）
 Layer 2: 七通道甄选（主升/潜伏/吸筹/地量/暗中护盘/趋势延续/点火破局）
 Layer 2.5: Markup 加速检测
 Layer 3: 板块共振（行业 Top-N）
-Layer 4: 威科夫狙击（Spring / SOS / LPS / Effort vs Result）
+Layer 4: QuantEvoLens狙击（Spring / SOS / LPS / Effort vs Result）
 """
 
 from __future__ import annotations
@@ -18,7 +18,7 @@ import pandas as pd
 from core.candidate_policy import apply_loss_guard, rerank_selected_codes
 from core.funnel_etf import etf_metrics
 from core.theme_radar import summarize_theme_radar
-from core.wyckoff_engine import (
+from core.quantevolens_engine import (
     FunnelConfig,
     layer4_triggers,
 )
@@ -526,7 +526,7 @@ def run_funnel_job(
     pool_board: str | None = None,
     executor_mode: str | None = None,
 ) -> tuple[dict[str, list[tuple[str, float]]], dict]:
-    """执行 Wyckoff Funnel，返回 (triggers, metrics)。"""
+    """执行 QuantEvoLens Funnel，返回 (triggers, metrics)。"""
     data = prepare_funnel_job_data(
         direct_source,
         enforce_target_trade_date=ENFORCE_TARGET_TRADE_DATE,
@@ -574,7 +574,7 @@ def run(
     executor_mode: str | None = None,
 ) -> tuple[bool, list[dict], dict] | tuple[bool, list[dict], dict, dict]:
     """
-    执行 Wyckoff Funnel，漏斗完成后立即发送飞书通知。
+    执行 QuantEvoLens Funnel，漏斗完成后立即发送飞书通知。
     返回 (成功与否, 用于研报的股票信息列表, 大盘上下文)。
     每项为 {"code": str, "name": str, "tag": str}。
     """

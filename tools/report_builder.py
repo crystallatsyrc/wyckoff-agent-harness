@@ -321,8 +321,8 @@ def _build_structure_background(
     return f"  [结构背景] 现价:{close_val:.2f}", close_val
 
 
-def _signal_context(wyckoff_tag: str) -> tuple[str, list[str], str]:
-    raw_tag = str(wyckoff_tag or "").strip()
+def _signal_context(quantevolens_tag: str) -> tuple[str, list[str], str]:
+    raw_tag = str(quantevolens_tag or "").strip()
     if not raw_tag:
         return "", [], ""
     lowered = raw_tag.lower()
@@ -413,7 +413,7 @@ def _build_payload_header(
 def generate_stock_payload(
     stock_code: str,
     stock_name: str,
-    wyckoff_tag: str,
+    quantevolens_tag: str,
     df: pd.DataFrame,
     *,
     industry: str | None = None,
@@ -447,7 +447,7 @@ def generate_stock_payload(
     """
     df = _prepare_payload_frame(df)
     background, close_val = _build_structure_background(df, market_cap_yi, avg_amount_20_yi)
-    raw_tag, facts, tag_text = _signal_context(wyckoff_tag)
+    raw_tag, facts, tag_text = _signal_context(quantevolens_tag)
     header = _build_payload_header(
         stock_code=stock_code,
         stock_name=stock_name,

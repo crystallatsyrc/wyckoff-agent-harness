@@ -10,7 +10,7 @@ from datetime import date, datetime, timedelta
 import pandas as pd
 
 from core.hist_dates import latest_trade_date_from_hist
-from core.wyckoff_engine import normalize_hist_from_fetch
+from core.quantevolens_engine import normalize_hist_from_fetch
 from integrations.tickflow_client import TickFlowClient, normalize_cn_symbol
 from tools.spot_patch import append_spot_bar_if_needed
 from utils.trading_clock import CN_TZ

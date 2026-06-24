@@ -13,7 +13,7 @@ from typing import Any
 
 import pandas as pd
 
-from core.wyckoff_engine import normalize_hist_from_fetch
+from core.quantevolens_engine import normalize_hist_from_fetch
 from integrations.fetch_a_share_csv import get_stocks_by_board, normalize_symbols, resolve_trading_window
 from utils.trading_clock import resolve_end_calendar_day
 

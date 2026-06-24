@@ -10,7 +10,7 @@ from workflows.market_funnel_job import MARKET_CHOICES, run_market_funnel
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Run TickFlow HK/US Wyckoff funnel job.")
+    parser = argparse.ArgumentParser(description="Run TickFlow HK/US QuantEvoLens funnel job.")
     parser.add_argument("--market", choices=MARKET_CHOICES, required=True)
     parser.add_argument("--output", default="", help="Optional JSON result path.")
     return parser.parse_args()

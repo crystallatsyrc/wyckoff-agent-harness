@@ -17,7 +17,7 @@ def test_funnel_tool_imports_are_direct() -> None:
 
 
 def test_funnel_workflow_exports() -> None:
-    from workflows.wyckoff_funnel import run, run_funnel_job
+    from workflows.quantevolens_funnel import run, run_funnel_job
 
     assert callable(run)
     assert callable(run_funnel_job)

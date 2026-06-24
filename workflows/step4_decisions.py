@@ -17,7 +17,7 @@ from workflows.step4_models import (
     Step4OrderConfig,
     Step4RuntimeConfig,
 )
-from workflows.step4_order_engine import WyckoffOrderEngine
+from workflows.step4_order_engine import QuantEvoLensOrderEngine
 from workflows.step4_payload import calc_atr, fetch_latest_real_close, load_qfq_history
 
 logger = logging.getLogger(__name__)
@@ -101,7 +101,7 @@ def execute_step4_decisions(
     decisions: list[DecisionItem],
     order_config: Step4OrderConfig,
 ) -> tuple[list[ExecutionTicket], float]:
-    engine = WyckoffOrderEngine(
+    engine = QuantEvoLensOrderEngine(
         total_equity=float(context.total_equity),
         free_cash=context.portfolio.free_cash,
         position_map={p.code: p for p in context.portfolio.positions},
@@ -126,9 +126,9 @@ def _attach_candidate_meta(
         out.append(
             replace(
                 dec,
-                wyckoff_track=meta.track or dec.wyckoff_track,
-                wyckoff_stage=meta.stage or dec.wyckoff_stage,
-                wyckoff_tag=meta.tag or dec.wyckoff_tag,
+                quantevolens_track=meta.track or dec.quantevolens_track,
+                quantevolens_stage=meta.stage or dec.quantevolens_stage,
+                quantevolens_tag=meta.tag or dec.quantevolens_tag,
                 funnel_score=meta.funnel_score if dec.funnel_score is None else dec.funnel_score,
                 source_type=meta.source_type or dec.source_type,
             )

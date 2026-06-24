@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query'
 import { Loader2, LayoutDashboard, Plus, Trash2 } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { useAuthStore } from '@/stores/auth'
-import { WyckoffLoading } from '@/components/loading'
+import { QuantEvoLensLoading } from '@/components/loading'
 import { usePreferences } from '@/lib/preferences'
 import { loadLLMConfig } from '@/lib/chat-agent'
 import { streamLLMResponse } from '@/lib/llm-stream'
@@ -89,7 +89,7 @@ export function PortfolioPage() {
   const source = portfolioData.isWhitelisted ? 'database' : 'manual'
   usePortfolioHistory(user?.id, fullDiag.result, source)
 
-  if (portfolioData.isLoading) return <WyckoffLoading />
+  if (portfolioData.isLoading) return <QuantEvoLensLoading />
 
   const portfolio = portfolioData.isWhitelisted ? portfolioData.portfolio : manualPortfolio
 
@@ -680,7 +680,7 @@ function buildFullPortfolioPrompt(entries: PositionEntry[], freeCash: number): s
 
 async function callFullPortfolioLLM(config: Parameters<typeof streamLLMResponse>[0], prompt: string, signal?: AbortSignal, onDelta?: (chunk: string) => void): Promise<string> {
   const result = await streamLLMResponse(config, [
-    { role: 'system', content: '你是威科夫资产配置诊断专家。基于用户的全部持仓、真实K线和价值面快照做整体诊断。主框架仍是仓位、趋势和量价结构；价值面只用于校准公司质量、风险暴露和仓位置信度，不要用基本面替代K线事实。输出包含：\n1. 仓位分布评估（集中度、行业分散性）\n2. 各持仓当前威科夫阶段一句话判断，并说明价值面质量/风险如何影响持仓置信度\n3. 现金比例是否合理\n4. 整体风险暴露（哪些持仓需要警惕）\n5. 加减仓优先级建议\n6. 操作建议（先减谁、可加谁、现金该不该动）\n\n用简洁的 Markdown 格式回答。不编造数据。' },
+    { role: 'system', content: '你是QuantEvoLens资产配置诊断专家。基于用户的全部持仓、真实K线和价值面快照做整体诊断。主框架仍是仓位、趋势和量价结构；价值面只用于校准公司质量、风险暴露和仓位置信度，不要用基本面替代K线事实。输出包含：\n1. 仓位分布评估（集中度、行业分散性）\n2. 各持仓当前QuantEvoLens阶段一句话判断，并说明价值面质量/风险如何影响持仓置信度\n3. 现金比例是否合理\n4. 整体风险暴露（哪些持仓需要警惕）\n5. 加减仓优先级建议\n6. 操作建议（先减谁、可加谁、现金该不该动）\n\n用简洁的 Markdown 格式回答。不编造数据。' },
     { role: 'user', content: `请对我的完整持仓做整体诊断和资产配置建议。\n\n${prompt}` },
   ], { temperature: 0.5, maxTokens: 4000, signal, onDelta })
   if (!result) throw new Error('模型未返回结果，请重试')

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from core.wyckoff_engine import FunnelConfig
+from core.quantevolens_engine import FunnelConfig
 
 
 def funnel_config_for_market(market: str, *, trading_days: int = 320, min_avg_amount: float = 0.0) -> FunnelConfig:

@@ -9,7 +9,7 @@ _PLAN_PREFIX = """\
 RESEARCH_AGENT_PROMPT = (
     _PLAN_PREFIX
     + """\
-你是威科夫投研团队的研究员，负责高效地收集市场数据和情报。
+你是QuantEvoLens投研团队的研究员，负责高效地收集市场数据和情报。
 
 # 任务
 根据指令收集所需数据，使用最少的工具调用完成任务。你只负责数据收集，不做投资建议。
@@ -25,7 +25,7 @@ RESEARCH_AGENT_PROMPT = (
 ANALYSIS_AGENT_PROMPT = (
     _PLAN_PREFIX
     + """\
-你是威科夫投研团队的首席分析师，专精 Wyckoff 量价分析。
+你是QuantEvoLens投研团队的首席分析师，专精 QuantEvoLens 量价分析。
 
 # 分析框架
 审视每只股票时，必须从以下角度拷问：
@@ -46,7 +46,7 @@ ANALYSIS_AGENT_PROMPT = (
 TRADING_AGENT_PROMPT = (
     _PLAN_PREFIX
     + """\
-你是威科夫投研团队的交易决策官，以综合人视角输出攻防计划。
+你是QuantEvoLens投研团队的交易决策官，以综合人视角输出攻防计划。
 
 # 决策框架
 - 持仓去留只取决于最近量价切片，不看账面盈亏

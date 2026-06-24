@@ -1,6 +1,6 @@
 """Compliance-safe market brief generation for Step3.
 
-The raw Wyckoff report remains the internal artifact.  The public/compliance
+The raw QuantEvoLens report remains the internal artifact.  The public/compliance
 brief is generated from a deliberately de-identified payload: market regime,
 style distribution, sector aggregates, and risk notes only.  The cheap model
 is a wording assistant, not a decision maker; a deterministic validator and
@@ -262,7 +262,7 @@ def _render_payload_text(payload: dict[str, Any]) -> str:
         "请写成可直接转发给普通读者的市场观察，不要提模型、候选池、操作池、RAG或内部流程。",
         *_render_market_payload_lines(payload.get("market") or {}),
         *_render_etf_payload_lines(payload.get("etf") or {}),
-        *_render_wyckoff_payload_lines(payload),
+        *_render_quantevolens_payload_lines(payload),
         *_render_sector_payload_lines(payload.get("sector_stats") or []),
         *_render_risk_payload_lines(payload.get("risk_flags") or []),
     ]
@@ -295,12 +295,12 @@ def _render_etf_payload_lines(etf: dict[str, Any]) -> list[str]:
     ]
 
 
-def _render_wyckoff_payload_lines(payload: dict[str, Any]) -> list[str]:
+def _render_quantevolens_payload_lines(payload: dict[str, Any]) -> list[str]:
     style = payload.get("style_stats") or {}
     trigger = payload.get("trigger_stats") or {}
     sample = payload.get("sample_stats") or {}
     return [
-        "威科夫结构温度:",
+        "QuantEvoLens结构温度:",
         (
             "- 风格="
             f"Trend:{style.get('trend_count', 0)}, "
@@ -341,17 +341,17 @@ def _render_risk_payload_lines(risk_flags: list[str]) -> list[str]:
 
 
 def _system_prompt() -> str:
-    return """你是威科夫方法市场观察简报编辑，只能基于输入的脱敏市场与ETF指标写公开市场研究摘要。
+    return """你是QuantEvoLens方法市场观察简报编辑，只能基于输入的脱敏市场与ETF指标写公开市场研究摘要。
 
 硬规则：
 - 不得输出任何股票代码、股票名称、个股名单或个股排序。
 - 不得给出买入、卖出、建仓、加仓、清仓、减仓、止损、目标价、参考价等交易指令。
 - 不得承诺收益，不得暗示确定性上涨。
 - 不要提“模型、候选池、操作池、RAG、完整研报、内部流程、样本入库”等背景词。
-- 允许使用威科夫语气分析指数和ETF：供应、需求、承接、测试、吸筹、推进、回撤、派发压力。
+- 允许使用QuantEvoLens语气分析指数和ETF：供应、需求、承接、测试、吸筹、推进、回撤、派发压力。
 - 若引用结构触发，必须翻成普通读者能理解的中文含义，不要堆英文缩写。
 - 输出应像一篇可直接转发的短评，普通读者无需知道系统背景也能读懂。
-- 输出中文 Markdown，结构固定为：大盘结构、ETF温度、威科夫解读、观察要点、风险提示。
+- 输出中文 Markdown，结构固定为：大盘结构、ETF温度、QuantEvoLens解读、观察要点、风险提示。
 """
 
 
@@ -379,7 +379,7 @@ def render_compliance_fallback(payload: dict[str, Any]) -> str:
         "",
         *_fallback_market_lines(market),
         *_fallback_etf_lines(payload.get("etf") or {}),
-        *_fallback_wyckoff_lines(payload),
+        *_fallback_quantevolens_lines(payload),
         *_fallback_observation_lines(market, payload.get("sector_stats") or []),
         *_fallback_risk_lines(payload.get("risk_flags") or []),
     ]
@@ -419,11 +419,11 @@ def _fallback_etf_lines(etf: dict[str, Any]) -> list[str]:
     ]
 
 
-def _fallback_wyckoff_lines(payload: dict[str, Any]) -> list[str]:
+def _fallback_quantevolens_lines(payload: dict[str, Any]) -> list[str]:
     style = payload.get("style_stats") or {}
     trigger = payload.get("trigger_stats") or {}
     return [
-        "### 三、威科夫解读",
+        "### 三、QuantEvoLens解读",
         (
             "- 当前更需要看需求是否能持续承接供应，而不是只看单日涨跌。"
             f"趋势推进结构 {style.get('trend_count', 0)}，吸筹/测试结构 {style.get('accum_count', 0)}。"
@@ -468,7 +468,7 @@ def _fallback_risk_lines(risk_flags: list[str]) -> list[str]:
 def _compliance_user_message(payload: dict[str, Any]) -> str:
     return (
         "请根据以下脱敏市场和ETF指标生成合规版市场观察简报。"
-        "用威科夫语气解释大盘结构和ETF强弱，不要使用任何个股代码、名称或交易动作词。\n\n"
+        "用QuantEvoLens语气解释大盘结构和ETF强弱，不要使用任何个股代码、名称或交易动作词。\n\n"
         + _render_payload_text(payload)
     )
 

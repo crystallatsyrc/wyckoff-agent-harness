@@ -1,4 +1,4 @@
-"""AI candidate allocation policy for Wyckoff funnel outputs."""
+"""AI candidate allocation policy for QuantEvoLens funnel outputs."""
 
 from __future__ import annotations
 

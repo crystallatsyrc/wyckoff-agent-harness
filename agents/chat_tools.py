@@ -1,4 +1,4 @@
-"""Wyckoff Agent 工具集合聚合层。"""
+"""QuantEvoLens Agent 工具集合聚合层。"""
 
 from agents.backtest_tools import run_backtest
 from agents.diagnosis_tools import analyze_stock
@@ -14,7 +14,7 @@ from agents.strategy_tools import generate_strategy_decision
 # 工具列表导出（Web/MCP/CLI 端，不含 exec/read/write/web_fetch）
 # ---------------------------------------------------------------------------
 
-WYCKOFF_TOOLS = [
+QUANTEVOLENS_TOOLS = [
     search_stock_by_name,
     analyze_stock,
     portfolio,

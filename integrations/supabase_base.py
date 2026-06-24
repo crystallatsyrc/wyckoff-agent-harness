@@ -17,7 +17,7 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 
-WRITE_CONTEXT_ENV = "WYCKOFF_WRITE_CONTEXT"
+WRITE_CONTEXT_ENV = "QUANTEVOLENS_WRITE_CONTEXT"
 SERVER_WRITE_CONTEXT = "server_job"
 CLI_WRITE_CONTEXT = "cli"
 
@@ -162,7 +162,7 @@ def require_server_write_context(operation: str = "Supabase shared write") -> No
     """共享生产表写入守卫。
 
     CLI 只有持仓写入可用用户 JWT；信号、推荐、策略等共享表必须由
-    GitHub Actions / server job 显式设置 ``WYCKOFF_WRITE_CONTEXT=server_job``。
+    GitHub Actions / server job 显式设置 ``QUANTEVOLENS_WRITE_CONTEXT=server_job``。
     """
     if not is_server_write_context():
         raise PermissionError(f"{operation} requires {WRITE_CONTEXT_ENV}={SERVER_WRITE_CONTEXT}")

@@ -11,7 +11,7 @@ import pandas as pd
 from core.backtest_config import BacktestRunConfig
 from core.backtest_performance import enrich_backtest_summary
 from core.backtest_replay import BacktestReplayResult, replay_backtest
-from core.wyckoff_engine import FunnelConfig
+from core.quantevolens_engine import FunnelConfig
 
 ProgressReporter = Callable[[str, str, float], None]
 

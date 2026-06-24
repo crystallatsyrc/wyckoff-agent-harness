@@ -103,7 +103,7 @@ export const onRequest: PagesFunction = async (context) => {
   request.headers.forEach((value, key) => {
     if (FORWARD_HEADERS.has(key)) headers.set(key, value)
   })
-  headers.set('user-agent', 'wyckoff-agent/1.0')
+  headers.set('user-agent', 'quantevolens-agent/1.0')
 
   try {
     const requestBody = body && isOneRouteChatCompletion(target, proxyPath)
@@ -122,7 +122,7 @@ export const onRequest: PagesFunction = async (context) => {
       }
     })
     respHeaders.set('Access-Control-Allow-Origin', '*')
-    respHeaders.set('X-Wyckoff-Proxy-Target', target.origin)
+    respHeaders.set('X-QuantEvoLens-Proxy-Target', target.origin)
 
     const respBody = response.body
     const contentType = response.headers.get('content-type') || ''

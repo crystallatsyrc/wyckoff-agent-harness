@@ -60,7 +60,7 @@ class _FakeUserClient:
 def test_portfolio_writes_accept_explicit_user_client(monkeypatch):
     from integrations.supabase_portfolio import delete_position, update_free_cash, upsert_position
 
-    monkeypatch.delenv("WYCKOFF_WRITE_CONTEXT", raising=False)
+    monkeypatch.delenv("QUANTEVOLENS_WRITE_CONTEXT", raising=False)
     client = _FakeUserClient()
 
     ok, _ = upsert_position("USER_LIVE:u1", {"code": "000001", "shares": 100, "cost_price": 10}, client=client)
@@ -79,7 +79,7 @@ def test_portfolio_writes_accept_explicit_user_client(monkeypatch):
 def test_portfolio_admin_fallback_rejects_cli_context(monkeypatch):
     from integrations.supabase_portfolio import upsert_position
 
-    monkeypatch.delenv("WYCKOFF_WRITE_CONTEXT", raising=False)
+    monkeypatch.delenv("QUANTEVOLENS_WRITE_CONTEXT", raising=False)
 
     ok, msg = upsert_position("USER_LIVE:u1", {"code": "000001", "shares": 100, "cost_price": 10})
 

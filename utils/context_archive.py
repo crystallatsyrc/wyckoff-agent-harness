@@ -9,7 +9,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-from utils.local_state import scrub_sensitive_value, wyckoff_home
+from utils.local_state import scrub_sensitive_value, quantevolens_home
 
 _CODE_RE = re.compile(r"\b\d{6}\b")
 _FILE_RE = re.compile(r"(?:[\w.-]+/)+[\w.-]+")
@@ -19,7 +19,7 @@ _MAX_INLINE = 400
 
 
 def archive_root(archive_dir: str | Path | None = None) -> Path:
-    root = Path(archive_dir).expanduser() if archive_dir else wyckoff_home() / "context_archive"
+    root = Path(archive_dir).expanduser() if archive_dir else quantevolens_home() / "context_archive"
     root.mkdir(parents=True, exist_ok=True)
     return root
 

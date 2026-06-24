@@ -24,7 +24,7 @@ importers:
       '@supabase/supabase-js':
         specifier: ^2.49.0
         version: 2.105.1
-      '@wyckoff/shared':
+      '@quantevolens/shared':
         specifier: workspace:*
         version: link:../../packages/shared
       ai:
@@ -64,7 +64,7 @@ importers:
       '@tanstack/react-query':
         specifier: ^5.62.0
         version: 5.100.8(react@19.2.5)
-      '@wyckoff/shared':
+      '@quantevolens/shared':
         specifier: workspace:*
         version: link:../../packages/shared
       ai:

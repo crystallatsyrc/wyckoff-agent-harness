@@ -12,7 +12,7 @@ def _init_tmp_db(monkeypatch, tmp_path: Path):
     if local_db._conn is not None:
         local_db._conn.close()
     local_db._conn = None
-    monkeypatch.setattr("core.constants.LOCAL_DB_PATH", tmp_path / "wyckoff.db")
+    monkeypatch.setattr("core.constants.LOCAL_DB_PATH", tmp_path / "quantevolens.db")
     local_db.init_db()
     return local_db
 
@@ -24,7 +24,7 @@ def _close_tmp_db(local_db) -> None:
 
 
 def test_export_session_transcript_markdown(tmp_path: Path, monkeypatch):
-    monkeypatch.setenv("WYCKOFF_HOME", str(tmp_path / "home"))
+    monkeypatch.setenv("QUANTEVOLENS_HOME", str(tmp_path / "home"))
     local_db = _init_tmp_db(monkeypatch, tmp_path)
     try:
         local_db.save_chat_log("source", "user", "复盘 000001")
@@ -49,7 +49,7 @@ def test_export_session_transcript_markdown(tmp_path: Path, monkeypatch):
 
 
 def test_fork_session_copies_rows_with_fork_metadata(tmp_path: Path, monkeypatch):
-    monkeypatch.setenv("WYCKOFF_HOME", str(tmp_path / "home"))
+    monkeypatch.setenv("QUANTEVOLENS_HOME", str(tmp_path / "home"))
     local_db = _init_tmp_db(monkeypatch, tmp_path)
     try:
         local_db.save_chat_log("source", "user", "看一下持仓", metadata_json=json.dumps({"a": 1}))

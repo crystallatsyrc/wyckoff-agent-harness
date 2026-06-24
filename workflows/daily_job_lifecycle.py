@@ -8,7 +8,7 @@ from workflows.daily_job_runtime import DailyJobConfig
 
 def load_daily_job_steps() -> tuple[object, object]:
     from workflows.step3_batch_report import run as run_step3
-    from workflows.wyckoff_funnel import run as run_step2
+    from workflows.quantevolens_funnel import run as run_step2
 
     return run_step2, run_step3
 

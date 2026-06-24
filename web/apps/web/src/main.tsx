@@ -7,7 +7,7 @@ import { AuthGuard } from '@/components/auth-guard'
 import { AppLayout } from '@/routes/layout'
 import { LoginPage } from '@/routes/login'
 const ChatPage = lazy(() => import('@/routes/chat').then(m => ({ default: m.ChatPage })))
-import { WyckoffLoading } from '@/components/loading'
+import { QuantEvoLensLoading } from '@/components/loading'
 import { ErrorBoundary } from '@/components/error-boundary'
 import { AppUpdateGate } from '@/components/app-update-gate'
 import { PreferencesProvider } from '@/lib/preferences'
@@ -36,7 +36,7 @@ createRoot(document.getElementById('root')!).render(
       <PreferencesProvider>
         <AppUpdateGate />
         <BrowserRouter>
-          <Suspense fallback={<WyckoffLoading />}>
+          <Suspense fallback={<QuantEvoLensLoading />}>
             <Routes>
               <Route path="/login" element={<LoginPage />} />
               <Route element={<AuthGuard />}>

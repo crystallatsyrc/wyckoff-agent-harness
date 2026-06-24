@@ -1,8 +1,8 @@
 # A 股主漏斗执行流程
 
-> 本文描述 A 股 Wyckoff 主漏斗从 GitHub Actions 触发到 Supabase 写库、跨日反馈闭环的完整执行链路。策略逻辑详见 [`../README_STRATEGY.md`](../README_STRATEGY.md)，架构与数据表详见 [`ARCHITECTURE.md`](ARCHITECTURE.md)。
+> 本文描述 A 股 QuantEvoLens 主漏斗从 GitHub Actions 触发到 Supabase 写库、跨日反馈闭环的完整执行链路。策略逻辑详见 [`../README_STRATEGY.md`](../README_STRATEGY.md)，架构与数据表详见 [`ARCHITECTURE.md`](ARCHITECTURE.md)。
 
-**主入口**：`.github/workflows/wyckoff_funnel.yml` → `scripts/daily_job.py`（周日到周四 **17:17** 北京时间；仅次日为 A 股交易日时继续）
+**主入口**：`.github/workflows/quantevolens_funnel.yml` → `scripts/daily_job.py`（周日到周四 **17:17** 北京时间；仅次日为 A 股交易日时继续）
 
 ---
 
@@ -11,7 +11,7 @@
 ```mermaid
 flowchart TB
     subgraph UPSTREAM["⬆️ 上游（漏斗运行前已存在）"]
-        U1["GitHub Actions 触发<br/>wyckoff_funnel.yml<br/>周日到周四 17:17 北京"]
+        U1["GitHub Actions 触发<br/>quantevolens_funnel.yml<br/>周日到周四 17:17 北京"]
         U2["环境变量 / Secrets<br/>TICKFLOW / TUSHARE / LLM / Supabase / IM"]
         U3["本地元数据<br/>行业映射 / 概念映射 / 股票池"]
         U4["前日反馈闭环<br/>signal_health_daily<br/>signal_registry"]
@@ -21,7 +21,7 @@ flowchart TB
     end
 
     subgraph CORE["🔬 核心：daily_job.py"]
-        S2["Step2 Wyckoff Funnel<br/>workflows/wyckoff_funnel.py"]
+        S2["Step2 QuantEvoLens Funnel<br/>workflows/quantevolens_funnel.py"]
         S25["Step2.5 信号确认<br/>pending → confirmed"]
         S26["Step2.6 推荐写库<br/>recommendation_tracking"]
         S27["Step2.7 起跳板 A/B/C 评分"]
@@ -66,17 +66,17 @@ flowchart TB
 
 ## 二、主入口：`daily_job.py` 完整执行链
 
-**触发**：`.github/workflows/wyckoff_funnel.yml` → `python scripts/daily_job.py`
+**触发**：`.github/workflows/quantevolens_funnel.yml` → `python scripts/daily_job.py`
 
 ```mermaid
 flowchart TD
-    START(["GitHub Actions 17:17<br/>wyckoff_funnel.yml"]) --> CHECK1{"配置校验<br/>LLM Key / Model"}
+    START(["GitHub Actions 17:17<br/>quantevolens_funnel.yml"]) --> CHECK1{"配置校验<br/>LLM Key / Model"}
     CHECK1 -->|缺失| FAIL1["exit 1"]
     CHECK1 -->|通过| CHECK2{"次日交易日判定<br/>明日是否 A 股交易日?"}
     CHECK2 -->|否| SKIP["IM 通知跳过<br/>exit 0"]
     CHECK2 -->|是| STEP2
 
-    STEP2["Step2: run_funnel()<br/>wyckoff_funnel.py"] --> P1["写 market_signal_daily<br/>大盘水温 regime"]
+    STEP2["Step2: run_funnel()<br/>quantevolens_funnel.py"] --> P1["写 market_signal_daily<br/>大盘水温 regime"]
     STEP2 --> P2["写 theme_radar_snapshot<br/>主题雷达"]
     STEP2 --> S25
 
@@ -102,17 +102,17 @@ flowchart TD
 
 | 阶段 | 入口 | 核心模块 |
 |------|------|----------|
-| 调度 | `wyckoff_funnel.yml` | GitHub Actions |
+| 调度 | `quantevolens_funnel.yml` | GitHub Actions |
 | 编排 | `scripts/daily_job.py` | 主流程 |
-| Step2 | `workflows/wyckoff_funnel.py` | `core/wyckoff_engine.py` |
+| Step2 | `workflows/quantevolens_funnel.py` | `core/quantevolens_engine.py` |
 | Step3 | `workflows/step3_batch_report.py` | `tools/report_builder.py` |
-| Step4 | `workflows/step4_rebalancer.py` | `core/holding_diagnostic.py` / `core/wyckoff_engine.py` |
+| Step4 | `workflows/step4_rebalancer.py` | `core/holding_diagnostic.py` / `core/quantevolens_engine.py` |
 
 ---
 
 ## 三、Step2 漏斗内部：L0 → L5 详细流程
 
-**核心函数**：`run_funnel_job()` → `core/wyckoff_engine.py`
+**核心函数**：`run_funnel_job()` → `core/quantevolens_engine.py`
 
 ```mermaid
 flowchart TD
@@ -298,7 +298,7 @@ sequenceDiagram
 | 时间（北京） | 工作流 | 与漏斗关系 |
 |-------------|--------|-----------|
 | **08:20** | `premarket_risk.yml` | **上游门控**：A50 + VIX → Step4 次日买入权限 |
-| **周日-周四 17:17** | `wyckoff_funnel.yml` | **主漏斗** daily_job Step2→3→4；次日非 A 股交易日则跳过 |
+| **周日-周四 17:17** | `quantevolens_funnel.yml` | **主漏斗** daily_job Step2→3→4；次日非 A 股交易日则跳过 |
 | **19:25** | `review_list_replay.yml` | 下游：涨停复盘 |
 | **21:10 周五** | `theme_radar.yml` | 下游：主线雷达周报（新闻增强） |
 | **23:00 日–四** | `recommendation_tracking_reprice.yml` | 下游：复盘重定价 |
@@ -364,7 +364,7 @@ efinance
 
 ## 十、当前生产配置要点
 
-来源：`.github/workflows/wyckoff_funnel.yml`
+来源：`.github/workflows/quantevolens_funnel.yml`
 
 | 变量 | 当前值 | 作用 |
 |------|--------|------|

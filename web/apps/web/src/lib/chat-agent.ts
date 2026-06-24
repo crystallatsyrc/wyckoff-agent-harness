@@ -1,5 +1,5 @@
 import { supabase } from './supabase'
-import { PROVIDER_BASE_URLS, PROVIDER_DEFAULT_MODELS, type Provider } from '@wyckoff/shared'
+import { PROVIDER_BASE_URLS, PROVIDER_DEFAULT_MODELS, type Provider } from '@quantevolens/shared'
 
 export interface LLMConfig {
   api_key: string

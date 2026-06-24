@@ -8,7 +8,7 @@ from typing import Any
 
 import pandas as pd
 
-from core.wyckoff_engine import normalize_hist_from_fetch
+from core.quantevolens_engine import normalize_hist_from_fetch
 from integrations.tickflow_client import TickFlowClient
 from workflows.market_funnel_runtime import RuntimeConfig
 

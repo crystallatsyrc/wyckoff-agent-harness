@@ -1,13 +1,13 @@
 <div align="center">
 
-# Wyckoff Trading Agent
+# QuantEvoLens
 
-**A주 / 홍콩주 / 미국주 와이코프 거래량-가격 분석 AI 에이전트 -- 자연어로 말하면, 차트를 읽어줍니다**
+**A주 / 홍콩주 / 미국주 QuantEvoLens 거래량-가격 분석 AI 에이전트 -- 자연어로 말하면, 차트를 읽어줍니다**
 
-[![PyPI](https://img.shields.io/pypi/v/youngcan-wyckoff-analysis?color=blue)](https://pypi.org/project/youngcan-wyckoff-analysis/)
+[![PyPI](https://img.shields.io/pypi/v/quantevolens?color=blue)](https://pypi.org/project/quantevolens/)
 [![Python](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/)
-[![Web App](https://img.shields.io/badge/Web-React%20App-0ea5e9.svg)](https://wyckoff-analysis.pages.dev/)
-[![Homepage](https://img.shields.io/badge/homepage-Wyckoff%20Homepage-0ea5e9.svg)](https://youngcan-wang.github.io/wyckoff-homepage/)
+[![Web App](https://img.shields.io/badge/Web-React%20App-0ea5e9.svg)](https://quantevolens-analysis.pages.dev/)
+[![Homepage](https://img.shields.io/badge/homepage-QuantEvoLens%20Homepage-0ea5e9.svg)](https://crystallatsyrc.github.io/quantevolens-homepage/)
 
 [中文](../README.md) | [English](README_EN.md) | [日本語](README_JA.md) | [Español](README_ES.md) | [아키텍처](ARCHITECTURE.md)
 
@@ -15,13 +15,13 @@
 
 ---
 
-자연어로 와이코프 전문가와 대화하세요. 10가지 전문 도구 + 5가지 범용 능력을 자율적으로 조합하여 다단계 추론을 수행하고, "매수할 것인가, 관망할 것인가"에 대한 결론을 제시합니다.
+자연어로 QuantEvoLens 전문가와 대화하세요. 10가지 전문 도구 + 5가지 범용 능력을 자율적으로 조합하여 다단계 추론을 수행하고, "매수할 것인가, 관망할 것인가"에 대한 결론을 제시합니다.
 
 Web + CLI + MCP 트리플 채널, Gemini / Claude / OpenAI / DeepSeek 멀티 모델 전환, GitHub Actions 자동화 스케줄링 지원.
 
-프로젝트 홈페이지: **[youngcan-wang.github.io/wyckoff-homepage](https://youngcan-wang.github.io/wyckoff-homepage/)**
+프로젝트 홈페이지: **[crystallatsyrc.github.io/quantevolens-homepage](https://crystallatsyrc.github.io/quantevolens-homepage/)**
 
-> 위험 고지: WyckoffAgent는 교육, 연구, 정보 제공 목적의 도구입니다. 투자 조언을 제공하지 않으며, 개인별 재무 상황을 모두 반영하지 않고, 미래 성과를 보장하지 않습니다.
+> 위험 고지: QuantEvoLens는 교육, 연구, 정보 제공 목적의 도구입니다. 투자 조언을 제공하지 않으며, 개인별 재무 상황을 모두 반영하지 않고, 미래 성과를 보장하지 않습니다.
 
 ## 문서 안내
 
@@ -44,7 +44,7 @@ Web + CLI + MCP 트리플 채널, Gemini / Claude / OpenAI / DeepSeek 멀티 모
     </td>
     <td>
       <strong><a href="https://tickflow.org/auth/register?ref=5N4NKTCPL4">TickFlow</a></strong><br />
-      WyckoffAgent에 A주 / 미국주식 / 홍콩주식 고품질 시장 데이터 기능을 제공해 준 TickFlow에 감사드립니다.
+      QuantEvoLens에 A주 / 미국주식 / 홍콩주식 고품질 시장 데이터 기능을 제공해 준 TickFlow에 감사드립니다.
     </td>
   </tr>
 </table>
@@ -53,7 +53,7 @@ Web + CLI + MCP 트리플 채널, Gemini / Claude / OpenAI / DeepSeek 멀티 모
 
 설치 없이 바로 사용할 수 있습니다.
 
-**React Web App**: **[wyckoff-analysis.pages.dev](https://wyckoff-analysis.pages.dev/)**
+**React Web App**: **[quantevolens-analysis.pages.dev](https://quantevolens-analysis.pages.dev/)**
 
 AI Agent 대화, 포트폴리오 관리, 퍼널 스크리닝, 추천 추적, 데이터 내보내기, 스트리밍 출력, 도구 호출 시각화를 제공하는 최신 React SPA입니다.
 
@@ -72,7 +72,7 @@ AI Agent 대화, 포트폴리오 관리, 퍼널 스크리닝, 추천 추적, 데
 | 기능 | 설명 |
 |------|------|
 | 대화형 에이전트 | 자연어로 진단, 스크리닝, 리서치 리포트를 실행하며, LLM이 도구를 자율적으로 편성; 파일 읽기/쓰기, 명령 실행, 웹 가져오기도 가능 |
-| 스킬 | 내장 슬래시 명령(`/screen`, `/checkup`, `/report`, `/strategy`, `/backtest`)으로 원탭 복합 워크플로우 실행; `~/.wyckoff/skills/*.md`로 사용자 확장 가능 |
+| 스킬 | 내장 슬래시 명령(`/screen`, `/checkup`, `/report`, `/strategy`, `/backtest`)으로 원탭 복합 워크플로우 실행; `~/.quantevolens/skills/*.md`로 사용자 확장 가능 |
 | 5단계 퍼널 스크리닝 | A주 전체 시장과 홍콩주 / 미국주 독립 universe를 6채널 + 섹터 공명 + 미시 저격으로 스캔 |
 | AI 3진영 리포트 | 논리 파산 / 비축 진영 / 도약대, LLM이 독립적으로 판단 |
 | 포트폴리오 진단 | 일괄 건강 검진: 이동평균 구조, 매집 단계, 트리거 시그널, 손절 상태 |
@@ -82,7 +82,7 @@ AI Agent 대화, 포트폴리오 관리, 퍼널 스크리닝, 추천 추적, 데
 | 추천 추적 | 과거 추천 종목의 종가 자동 동기화, 누적 수익률 계산 |
 | 일봉 백테스트 | 퍼널 적중 후 N일 수익률 재생, 승률/Sharpe/최대 낙폭 출력 |
 | 장전 리스크 관리 | A50 + VIX 모니터링, 4단계 경보 푸시 |
-| 로컬 대시보드 | `wyckoff dashboard` — 추천, 시그널, 포트폴리오, Agent 기억, 대화 로그; 다크/라이트 테마, 중/영 이중 언어 |
+| 로컬 대시보드 | `quantevolens dashboard` — 추천, 시그널, 포트폴리오, Agent 기억, 대화 로그; 다크/라이트 테마, 중/영 이중 언어 |
 | Agent 기억 | 세션 간 기억: 대화 결론 자동 추출, 다음 질의 시 관련 컨텍스트 주입 |
 | 컨텍스트 압축 | 남은 context window 예산 기준으로 자동 압축, 도구 결과 스마트 요약으로 핵심 데이터 보존 |
 | 도구 확인 | `exec_command`, `write_file`, `update_portfolio`는 실행 전 사용자 승인 필요 |
@@ -112,24 +112,24 @@ tickflow → tushare → akshare → baostock → efinance
 ### 원라인 설치 (권장)
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/YoungCan-Wang/WyckoffTradingAgent/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/crystallatsyrc/QuantEvoLens/main/install.sh | bash
 ```
 
-Python 감지, uv 설치, 격리 환경 생성을 자동으로 수행합니다. 완료 후 `wyckoff`로 실행.
+Python 감지, uv 설치, 격리 환경 생성을 자동으로 수행합니다. 완료 후 `quantevolens`로 실행.
 
 ### Homebrew
 
 ```bash
-brew tap YoungCan-Wang/wyckoff
-brew install wyckoff
+brew tap crystallatsyrc/quantevolens
+brew install quantevolens
 ```
 
 ### pip
 
 ```bash
 uv venv && source .venv/bin/activate
-uv pip install youngcan-wyckoff-analysis
-wyckoff
+uv pip install quantevolens
+quantevolens
 ```
 
 ### 시작하기 — 원클릭 Agent 설정
@@ -146,7 +146,7 @@ wyckoff
 
 > 선택사항: `/login`으로 클라우드 동기화(멀티 디바이스). 로그인 없이도 모든 기능 사용 가능.
 
-업데이트: `wyckoff update`
+업데이트: `quantevolens update`
 
 | 시작 화면 | 포트폴리오 조회 |
 |:---:|:---:|
@@ -159,7 +159,7 @@ wyckoff
 ### 로컬 대시보드
 
 ```bash
-wyckoff dashboard
+quantevolens dashboard
 ```
 
 로컬 HTTP 대시보드(기본 포트 8765)를 시작하고 브라우저를 자동으로 엽니다. 모든 데이터는 로컬 SQLite에 저장됩니다.
@@ -188,7 +188,7 @@ pnpm install
 pnpm dev
 ```
 
-Web App: **[wyckoff-analysis.pages.dev](https://wyckoff-analysis.pages.dev/)**
+Web App: **[quantevolens-analysis.pages.dev](https://quantevolens-analysis.pages.dev/)**
 
 ## 도구
 
@@ -197,7 +197,7 @@ Web App: **[wyckoff-analysis.pages.dev](https://wyckoff-analysis.pages.dev/)**
 | 도구 | 기능 |
 |------|------|
 | `search_stock_by_name` | 종목명 / 코드 / 병음 퍼지 검색 |
-| `analyze_stock` | 와이코프 진단 / 최근 OHLCV 시세 (모드 전환) |
+| `analyze_stock` | QuantEvoLens 진단 / 최근 OHLCV 시세 (모드 전환) |
 | `portfolio` | 보유 목록 조회 / 일괄 포트폴리오 진단 (모드 전환) |
 | `update_portfolio` | 보유 추가 / 수정 / 삭제, 가용 현금 설정, 추적 기록 삭제 |
 | `get_market_overview` | 시장 온도 개요 |
@@ -265,14 +265,14 @@ Web App: **[wyckoff-analysis.pages.dev](https://wyckoff-analysis.pages.dev/)**
 
 ## MCP Server
 
-[MCP 프로토콜](https://modelcontextprotocol.io/)을 통해 와이코프 분석 기능을 노출하여 Claude Code / Cursor / 모든 MCP 클라이언트에서 10가지 도구를 직접 호출할 수 있습니다.
+[MCP 프로토콜](https://modelcontextprotocol.io/)을 통해 QuantEvoLens 분석 기능을 노출하여 Claude Code / Cursor / 모든 MCP 클라이언트에서 10가지 도구를 직접 호출할 수 있습니다.
 
 ```bash
 # MCP 의존성 설치
-uv pip install youngcan-wyckoff-analysis[mcp]
+uv pip install quantevolens[mcp]
 
 # Claude Code에 등록
-claude mcp add wyckoff -- wyckoff-mcp
+claude mcp add quantevolens -- quantevolens-mcp
 ```
 
 또는 MCP 클라이언트 설정 파일에 수동 추가:
@@ -280,8 +280,8 @@ claude mcp add wyckoff -- wyckoff-mcp
 ```json
 {
   "mcpServers": {
-    "wyckoff": {
-      "command": "wyckoff-mcp",
+    "quantevolens": {
+      "command": "quantevolens-mcp",
       "env": {
         "TUSHARE_TOKEN": "your_token",
         "TICKFLOW_API_KEY": "your_key"
@@ -291,13 +291,13 @@ claude mcp add wyckoff -- wyckoff-mcp
 }
 ```
 
-등록 후 Claude Code / Cursor에서 "000001 진단해줘"라고 물어보면 와이코프 도구가 호출됩니다.
+등록 후 Claude Code / Cursor에서 "000001 진단해줘"라고 물어보면 QuantEvoLens 도구가 호출됩니다.
 
-## Wyckoff Skills
+## QuantEvoLens Skills
 
-경량 와이코프 분석 기능 재사용: [`YoungCan-Wang/wyckoff_skill`](https://github.com/YoungCan-Wang/wyckoff_skill.git)
+경량 QuantEvoLens 분석 기능 재사용: [`crystallatsyrc/quantevolens_skill`](https://github.com/crystallatsyrc/quantevolens_skill.git)
 
-AI 어시스턴트에 빠르게 "와이코프 시각"을 장착하기에 적합합니다.
+AI 어시스턴트에 빠르게 "QuantEvoLens 시각"을 장착하기에 적합합니다.
 
 ## 위험 경고
 

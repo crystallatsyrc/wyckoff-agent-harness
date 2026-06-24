@@ -1,6 +1,6 @@
 """Append-only agent run scratchpad.
 
-Each CLI/TUI turn can write a JSONL trace under ``~/.wyckoff/scratchpad``.
+Each CLI/TUI turn can write a JSONL trace under ``~/.quantevolens/scratchpad``.
 The file is deliberately independent from SQLite chat logs so partial runs,
 crashes, and long tool calls still leave an inspectable trail.
 """
@@ -19,10 +19,10 @@ _SENSITIVE_KEY_RE = re.compile(r"(api[_-]?key|token|password|secret|authorizatio
 _MAX_INLINE_STRING = 200_000
 
 
-def wyckoff_home() -> Path:
-    """Return the local Wyckoff state directory."""
+def quantevolens_home() -> Path:
+    """Return the local QuantEvoLens state directory."""
 
-    return Path(os.getenv("WYCKOFF_HOME", Path.home() / ".wyckoff")).expanduser()
+    return Path(os.getenv("QUANTEVOLENS_HOME", Path.home() / ".quantevolens")).expanduser()
 
 
 def _timestamp() -> str:
@@ -65,7 +65,7 @@ class AgentScratchpad:
     ) -> None:
         self.query = query
         self.session_id = session_id
-        self.dir = scratchpad_dir or wyckoff_home() / "scratchpad"
+        self.dir = scratchpad_dir or quantevolens_home() / "scratchpad"
         self.dir.mkdir(parents=True, exist_ok=True)
 
         query_hash = hashlib.sha1(query.encode("utf-8", errors="ignore")).hexdigest()[:12]

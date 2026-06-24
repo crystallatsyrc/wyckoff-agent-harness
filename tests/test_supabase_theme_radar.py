@@ -49,7 +49,7 @@ def test_upsert_theme_radar_snapshot_writes_summary_columns(monkeypatch):
     from integrations import supabase_theme_radar as mod
 
     client = _FakeClient()
-    monkeypatch.setenv("WYCKOFF_WRITE_CONTEXT", "server_job")
+    monkeypatch.setenv("QUANTEVOLENS_WRITE_CONTEXT", "server_job")
     monkeypatch.setattr(mod, "_configured", lambda: True)
     monkeypatch.setattr(mod, "_admin", lambda: client)
 

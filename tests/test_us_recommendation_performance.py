@@ -80,7 +80,7 @@ def test_refresh_us_tracking_performance_fetches_forward_adjusted_hist(monkeypat
             return {"SPLT.US": pd.DataFrame({"date": ["2026-05-15"], "high": [26.0], "low": [24.0], "close": [25.0]})}
 
     monkeypatch.setenv("TICKFLOW_API_KEY", "key")
-    monkeypatch.setenv("WYCKOFF_WRITE_CONTEXT", "server_job")
+    monkeypatch.setenv("QUANTEVOLENS_WRITE_CONTEXT", "server_job")
     monkeypatch.setattr("integrations.recommendation_performance.is_admin_configured", lambda: True)
     monkeypatch.setattr("integrations.recommendation_performance.create_admin_client", lambda: object())
     monkeypatch.setattr(

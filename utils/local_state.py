@@ -10,8 +10,8 @@ _SENSITIVE_KEY_RE = re.compile(r"(api[_-]?key|token|password|secret|authorizatio
 _MAX_INLINE_STRING = 200_000
 
 
-def wyckoff_home() -> Path:
-    return Path(os.getenv("WYCKOFF_HOME", Path.home() / ".wyckoff")).expanduser()
+def quantevolens_home() -> Path:
+    return Path(os.getenv("QUANTEVOLENS_HOME", Path.home() / ".quantevolens")).expanduser()
 
 
 def scrub_sensitive_value(value: Any) -> Any:

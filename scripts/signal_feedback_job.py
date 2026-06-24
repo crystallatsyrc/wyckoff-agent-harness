@@ -14,7 +14,7 @@ from workflows.signal_feedback_job import (
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Refresh Wyckoff signal feedback tables.")
+    parser = argparse.ArgumentParser(description="Refresh QuantEvoLens signal feedback tables.")
     parser.add_argument("--market", default="cn")
     parser.add_argument("--end-date", default=date.today().isoformat())
     parser.add_argument("--as-of-date", default=date.today().isoformat())

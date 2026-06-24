@@ -7,7 +7,7 @@ import pytest
 
 from core.backtest_execution import ExitSimulationConfig
 from core.backtest_replay import BacktestReplayConfig, replay_backtest
-from core.wyckoff_engine import FunnelConfig, FunnelResult
+from core.quantevolens_engine import FunnelConfig, FunnelResult
 
 
 def _hist() -> pd.DataFrame:

@@ -208,7 +208,7 @@ def test_refresh_tail_buy_prices_updates_current_price(monkeypatch):
         return {"600001.SH": {"last_price": 11.2}}
 
     monkeypatch.setenv("TICKFLOW_API_KEY", "tick-key")
-    monkeypatch.setenv("WYCKOFF_WRITE_CONTEXT", "server_job")
+    monkeypatch.setenv("QUANTEVOLENS_WRITE_CONTEXT", "server_job")
     monkeypatch.setattr(supabase_tail_buy, "_configured", lambda: True)
     monkeypatch.setattr(supabase_tail_buy, "_admin", lambda: client)
     monkeypatch.setattr(supabase_tail_buy, "_fetch_tail_quotes", fake_fetch_quotes)
@@ -245,7 +245,7 @@ def test_refresh_tail_buy_prices_skips_rows_without_user_id(monkeypatch):
     client = _FakeClient(rows)
 
     monkeypatch.setenv("TICKFLOW_API_KEY", "tick-key")
-    monkeypatch.setenv("WYCKOFF_WRITE_CONTEXT", "server_job")
+    monkeypatch.setenv("QUANTEVOLENS_WRITE_CONTEXT", "server_job")
     monkeypatch.setattr(supabase_tail_buy, "_configured", lambda: True)
     monkeypatch.setattr(supabase_tail_buy, "_admin", lambda: client)
     monkeypatch.setattr(

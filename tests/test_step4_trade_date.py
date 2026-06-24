@@ -7,7 +7,7 @@ from workflows import step4_rebalancer as step4
 from workflows.step4_decision_parser import max_new_buy_names
 from workflows.step4_models import DecisionItem, ExecutionTicket, NewBuyLimits, PositionItem
 from workflows.step4_order_config import step4_order_config_from_env
-from workflows.step4_order_engine import WyckoffOrderEngine
+from workflows.step4_order_engine import QuantEvoLensOrderEngine
 from workflows.step4_runtime_config import step4_runtime_config_from_env
 
 
@@ -77,7 +77,7 @@ def test_step4_trade_context_uses_latest_market_trade_date(monkeypatch):
 
 
 def test_existing_position_probe_is_treated_as_add_on_and_requires_profit():
-    engine = WyckoffOrderEngine(
+    engine = QuantEvoLensOrderEngine(
         total_equity=100000,
         free_cash=50000,
         position_map={
@@ -103,7 +103,7 @@ def test_existing_position_probe_is_treated_as_add_on_and_requires_profit():
 
 
 def test_order_engine_uses_explicit_buy_block_config():
-    engine = WyckoffOrderEngine(
+    engine = QuantEvoLensOrderEngine(
         total_equity=100000,
         free_cash=50000,
         position_map={},

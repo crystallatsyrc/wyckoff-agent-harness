@@ -36,9 +36,9 @@ def test_create_admin_client_requires_service_role(monkeypatch):
 
 
 def test_require_server_write_context(monkeypatch):
-    monkeypatch.delenv("WYCKOFF_WRITE_CONTEXT", raising=False)
+    monkeypatch.delenv("QUANTEVOLENS_WRITE_CONTEXT", raising=False)
     with pytest.raises(PermissionError, match="server_job"):
         require_server_write_context("upsert signal_observations")
 
-    monkeypatch.setenv("WYCKOFF_WRITE_CONTEXT", "server_job")
+    monkeypatch.setenv("QUANTEVOLENS_WRITE_CONTEXT", "server_job")
     require_server_write_context("upsert signal_observations")

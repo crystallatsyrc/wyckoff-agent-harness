@@ -48,7 +48,7 @@ def _collect_rss_events(urls: list[str], *, timeout: int) -> list[dict[str, Any]
     events: list[dict[str, Any]] = []
     for url in urls:
         try:
-            resp = requests.get(url, timeout=timeout, headers={"User-Agent": "WyckoffThemeRadar/1.0"})
+            resp = requests.get(url, timeout=timeout, headers={"User-Agent": "QuantEvoLensThemeRadar/1.0"})
             resp.raise_for_status()
             events.extend(_parse_rss(resp.content, source=url))
         except Exception:

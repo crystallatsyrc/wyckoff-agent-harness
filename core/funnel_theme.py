@@ -1,4 +1,4 @@
-"""Theme radar helpers used by the Wyckoff funnel."""
+"""Theme radar helpers used by the QuantEvoLens funnel."""
 
 from __future__ import annotations
 

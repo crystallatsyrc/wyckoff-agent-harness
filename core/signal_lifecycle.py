@@ -1,4 +1,4 @@
-"""Signal lifecycle evaluation for Wyckoff events."""
+"""Signal lifecycle evaluation for QuantEvoLens events."""
 
 from __future__ import annotations
 

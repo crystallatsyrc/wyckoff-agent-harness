@@ -1,4 +1,4 @@
-"""Model metadata and local usage cost helpers for Wyckoff CLI."""
+"""Model metadata and local usage cost helpers for QuantEvoLens CLI."""
 
 from __future__ import annotations
 
@@ -81,7 +81,7 @@ def infer_model_info(config: dict[str, Any]) -> ModelInfo:
     """Infer model metadata from a saved model config.
 
     Cost values are deliberately read from config, not guessed from volatile
-    provider price pages. Users can set them with `wyckoff model cost`.
+    provider price pages. Users can set them with `quantevolens model cost`.
     """
 
     provider = str(config.get("provider_name", "") or "")

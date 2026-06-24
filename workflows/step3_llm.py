@@ -255,7 +255,7 @@ def _build_fallback_sections(selected_df: pd.DataFrame) -> str:
         code = str(row.get("code", ""))
         name = str(row.get("name", code))
         tag = str(row.get("tag", ""))
-        score = row.get("wyckoff_score")
+        score = row.get("quantevolens_score")
         score_text = f"{float(score):.3f}" if pd.notna(score) else "-"
         lines.append(
             f"- `{code} {name}` | 标签: {tag or '-'} | 量化分: {score_text} | 仍需条件: 回踩结构战区时需缩量确认。"

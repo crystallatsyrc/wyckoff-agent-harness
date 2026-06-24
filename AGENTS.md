@@ -1,11 +1,11 @@
-# Wyckoff-Analysis Development Rules
+# QuantEvoLens Development Rules
 
 > This file is the single source of truth for code quality rules.
 > All AI coding assistants (Claude Code, Cursor, Copilot, Windsurf, etc.) MUST follow these rules.
 
 ## Project Overview
 
-Multi-market quantitative analysis system based on Wyckoff method, covering A-shares, Hong Kong stocks, US stocks, and ETFs. Python backend (CLI + MCP) + React/TypeScript web frontend.
+Multi-market quantitative analysis system based on QuantEvoLens method, covering A-shares, Hong Kong stocks, US stocks, and ETFs. Python backend (CLI + MCP) + React/TypeScript web frontend.
 
 Streamlit is fully retired from `main`: do not add, restore, or maintain Streamlit runtime code here. The historical Streamlit MVP code is preserved on the `release/streamlit` branch, and its product architecture/screenshots are archived in [docs/STREAMLIT_MVP_ARCHITECTURE.md](docs/STREAMLIT_MVP_ARCHITECTURE.md).
 

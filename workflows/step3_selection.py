@@ -52,7 +52,7 @@ def select_step3_candidates(
     runtime_config: Step3RuntimeConfig,
 ) -> pd.DataFrame:
     selected_df = candidates_df.copy()
-    _fill_wyckoff_score(selected_df)
+    _fill_quantevolens_score(selected_df)
     selected_df["industry_rank"] = pd.NA
     effective_context_cap = _resolve_step3_context_cap(len(candidates_df), runtime_config)
     if has_upstream_priority_context(candidates_df, runtime_config):
@@ -62,16 +62,16 @@ def select_step3_candidates(
     else:
         print(f"[step3] 候选压缩未启用: selected=全量{len(selected_df)}")
     selected_df = _apply_context_cap(selected_df, effective_context_cap, runtime_config)
-    _fill_wyckoff_score(selected_df)
+    _fill_quantevolens_score(selected_df)
     if "industry_rank" not in selected_df.columns:
         selected_df["industry_rank"] = pd.NA
     return selected_df
 
 
-def _fill_wyckoff_score(df: pd.DataFrame) -> None:
-    df["wyckoff_score"] = pd.to_numeric(df.get("priority_score"), errors="coerce")
-    df["wyckoff_score"] = df["wyckoff_score"].where(
-        df["wyckoff_score"].notna(),
+def _fill_quantevolens_score(df: pd.DataFrame) -> None:
+    df["quantevolens_score"] = pd.to_numeric(df.get("priority_score"), errors="coerce")
+    df["quantevolens_score"] = df["quantevolens_score"].where(
+        df["quantevolens_score"].notna(),
         pd.to_numeric(df.get("funnel_score"), errors="coerce"),
     )
 

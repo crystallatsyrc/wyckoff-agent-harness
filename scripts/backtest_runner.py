@@ -1,4 +1,4 @@
-"""CLI entrypoint for the Wyckoff backtest runner."""
+"""CLI entrypoint for the QuantEvoLens backtest runner."""
 
 from __future__ import annotations
 

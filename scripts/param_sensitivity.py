@@ -1,4 +1,4 @@
-"""CLI entrypoint for Wyckoff parameter sensitivity analysis."""
+"""CLI entrypoint for QuantEvoLens parameter sensitivity analysis."""
 
 from __future__ import annotations
 
@@ -10,7 +10,7 @@ from workflows.param_sensitivity import ParamSensitivityRequest, run_param_sensi
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Wyckoff 参数敏感性分析")
+    parser = argparse.ArgumentParser(description="QuantEvoLens 参数敏感性分析")
     parser.add_argument("--start", required=True)
     parser.add_argument("--end", required=True)
     parser.add_argument("--board", default="all")

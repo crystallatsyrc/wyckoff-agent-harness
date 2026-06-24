@@ -7,7 +7,7 @@ from collections.abc import Callable
 
 import pandas as pd
 
-from core.wyckoff_engine import sort_by_date_if_needed
+from core.quantevolens_engine import sort_by_date_if_needed
 
 TODAY_REVIEW_MIN_PCT = 8.0
 TODAY_OPEN_MAX_PCT = 4.0

@@ -7,7 +7,7 @@ import re
 from dataclasses import dataclass
 from pathlib import Path
 
-SKILLS_DIR = Path(os.path.expanduser("~/.wyckoff/skills"))
+SKILLS_DIR = Path(os.path.expanduser("~/.quantevolens/skills"))
 
 _VALID_NAME_RE = re.compile(r"^[a-z][a-z0-9_-]{0,63}$")
 
@@ -28,7 +28,7 @@ BUILTIN_SKILLS: dict[str, Skill] = {
         name="screen",
         description="全市场漏斗筛选，发现结构性机会",
         prompt=(
-            "执行全市场威科夫五层漏斗筛选：\n"
+            "执行全市场QuantEvoLens五层漏斗筛选：\n"
             '1. 调用 screen_stocks(board="{user_input}") 执行筛选'
             '（若用户未指定 board 则用 "all"）\n'
             '2. 对筛选出的每只股票，调用 analyze_stock(code=..., mode="diagnose") 做深度诊断\n'
@@ -43,7 +43,7 @@ BUILTIN_SKILLS: dict[str, Skill] = {
             "执行持仓全面体检：\n"
             '1. 调用 portfolio(mode="diagnose") 获取持仓诊断数据\n'
             "2. 调用 get_market_overview() 了解大盘环境\n"
-            "3. 综合分析每只持仓的威科夫阶段、健康度、风险\n"
+            "3. 综合分析每只持仓的QuantEvoLens阶段、健康度、风险\n"
             "4. 给出具体操作建议（持有/减仓/加仓/清仓）及理由"
         ),
     ),
@@ -69,7 +69,7 @@ BUILTIN_SKILLS: dict[str, Skill] = {
     ),
     "backtest": Skill(
         name="backtest",
-        description="回测威科夫策略历史表现",
+        description="回测QuantEvoLens策略历史表现",
         prompt=(
             "运行策略回测：\n"
             "1. 调用 run_backtest({user_input}) 执行回测\n"
@@ -87,7 +87,7 @@ BUILTIN_SKILLS: dict[str, Skill] = {
 
 
 def _parse_skill_md(path: Path) -> Skill | None:
-    """解析 ~/.wyckoff/skills/<name>.md 文件。"""
+    """解析 ~/.quantevolens/skills/<name>.md 文件。"""
     try:
         text = path.read_text(encoding="utf-8")
     except OSError:
@@ -122,7 +122,7 @@ def _parse_skill_md(path: Path) -> Skill | None:
 
 
 def load_user_skills() -> dict[str, Skill]:
-    """从 ~/.wyckoff/skills/ 加载用户自定义 skills。"""
+    """从 ~/.quantevolens/skills/ 加载用户自定义 skills。"""
     skills: dict[str, Skill] = {}
     if not SKILLS_DIR.is_dir():
         return skills

@@ -82,7 +82,7 @@ def _apply_funnel_env(payload: dict[str, Any]) -> None:
 
 def _run_funnel_screen(request_id: str, payload: dict[str, Any]) -> dict[str, Any]:
     _apply_funnel_env(payload)
-    from workflows.wyckoff_funnel import run as run_funnel
+    from workflows.quantevolens_funnel import run as run_funnel
 
     ok, symbols_for_report, benchmark_context, details = run_funnel(
         "",

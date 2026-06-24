@@ -1,9 +1,9 @@
-name: Wyckoff Funnel US
+name: QuantEvoLens Funnel HK
 
 on:
   schedule:
-    # 美股常规交易 16:00 ET 收盘；21:35 UTC 覆盖 EST/EDT，始终在收盘后执行。
-    - cron: '35 21 * * 1-5'
+    # 港股常规交易 16:00 HKT 收盘；16:35 HKT / 08:35 UTC 执行，给收盘行情留缓冲。
+    - cron: '35 8 * * 1-5'
   workflow_dispatch:
 
 concurrency:
@@ -16,18 +16,18 @@ jobs:
     timeout-minutes: 45
     env:
       PYTHONUNBUFFERED: "1"
-      WYCKOFF_WRITE_CONTEXT: "server_job"
+      QUANTEVOLENS_WRITE_CONTEXT: "server_job"
       TICKFLOW_API_KEY: ${{ secrets.TICKFLOW_API_KEY }}
       SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
       SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
       MARKET_FUNNEL_WRITE_DB: "1"
-      MARKET_FUNNEL_MAX_SYMBOLS: "1500"
+      MARKET_FUNNEL_MAX_SYMBOLS: "600"
       MARKET_FUNNEL_QUOTE_BATCH_SIZE: "50"
       MARKET_FUNNEL_QUOTE_BATCH_SLEEP: "1.1"
       MARKET_FUNNEL_KLINE_COUNT: "320"
       MARKET_FUNNEL_KLINE_BATCH_SIZE: "100"
       MARKET_FUNNEL_KLINE_BATCH_SLEEP: "2.1"
-      MARKET_FUNNEL_MIN_QUOTE_AMOUNT: "5000000"
+      MARKET_FUNNEL_MIN_QUOTE_AMOUNT: "2000000"
       TZ: Asia/Shanghai
 
     steps:
@@ -47,19 +47,19 @@ jobs:
       - name: Prepare logs dir
         run: mkdir -p logs
 
-      - name: Run US funnel
+      - name: Run HK funnel
         run: |
           set -o pipefail
           python -u scripts/market_funnel_job.py \
-            --market us \
-            --output "${{ github.workspace }}/logs/us_funnel_result.json" \
-            2>&1 | tee -a "${{ github.workspace }}/logs/us_funnel.console.log"
+            --market hk \
+            --output "${{ github.workspace }}/logs/hk_funnel_result.json" \
+            2>&1 | tee -a "${{ github.workspace }}/logs/hk_funnel.console.log"
 
       - name: Upload artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: us-funnel-logs-${{ github.run_number }}
+          name: hk-funnel-logs-${{ github.run_number }}
           path: logs/*
           retention-days: 7
           if-no-files-found: warn

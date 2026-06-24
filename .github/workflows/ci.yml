@@ -187,5 +187,5 @@ jobs:
         run: pnpm -r exec tsc --noEmit
         working-directory: web
       - name: Run web tests
-        run: pnpm --filter @wyckoff/web test
+        run: pnpm --filter @quantevolens/web test
         working-directory: web

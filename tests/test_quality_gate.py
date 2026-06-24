@@ -4,9 +4,9 @@ from scripts.quality_gate import DEFAULT_FUNC_LIMIT, SOFT_FUNC_TARGET_LINES, fun
 
 def test_function_line_limits_are_layer_specific() -> None:
     assert SOFT_FUNC_TARGET_LINES == 50
-    assert function_line_limit("core/wyckoff_engine.py") == DEFAULT_FUNC_LIMIT
+    assert function_line_limit("core/quantevolens_engine.py") == DEFAULT_FUNC_LIMIT
     assert function_line_limit("integrations/data_source.py") == DEFAULT_FUNC_LIMIT
-    assert function_line_limit("workflows/wyckoff_funnel.py") == DEFAULT_FUNC_LIMIT
+    assert function_line_limit("workflows/quantevolens_funnel.py") == DEFAULT_FUNC_LIMIT
     assert function_line_limit("cli/tui.py") == 100
     assert function_line_limit("web/apps/web/src/routes/chat.tsx") == 120
     assert function_line_limit("web/apps/web/src/components/market-bar.tsx") == 90

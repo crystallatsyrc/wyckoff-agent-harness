@@ -124,7 +124,7 @@ function useExportState(userId: string | undefined, t: Translate) {
 
   function downloadZip() {
     if (!datasets.length) return
-    downloadBlob(createZipBlob(zipFiles(datasets)), `wyckoff_export_${formatStamp()}.zip`)
+    downloadBlob(createZipBlob(zipFiles(datasets)), `quantevolens_export_${formatStamp()}.zip`)
   }
 
   return {

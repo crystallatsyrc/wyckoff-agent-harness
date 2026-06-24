@@ -3,8 +3,8 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-from core.wyckoff_engine import FunnelConfig
-from core.wyckoff_v2_structure import detect_structure_triggers, identify_trading_range
+from core.quantevolens_engine import FunnelConfig
+from core.quantevolens_v2_structure import detect_structure_triggers, identify_trading_range
 
 
 def _range_df(n: int = 120) -> pd.DataFrame:

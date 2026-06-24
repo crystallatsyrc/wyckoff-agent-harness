@@ -6,7 +6,7 @@ import pandas as pd
 
 from core.candidate_ranker import calc_close_return_pct
 from core.funnel_format import fmt_pct, fmt_ratio
-from core.wyckoff_engine import FunnelConfig
+from core.quantevolens_engine import FunnelConfig
 
 
 def build_etf_funnel_config(base_cfg: FunnelConfig) -> FunnelConfig:

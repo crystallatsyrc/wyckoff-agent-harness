@@ -47,7 +47,7 @@ _BLOCKED_FILE_NAMES = {
     "id_ecdsa",
     "id_ed25519",
 }
-_ALLOWED_WYCKOFF_SUBDIRS = {"tool-results", "scratchpad", "exports", "reports"}
+_ALLOWED_QUANTEVOLENS_SUBDIRS = {"tool-results", "scratchpad", "exports", "reports"}
 _BLOCKED_SYSTEM_ROOTS = (
     pathlib.Path("/bin"),
     pathlib.Path("/etc"),
@@ -129,11 +129,11 @@ def _path_parts_lower(path: pathlib.Path) -> list[str]:
     return [part.lower() for part in path.parts]
 
 
-def _is_allowed_wyckoff_path(parts: list[str]) -> bool:
-    if ".wyckoff" not in parts:
+def _is_allowed_quantevolens_path(parts: list[str]) -> bool:
+    if ".quantevolens" not in parts:
         return False
-    idx = parts.index(".wyckoff")
-    return len(parts) > idx + 1 and parts[idx + 1] in _ALLOWED_WYCKOFF_SUBDIRS
+    idx = parts.index(".quantevolens")
+    return len(parts) > idx + 1 and parts[idx + 1] in _ALLOWED_QUANTEVOLENS_SUBDIRS
 
 
 def _is_under_path(path: pathlib.Path, root: pathlib.Path) -> bool:
@@ -156,18 +156,18 @@ def validate_agent_path(path: str, *, for_write: bool = False) -> pathlib.Path |
     parts = _path_parts_lower(p)
     joined = "/".join(parts)
     name = p.name.lower()
-    allowed_wyckoff_path = _is_allowed_wyckoff_path(parts)
+    allowed_quantevolens_path = _is_allowed_quantevolens_path(parts)
 
     if any(_is_under_path(p, root) for root in _BLOCKED_SYSTEM_ROOTS):
         return security_error("禁止访问系统目录")
     if _is_under_path(p, pathlib.Path.home().expanduser() / "Library"):
         return security_error("禁止访问用户 Library 配置目录")
-    if ".wyckoff" in parts and not allowed_wyckoff_path:
-        return security_error("禁止读取或写入 Wyckoff 凭据、会话和配置目录")
+    if ".quantevolens" in parts and not allowed_quantevolens_path:
+        return security_error("禁止读取或写入 QuantEvoLens 凭据、会话和配置目录")
     if any(part in parts for part in _BLOCKED_PATH_PARTS) or any(part in joined for part in _BLOCKED_PATH_PARTS):
         return security_error("禁止访问凭据、密钥或云配置目录")
-    hidden_parts = [part for part in parts if part.startswith(".") and part not in {".", "..", ".wyckoff"}]
-    if hidden_parts and not allowed_wyckoff_path:
+    hidden_parts = [part for part in parts if part.startswith(".") and part not in {".", "..", ".quantevolens"}]
+    if hidden_parts and not allowed_quantevolens_path:
         return security_error("禁止访问隐藏文件或隐藏目录")
     if name in _BLOCKED_FILE_NAMES or name.startswith(".env"):
         return security_error("禁止访问环境变量或密钥文件")
@@ -202,10 +202,10 @@ def validate_agent_command(command: str) -> list[str] | dict:
         return security_error("禁止通过 Agent 执行内联代码")
     for arg in args[1:]:
         lowered = arg.lower()
-        touches_wyckoff_config = ".wyckoff" in lowered and not any(
-            f".wyckoff/{subdir}" in lowered for subdir in _ALLOWED_WYCKOFF_SUBDIRS
+        touches_quantevolens_config = ".quantevolens" in lowered and not any(
+            f".quantevolens/{subdir}" in lowered for subdir in _ALLOWED_QUANTEVOLENS_SUBDIRS
         )
-        if SENSITIVE_KEY_RE.search(arg) or ".ssh" in lowered or ".env" in lowered or touches_wyckoff_config:
+        if SENSITIVE_KEY_RE.search(arg) or ".ssh" in lowered or ".env" in lowered or touches_quantevolens_config:
             return security_error("命令参数疑似访问凭据、会话或密钥")
     return args
 

@@ -1,5 +1,5 @@
 import { BellPlus, Plus, ShieldAlert } from 'lucide-react'
-import type { AnalyzeStockResult, ScreenStockItem, StrategyDecisionResult } from '@wyckoff/shared'
+import type { AnalyzeStockResult, ScreenStockItem, StrategyDecisionResult } from '@quantevolens/shared'
 import { MarkdownContent } from '@/components/markdown'
 import { ScreenResultCard } from '@/components/screen-result-card'
 import { asRecord, normalizeStockCode, sanitizeText } from './utils'

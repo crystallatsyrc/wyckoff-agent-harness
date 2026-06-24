@@ -1,4 +1,4 @@
-import type { AnalyzeStockResult, ScreenResult, StrategyDecisionResult } from '@wyckoff/shared'
+import type { AnalyzeStockResult, ScreenResult, StrategyDecisionResult } from '@quantevolens/shared'
 import type { TranslationKey } from '@/lib/preferences'
 import { asRecord, sanitizeText } from './utils'
 import { isToolPart, type MessagePart, type ToolPart } from './messages'
@@ -150,7 +150,7 @@ export function toolProgressDescription(toolName: string, input: unknown): strin
     case 'market_overview':
       return '读取市场水温、主要指数和风险偏好状态。'
     case 'market_history':
-      return `回看 ${marketIndexInputLabel(item)} 的量价结构和威科夫阶段。`
+      return `回看 ${marketIndexInputLabel(item)} 的量价结构和QuantEvoLens阶段。`
     case 'query_recommendations':
       return `读取最近 ${limitInputLabel(item)} 条形态复盘记录。`
     case 'query_tail_buy':
@@ -160,7 +160,7 @@ export function toolProgressDescription(toolName: string, input: unknown): strin
     case 'screen_stocks':
       return '读取最新漏斗选股结果，按分数和形态证据筛候选。'
     case 'generate_ai_report':
-      return `生成 ${codesInputLabel(item)} 的威科夫深度研报。`
+      return `生成 ${codesInputLabel(item)} 的QuantEvoLens深度研报。`
     case 'generate_strategy_decision':
       return '结合市场状态和持仓，生成组合级操作建议。'
     case 'intraday_analysis':

@@ -3,7 +3,7 @@ import { APP_VERSION } from '@/lib/app-version'
 
 const VERSION_URL = '/version.json'
 const CHECK_INTERVAL_MS = 60_000
-const RELOAD_SESSION_KEY = 'wyckoff.update.reload'
+const RELOAD_SESSION_KEY = 'quantevolens.update.reload'
 
 interface VersionPayload {
   version?: unknown

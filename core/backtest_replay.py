@@ -23,7 +23,7 @@ from core.backtest_selection import combine_trigger_scores, select_ai_input_code
 from core.candidate_policy import CandidatePolicyConfig, apply_regime_position_filter
 from core.market_breadth import calc_market_breadth
 from core.signal_confirmation import PendingPool, score_springboard_abc
-from core.wyckoff_engine import FunnelConfig, FunnelResult, run_funnel
+from core.quantevolens_engine import FunnelConfig, FunnelResult, run_funnel
 
 logger = logging.getLogger(__name__)
 ProgressReporter = Callable[[str, str, float], None]

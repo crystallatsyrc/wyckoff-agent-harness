@@ -3,7 +3,7 @@ import {
   normalizeGeminiChunk,
   normalizeGeminiSseLine,
   normalizeGeminiToolCalls,
-} from '@wyckoff/shared'
+} from '@quantevolens/shared'
 
 describe('normalizeGeminiToolCalls', () => {
   it('adds missing index without stripping extra_content', () => {

@@ -1,7 +1,7 @@
-"""Optional wbt integration for Wyckoff backtests.
+"""Optional wbt integration for QuantEvoLens backtests.
 
 The local ``wbt`` project is a weight-based Rust backtesting engine.  This
-adapter keeps it as an optional analytics backend: Wyckoff still owns signal
+adapter keeps it as an optional analytics backend: QuantEvoLens still owns signal
 generation, execution constraints, and trade replay; wbt can consume the
 resulting NAV/weight data for a second, high-performance metric view.
 """
@@ -192,7 +192,7 @@ def _symbol_weight_rows(
 def build_nav_weight_frame(nav_df: pd.DataFrame) -> pd.DataFrame:
     """Build a synthetic one-symbol wbt input from the legacy NAV curve.
 
-    This lets wbt evaluate the already replayed Wyckoff portfolio without
+    This lets wbt evaluate the already replayed QuantEvoLens portfolio without
     changing the strategy/execution semantics.  Costs are already embedded in
     the NAV curve, so callers should use ``fee_rate=0`` for this synthetic view.
     """
@@ -208,7 +208,7 @@ def build_nav_weight_frame(nav_df: pd.DataFrame) -> pd.DataFrame:
     return pd.DataFrame(
         {
             "dt": work["dt"],
-            "symbol": "WYCKOFF_PORTFOLIO",
+            "symbol": "QUANTEVOLENS_PORTFOLIO",
             "weight": 1.0,
             "price": work["price"].astype(float),
         }

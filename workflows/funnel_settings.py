@@ -1,4 +1,4 @@
-"""Runtime settings for the Wyckoff funnel job."""
+"""Runtime settings for the QuantEvoLens funnel job."""
 
 from __future__ import annotations
 

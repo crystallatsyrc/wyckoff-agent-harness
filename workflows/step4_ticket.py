@@ -97,8 +97,8 @@ def _render_buy_ticket_lines(approved_buy: list[ExecutionTicket], *, atr_period:
         lines.append(f"  下单：{ticket.shares} 股 | 占用：{ticket.amount:.2f} 元 | 参考价：{price_hint}")
         if ticket.chase_profile:
             lines.append(f"  分层：{ticket.chase_profile}")
-        if ticket.wyckoff_context:
-            lines.append(f"  结构：{ticket.wyckoff_context}")
+        if ticket.quantevolens_context:
+            lines.append(f"  结构：{ticket.quantevolens_context}")
         if ticket.max_entry_price is not None:
             lines.append(f"  🛑 【防追高限价】明日开盘价若 > {ticket.max_entry_price:.2f} 元，请放弃买入！")
         lines.append(

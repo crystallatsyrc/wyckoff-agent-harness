@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 
 def generate_ai_report(stock_codes: list[str], tool_context: ToolContext | None = None) -> dict:
-    """对指定股票列表生成威科夫三阵营 AI 深度研报。"""
+    """对指定股票列表生成QuantEvoLens三阵营 AI 深度研报。"""
     try:
         ensure_tushare_token(tool_context)
         if not stock_codes:

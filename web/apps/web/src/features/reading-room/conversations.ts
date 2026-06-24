@@ -163,7 +163,7 @@ function activateConversation(
 }
 
 function conversationStorageKey(userId: string | undefined): string {
-  return `wyckoff:${userId || 'guest'}:${CONVERSATION_STORAGE_VERSION}`
+  return `quantevolens:${userId || 'guest'}:${CONVERSATION_STORAGE_VERSION}`
 }
 
 function createConversation(): ReadingRoomConversation {

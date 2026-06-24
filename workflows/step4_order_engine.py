@@ -12,7 +12,7 @@ DEFAULT_STEP4_ORDER_CONFIG = Step4OrderConfig()
 _SENTINEL = object()
 
 
-def _format_wyckoff_context(track: str, stage: str, tag: str) -> str:
+def _format_quantevolens_context(track: str, stage: str, tag: str) -> str:
     parts = [x for x in [clean_text(track), clean_text(stage), clean_text(tag)] if x]
     return " | ".join(parts)
 
@@ -23,9 +23,9 @@ def _resolve_chase_limits(
     config: Step4OrderConfig,
 ) -> tuple[float, float, str, str]:
     regime = clean_text(market_regime).upper() or "NEUTRAL"
-    track = normalize_track(dec.wyckoff_track) or normalize_track(dec.wyckoff_tag)
-    stage = normalize_stage(dec.wyckoff_stage) or normalize_stage(dec.wyckoff_tag)
-    tag = clean_text(dec.wyckoff_tag)
+    track = normalize_track(dec.quantevolens_track) or normalize_track(dec.quantevolens_tag)
+    stage = normalize_stage(dec.quantevolens_stage) or normalize_stage(dec.quantevolens_tag)
+    tag = clean_text(dec.quantevolens_tag)
 
     pct_limit = float(max(config.max_gap_up_pct, 0.0))
     atr_limit = float(max(config.max_gap_up_atr_mult, 0.0))
@@ -77,11 +77,11 @@ def _resolve_chase_limits(
 
     pct_limit = min(max(pct_limit, config.chase_gap_pct_min), config.chase_gap_pct_max)
     atr_limit = min(max(atr_limit, config.chase_atr_mult_min), config.chase_atr_mult_max)
-    context = _format_wyckoff_context(track, stage, tag)
+    context = _format_quantevolens_context(track, stage, tag)
     return (pct_limit, atr_limit, "/".join(profile_parts), context)
 
 
-class WyckoffOrderEngine:
+class QuantEvoLensOrderEngine:
     """Deterministic order execution engine."""
 
     SLIPPAGE_BPS = 0.005
@@ -349,10 +349,10 @@ class WyckoffOrderEngine:
 
     def _resolve_entry_limits(self, ctx: OrderContext) -> tuple[float | None, str, str]:
         chase_profile = ""
-        wyckoff_context = _format_wyckoff_context(ctx.dec.wyckoff_track, ctx.dec.wyckoff_stage, ctx.dec.wyckoff_tag)
+        quantevolens_context = _format_quantevolens_context(ctx.dec.quantevolens_track, ctx.dec.quantevolens_stage, ctx.dec.quantevolens_tag)
         if ctx.action not in {"PROBE", "ATTACK"}:
-            return None, chase_profile, wyckoff_context
-        gap_pct_limit, atr_mult_limit, chase_profile, wyckoff_context = _resolve_chase_limits(
+            return None, chase_profile, quantevolens_context
+        gap_pct_limit, atr_mult_limit, chase_profile, quantevolens_context = _resolve_chase_limits(
             ctx.dec,
             self.market_regime,
             self.config,
@@ -373,7 +373,7 @@ class WyckoffOrderEngine:
                 f"T+1_max_entry_price={max_entry_price:.2f}",
             ]
         )
-        return max_entry_price, chase_profile, wyckoff_context
+        return max_entry_price, chase_profile, quantevolens_context
 
     def _resolve_entry_price_for_calc(self, ctx: OrderContext) -> tuple[float, ExecutionTicket | None]:
         price_for_calc = ctx.current_price
@@ -415,7 +415,7 @@ class WyckoffOrderEngine:
         price_for_calc: float,
         max_entry_price: float | None,
         chase_profile: str,
-        wyckoff_context: str,
+        quantevolens_context: str,
     ) -> ExecutionTicket:
         base_slippage, atr_slippage, slippage_abs, fill_price, expected_exit_price, risk_per_share = (
             self._buy_risk_inputs(ctx)
@@ -438,7 +438,7 @@ class WyckoffOrderEngine:
             price_for_calc,
             max_entry_price,
             chase_profile,
-            wyckoff_context,
+            quantevolens_context,
             slippage_abs,
             base_slippage,
             atr_slippage,
@@ -459,7 +459,7 @@ class WyckoffOrderEngine:
         price_for_calc: float,
         max_entry_price: float | None,
         chase_profile: str,
-        wyckoff_context: str,
+        quantevolens_context: str,
         slippage_abs: float,
         base_slippage: float,
         atr_slippage: float,
@@ -505,7 +505,7 @@ class WyckoffOrderEngine:
             audit="; ".join(audit),
             max_entry_price=max_entry_price,
             chase_profile=chase_profile,
-            wyckoff_context=wyckoff_context,
+            quantevolens_context=quantevolens_context,
         )
 
     def _process_buy(self, ctx: OrderContext) -> ExecutionTicket:
@@ -515,11 +515,11 @@ class WyckoffOrderEngine:
             ticket = validator(ctx)
             if ticket is not None:
                 return ticket
-        max_entry_price, chase_profile, wyckoff_context = self._resolve_entry_limits(ctx)
+        max_entry_price, chase_profile, quantevolens_context = self._resolve_entry_limits(ctx)
         price_for_calc, ticket = self._resolve_entry_price_for_calc(ctx)
         if ticket is not None:
             return ticket
-        return self._build_buy_ticket(ctx, price_for_calc, max_entry_price, chase_profile, wyckoff_context)
+        return self._build_buy_ticket(ctx, price_for_calc, max_entry_price, chase_profile, quantevolens_context)
 
     def _process_one(self, dec: DecisionItem) -> ExecutionTicket:
         ctx = self._prepare_order_context(dec)

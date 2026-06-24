@@ -1,7 +1,7 @@
-"""Wyckoff signal-to-event classification.
+"""QuantEvoLens signal-to-event classification.
 
 This borrows CZSC's Signal -> Event mindset without importing Chan theory
-objects.  Wyckoff remains the domain language; this module only turns raw
+objects.  QuantEvoLens remains the domain language; this module only turns raw
 trigger facts into readable, testable event labels.
 """
 
@@ -11,7 +11,7 @@ from dataclasses import dataclass, replace
 
 
 @dataclass(frozen=True)
-class WyckoffEvent:
+class QuantEvoLensEvent:
     event_id: str
     label: str
     track: str
@@ -92,9 +92,9 @@ _SOS_WATCH = _EventSpec(
     watch_points=("确认突破是否有效", "高开过多不宜追"),
 )
 
-_WYCKOFF_WATCH = _EventSpec(
-    event_id="wyckoff_watch",
-    label="威科夫观察",
+_QUANTEVOLENS_WATCH = _EventSpec(
+    event_id="quantevolens_watch",
+    label="QuantEvoLens观察",
     track="Watch",
     action="观察",
     confidence="low",
@@ -124,8 +124,8 @@ def _event(
     *,
     spec: _EventSpec,
     base_reasons: list[str],
-) -> WyckoffEvent:
-    return WyckoffEvent(
+) -> QuantEvoLensEvent:
+    return QuantEvoLensEvent(
         event_id=spec.event_id,
         label=spec.label,
         track=spec.track,
@@ -153,18 +153,18 @@ def _event_spec(trigger_set: set[str], stage: str, score: float) -> _EventSpec:
         return replace(_VOLUME_ABSORPTION, track="Trend" if stage == "Markup" else "Accum")
     if "sos" in trigger_set:
         return _SOS_WATCH
-    return _WYCKOFF_WATCH
+    return _QUANTEVOLENS_WATCH
 
 
-def classify_wyckoff_event(
+def classify_quantevolens_event(
     triggers: tuple[str, ...] | list[str] | set[str],
     *,
     stage: str = "",
     channel: str = "",
     score: float = 0.0,
     regime: str = "",
-) -> WyckoffEvent:
-    """Classify raw Wyckoff triggers into a readable event.
+) -> QuantEvoLensEvent:
+    """Classify raw QuantEvoLens triggers into a readable event.
 
     The returned action is deliberately phrased as observation, not a trade
     instruction.  Trading decisions can later consume these event ids.
@@ -178,4 +178,4 @@ def classify_wyckoff_event(
     return _event(spec=_event_spec(trigger_set, stage_s, score), base_reasons=base_reasons)
 
 
-__all__ = ["WyckoffEvent", "classify_wyckoff_event"]
+__all__ = ["QuantEvoLensEvent", "classify_quantevolens_event"]

@@ -195,7 +195,7 @@ def test_step3_report_workflow_delegates_candidate_data_building():
     imports = set(_import_names(ROOT / "workflows" / "step3_batch_report.py"))
     forbidden = {
         "core.sector_rotation",
-        "core.wyckoff_engine",
+        "core.quantevolens_engine",
         "integrations.fetch_a_share_csv",
         "integrations.index_data_source",
         "integrations.market_metadata",
@@ -523,7 +523,7 @@ def test_theme_radar_entrypoint_delegates_runtime_and_rendering():
         "integrations.theme_radar_storage",
         "utils.feishu",
         "workflows.theme_radar_report",
-        "workflows.wyckoff_funnel",
+        "workflows.quantevolens_funnel",
     }
     assert imports.isdisjoint(forbidden_imports)
     for token in (
@@ -593,14 +593,14 @@ def test_funnel_render_delegates_structured_report_payload():
     assert "workflows.funnel_report_payload" in imports
 
 
-def test_wyckoff_funnel_delegates_notification_delivery():
-    imports = set(_import_names(ROOT / "workflows" / "wyckoff_funnel.py"))
+def test_quantevolens_funnel_delegates_notification_delivery():
+    imports = set(_import_names(ROOT / "workflows" / "quantevolens_funnel.py"))
     assert "workflows.funnel_render" not in imports
     assert "workflows.funnel_delivery" in imports
 
 
-def test_wyckoff_funnel_delegates_benchmark_gate_logging_to_data_workflow():
-    orchestration = (ROOT / "workflows" / "wyckoff_funnel.py").read_text(encoding="utf-8")
+def test_quantevolens_funnel_delegates_benchmark_gate_logging_to_data_workflow():
+    orchestration = (ROOT / "workflows" / "quantevolens_funnel.py").read_text(encoding="utf-8")
     data_workflow = (ROOT / "workflows" / "funnel_data.py").read_text(encoding="utf-8")
     assert "_print_benchmark_gate" not in orchestration
     assert "_print_benchmark_gate" in data_workflow
@@ -675,7 +675,7 @@ def test_market_funnel_entrypoint_delegates_workflow():
         "pathlib",
         "typing",
         "core.candidate_ranker",
-        "core.wyckoff_engine",
+        "core.quantevolens_engine",
         "integrations.tickflow_client",
         "integrations.tickflow_notice",
         "workflows.market_funnel_config",
@@ -886,7 +886,7 @@ def test_backtest_snapshot_fetch_entrypoint_delegates_runtime_workflow():
         "concurrent.futures",
         "dataclasses",
         "pandas",
-        "core.wyckoff_engine",
+        "core.quantevolens_engine",
         "integrations.data_source",
         "integrations.fetch_a_share_csv",
         "integrations.index_data_source",
@@ -921,7 +921,7 @@ def test_benchmark_funnel_fetch_entrypoint_delegates_runtime_workflow():
         "collections",
         "concurrent.futures",
         "pandas",
-        "core.wyckoff_engine",
+        "core.quantevolens_engine",
         "integrations.fetch_a_share_csv",
         "utils.trading_clock",
     }
@@ -973,7 +973,7 @@ def test_diagnose_holdings_entrypoint_delegates_runtime_workflow():
         "pandas",
         "dataclasses",
         "core.holding_diagnostic",
-        "core.wyckoff_engine",
+        "core.quantevolens_engine",
         "integrations.fetch_a_share_csv",
         "integrations.index_data_source",
         "utils.trading_clock",
@@ -1168,7 +1168,7 @@ def test_us_backtest_snapshot_fetch_entrypoint_delegates_runtime_workflow():
         "time",
         "datetime",
         "pandas",
-        "core.wyckoff_engine",
+        "core.quantevolens_engine",
         "integrations.market_universe",
         "integrations.tickflow_client",
     }
@@ -1243,7 +1243,7 @@ def test_single_symbol_diagnosis_entrypoint_delegates_workflow():
         "pandas",
         "core.candidate_ranker",
         "core.signal_confirmation",
-        "core.wyckoff_engine",
+        "core.quantevolens_engine",
         "utils.feishu",
         "workflows.market_funnel_config",
         "workflows.single_symbol_diagnosis_data",
@@ -1420,9 +1420,9 @@ def test_review_list_replay_entrypoint_is_thin_cli():
         "datetime",
         "pandas",
         "core.candidate_ranker",
-        "core.wyckoff_engine",
+        "core.quantevolens_engine",
         "utils.feishu",
-        "workflows.wyckoff_funnel",
+        "workflows.quantevolens_funnel",
     }
     assert imports.isdisjoint(forbidden_imports)
     for token in (

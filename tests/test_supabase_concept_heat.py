@@ -62,7 +62,7 @@ def test_upsert_concept_heat_history_sorts_and_limits(monkeypatch):
     from integrations import supabase_concept_heat as mod
 
     client = _FakeClient()
-    monkeypatch.setenv("WYCKOFF_WRITE_CONTEXT", "server_job")
+    monkeypatch.setenv("QUANTEVOLENS_WRITE_CONTEXT", "server_job")
     monkeypatch.setattr(mod, "_configured", lambda: True)
     monkeypatch.setattr(mod, "_admin", lambda: client)
 

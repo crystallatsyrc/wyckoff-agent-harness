@@ -11,7 +11,7 @@ from typing import Any
 import pandas as pd
 
 from core.market_breadth import calc_market_breadth
-from core.wyckoff_engine import FunnelConfig
+from core.quantevolens_engine import FunnelConfig
 from integrations.fetch_a_share_csv import resolve_trading_window
 from integrations.funnel_snapshot import dump_full_fetch_snapshot
 from integrations.index_data_source import fetch_index_hist

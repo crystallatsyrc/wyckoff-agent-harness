@@ -5,7 +5,7 @@ from datetime import date
 
 import pandas as pd
 
-from core.wyckoff_engine import FunnelConfig
+from core.quantevolens_engine import FunnelConfig
 from workflows.review_big_gainers import find_big_gainers, load_today_review_codes
 from workflows.review_list_replay import (
     ReplayContext,

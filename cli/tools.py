@@ -54,7 +54,7 @@ TOOL_SCHEMAS: list[dict[str, Any]] = [
     },
     {
         "name": "analyze_stock",
-        "description": "分析单只股票：A 股/ETF 支持 6 位代码；美股/港股使用 TickFlow 标准代码。支持 Wyckoff 健康诊断或近期行情查询。",
+        "description": "分析单只股票：A 股/ETF 支持 6 位代码；美股/港股使用 TickFlow 标准代码。支持 QuantEvoLens 健康诊断或近期行情查询。",
         "parameters": {
             "type": "object",
             "properties": {
@@ -62,7 +62,7 @@ TOOL_SCHEMAS: list[dict[str, Any]] = [
                 "mode": {
                     "type": "string",
                     "enum": ["diagnose", "price"],
-                    "description": "'diagnose' 做 Wyckoff 结构化诊断；'price' 仅返回近期 OHLCV 行情",
+                    "description": "'diagnose' 做 QuantEvoLens 结构化诊断；'price' 仅返回近期 OHLCV 行情",
                 },
                 "cost": {"type": "number", "description": "持仓成本价（仅 diagnose 模式），默认 0"},
                 "days": {"type": "integer", "description": "获取天数（仅 price 模式），默认 30，最大 250"},
@@ -72,7 +72,7 @@ TOOL_SCHEMAS: list[dict[str, Any]] = [
     },
     {
         "name": "portfolio",
-        "description": "查看或诊断用户持仓。mode='view' 返回持仓列表和资金；mode='diagnose' 对每只持仓做 Wyckoff 健康诊断。",
+        "description": "查看或诊断用户持仓。mode='view' 返回持仓列表和资金；mode='diagnose' 对每只持仓做 QuantEvoLens 健康诊断。",
         "parameters": {
             "type": "object",
             "properties": {
@@ -111,7 +111,7 @@ TOOL_SCHEMAS: list[dict[str, Any]] = [
     },
     {
         "name": "screen_stocks",
-        "description": "运行 Wyckoff 五层漏斗筛选，从全市场筛选出具有结构性机会的股票。整个过程可能需要几分钟。",
+        "description": "运行 QuantEvoLens 五层漏斗筛选，从全市场筛选出具有结构性机会的股票。整个过程可能需要几分钟。",
         "parameters": {
             "type": "object",
             "properties": {
@@ -124,7 +124,7 @@ TOOL_SCHEMAS: list[dict[str, Any]] = [
     },
     {
         "name": "generate_ai_report",
-        "description": "对指定股票列表生成威科夫三阵营 AI 深度研报（逻辑破产/储备营地/起跳板）。需要 Gemini API Key。最多 10 只。",
+        "description": "对指定股票列表生成QuantEvoLens三阵营 AI 深度研报（逻辑破产/储备营地/起跳板）。需要 Gemini API Key。最多 10 只。",
         "parameters": {
             "type": "object",
             "properties": {
@@ -206,7 +206,7 @@ TOOL_SCHEMAS: list[dict[str, Any]] = [
     },
     {
         "name": "run_backtest",
-        "description": "回测威科夫五层漏斗策略的历史表现。耗时 3-10 分钟，后台执行。用户问'帮我回测''跑个回测'时调用。",
+        "description": "回测QuantEvoLens五层漏斗策略的历史表现。耗时 3-10 分钟，后台执行。用户问'帮我回测''跑个回测'时调用。",
         "parameters": {
             "type": "object",
             "properties": {
@@ -280,7 +280,7 @@ TOOL_SCHEMAS: list[dict[str, Any]] = [
     },
     {
         "name": "delegate_to_analysis",
-        "description": "委派分析师做深度分析。用于个股诊断、持仓体检、AI 研报等需要 Wyckoff 框架深度分析的任务。",
+        "description": "委派分析师做深度分析。用于个股诊断、持仓体检、AI 研报等需要 QuantEvoLens 框架深度分析的任务。",
         "parameters": {
             "type": "object",
             "properties": {

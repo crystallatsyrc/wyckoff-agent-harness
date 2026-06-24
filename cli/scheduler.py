@@ -10,7 +10,7 @@ from pathlib import Path
 
 logger = logging.getLogger(__name__)
 
-SCHEDULES_PATH = Path.home() / ".wyckoff" / "schedules.json"
+SCHEDULES_PATH = Path.home() / ".quantevolens" / "schedules.json"
 
 DEFAULT_PRESETS: list[dict] = [
     {

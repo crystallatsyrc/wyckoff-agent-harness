@@ -46,10 +46,10 @@ def _bool_value(raw: Any, default: bool) -> bool:
 
 
 def _profile_path() -> Path:
-    raw_path = os.getenv("WYCKOFF_CONFIG_PATH", "").strip()
+    raw_path = os.getenv("QUANTEVOLENS_CONFIG_PATH", "").strip()
     if raw_path:
         return Path(raw_path).expanduser()
-    profile = os.getenv("WYCKOFF_CONFIG_PROFILE", "a_share_prod").strip() or "a_share_prod"
+    profile = os.getenv("QUANTEVOLENS_CONFIG_PROFILE", "a_share_prod").strip() or "a_share_prod"
     if "/" in profile or profile.endswith((".yml", ".yaml")):
         return Path(profile).expanduser()
     return ROOT / "config" / "profiles" / f"{profile}.yml"

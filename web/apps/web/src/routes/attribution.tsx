@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query'
 import { RefreshCw } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { checkWhitelist } from '@/lib/kline'
-import { WyckoffLoading } from '@/components/loading'
+import { QuantEvoLensLoading } from '@/components/loading'
 import { useAuthStore } from '@/stores/auth'
 
 type JsonMap = Record<string, unknown>
@@ -80,9 +80,9 @@ export function AttributionPage() {
     enabled: whitelist.data === true,
   })
 
-  if (whitelist.isLoading) return <WyckoffLoading />
+  if (whitelist.isLoading) return <QuantEvoLensLoading />
   if (whitelist.data !== true) return <LockedView />
-  if (report.isLoading) return <WyckoffLoading />
+  if (report.isLoading) return <QuantEvoLensLoading />
 
   return (
     <div className="h-full overflow-auto p-6">

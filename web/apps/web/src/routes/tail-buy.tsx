@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
 import { checkWhitelist } from '@/lib/kline'
-import { WyckoffLoading } from '@/components/loading'
+import { QuantEvoLensLoading } from '@/components/loading'
 import { usePreferences } from '@/lib/preferences'
 import { useAuthStore } from '@/stores/auth'
 
@@ -136,9 +136,9 @@ export function TailBuyPage() {
     enabled: whitelist.data === true,
   })
 
-  if (whitelist.isLoading) return <WyckoffLoading />
+  if (whitelist.isLoading) return <QuantEvoLensLoading />
   if (whitelist.data !== true) return <TailBuyLockedView />
-  if (tailBuy.isLoading) return <WyckoffLoading />
+  if (tailBuy.isLoading) return <QuantEvoLensLoading />
 
   return <TailBuyReadyContent data={tailBuy.data || []} />
 }

@@ -1,4 +1,4 @@
-"""Agent-facing stock price and Wyckoff diagnosis tools."""
+"""Agent-facing stock price and QuantEvoLens diagnosis tools."""
 
 from __future__ import annotations
 
@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 def analyze_stock(
     code: str, mode: str = "diagnose", cost: float = 0.0, days: int = 30, tool_context: ToolContext | None = None
 ) -> dict:
-    """分析单只 A 股股票：Wyckoff 健康诊断或近期行情查询。"""
+    """分析单只 A 股股票：QuantEvoLens 健康诊断或近期行情查询。"""
     try:
         ensure_tushare_token(tool_context)
         mode = (mode or "diagnose").strip().lower()

@@ -24,7 +24,7 @@ flowchart LR
 ```mermaid
 flowchart TD
   subgraph F["T 日 17:17：A 股漏斗"]
-    A["wyckoff_funnel.yml<br/>定时或手动触发"] --> B["scripts/daily_job.py"]
+    A["quantevolens_funnel.yml<br/>定时或手动触发"] --> B["scripts/daily_job.py"]
     B --> C["Step2: run_funnel"]
     C --> D["读取上一轮<br/>signal_health_daily / signal_registry"]
     D --> E{"FUNNEL_DYNAMIC_POLICY"}
@@ -79,8 +79,8 @@ GitHub Actions 中建议用 Repository Variables 配置：
 |--------|--------|------|
 | `FUNNEL_DYNAMIC_POLICY` | `shadow` | 非敏感配置，优先放 GitHub Variables；也兼容 Secrets。 |
 | `FUNNEL_EXTERNAL_SEED_SYMBOLS` / `FUNNEL_EXTRA_SYMBOLS` | 空 | 临时追加外部观察名单；存在时自动启用 external seed shadow。 |
-| `WYCKOFF_WRITE_CONTEXT` | `server_job` | 只有 Actions / server job 可写共享信号、推荐、策略表；CLI 默认只读云端。 |
-| `WYCKOFF_STRATEGY_REFLECTION` | `shadow` | 开启策略反思 shadow 写入，不自动晋级生产策略。 |
+| `QUANTEVOLENS_WRITE_CONTEXT` | `server_job` | 只有 Actions / server job 可写共享信号、推荐、策略表；CLI 默认只读云端。 |
+| `QUANTEVOLENS_STRATEGY_REFLECTION` | `shadow` | 开启策略反思 shadow 写入，不自动晋级生产策略。 |
 | `SUPABASE_SERVICE_ROLE_KEY` | service role key | 定时任务写反馈表需要绕过 RLS。 |
 
 本地临时验证：

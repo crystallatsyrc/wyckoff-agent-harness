@@ -12,7 +12,7 @@ from core.funnel_theme import empty_theme_snapshot, select_linked_theme_radar
 from core.funnel_theme import theme_candidate_map as build_theme_candidate_map
 from core.sector_rotation import analyze_sector_rotation
 from core.theme_radar import build_theme_radar_snapshot
-from core.wyckoff_engine import (
+from core.quantevolens_engine import (
     FunnelConfig,
     detect_leader_radar,
     layer1_filter,

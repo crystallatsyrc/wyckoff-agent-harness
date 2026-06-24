@@ -21,7 +21,7 @@ export interface SaveHistoryInput<T> {
   payload: T
 }
 
-const DB_NAME = 'wyckoff-local-history'
+const DB_NAME = 'quantevolens-local-history'
 const STORE_NAME = 'analysis-history'
 const DB_VERSION = 1
 const HISTORY_LIMIT = 30

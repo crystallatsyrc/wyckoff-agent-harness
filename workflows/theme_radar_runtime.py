@@ -14,7 +14,7 @@ from integrations.supabase_concept_heat import load_concept_heat_history_from_su
 from integrations.theme_radar_storage import persist_theme_radar_snapshot
 from utils.feishu import send_feishu_notification
 from workflows.theme_radar_report import render_theme_radar_html, render_theme_radar_report
-from workflows.wyckoff_funnel import run_funnel_job
+from workflows.quantevolens_funnel import run_funnel_job
 
 
 @dataclass(frozen=True)

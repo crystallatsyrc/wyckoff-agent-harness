@@ -11,7 +11,7 @@ from workflows.diagnose_holdings_cli import run_diagnose_holdings_cli
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        description="持仓健康诊断 CLI — 基于 Wyckoff 引擎的结构化诊断",
+        description="持仓健康诊断 CLI — 基于 QuantEvoLens 引擎的结构化诊断",
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument("--codes", type=str, default="", help="逗号分隔的股票代码，如 300813,600703,300014")

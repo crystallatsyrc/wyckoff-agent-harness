@@ -4,7 +4,7 @@ import { CheckCircle2, ShieldCheck } from 'lucide-react'
 import { createChart, HistogramSeries, type Time } from 'lightweight-charts'
 import { supabase } from '@/lib/supabase'
 import { checkWhitelist } from '@/lib/kline'
-import { WyckoffLoading } from '@/components/loading'
+import { QuantEvoLensLoading } from '@/components/loading'
 import { usePreferences, type TranslationKey } from '@/lib/preferences'
 import { useAuthStore } from '@/stores/auth'
 
@@ -181,7 +181,7 @@ export function TrackingPage() {
   const latestDate = latestDates[0] ?? null
   const oldestDate = latestDates.at(-1) ?? null
   const activeOldestDate = activeDates.at(-1) ?? null
-  if (whitelist.isLoading) return <WyckoffLoading />
+  if (whitelist.isLoading) return <QuantEvoLensLoading />
   if (!isWhitelisted) return <TrackingLockedView />
 
   return (
@@ -193,7 +193,7 @@ export function TrackingPage() {
           {fetchError.message}
         </div>
       ) : loading ? (
-        <WyckoffLoading />
+        <QuantEvoLensLoading />
       ) : (
         <TrackingReadyContent
           activeDates={activeDates}

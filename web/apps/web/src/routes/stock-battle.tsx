@@ -522,7 +522,7 @@ async function callBattleLLM(config: Parameters<typeof streamLLMResponse>[0], st
 
 function buildBattleMessages(stocks: BattleStock[]) {
   return [
-    { role: 'system' as const, content: '你是威科夫强弱对抗分析师。主框架是量价相对强弱、趋势延续性和回撤位置；若给出价值面摘要，只把它作为质量、风险和置信度校准，不用基本面替代 K 线事实。输出强弱排序、胜出原因、落后风险、价值面校准、适合观察的触发价位。' },
+    { role: 'system' as const, content: '你是QuantEvoLens强弱对抗分析师。主框架是量价相对强弱、趋势延续性和回撤位置；若给出价值面摘要，只把它作为质量、风险和置信度校准，不用基本面替代 K 线事实。输出强弱排序、胜出原因、落后风险、价值面校准、适合观察的触发价位。' },
     { role: 'user' as const, content: `请比较这些股票的强弱，并给出结论。\n\n${stocks.map(buildStockDigest).join('\n\n---\n\n')}` },
   ]
 }

@@ -11,7 +11,7 @@ import workflows.funnel_candidates as funnel_candidates
 import workflows.funnel_data as funnel_data
 import workflows.funnel_etf as etf_workflow
 import workflows.funnel_layers as funnel_layers
-import workflows.wyckoff_funnel as funnel
+import workflows.quantevolens_funnel as funnel
 from core.candidate_policy import apply_loss_guard
 from core.funnel_etf import append_etf_section, rank_etf_candidates
 from core.funnel_report import signal_report_fields

@@ -11,14 +11,14 @@ def test_exec_command_allows_simple_read_only_command():
 
 
 def test_exec_command_blocks_shell_control_operators():
-    result = exec_command("echo hello; cat ~/.wyckoff/config.json")
+    result = exec_command("echo hello; cat ~/.quantevolens/config.json")
 
     assert result["error"].startswith("安全拦截")
     assert "shell 控制符" in result["error"]
 
 
 def test_exec_command_blocks_destructive_command():
-    result = exec_command("rm -rf /tmp/wyckoff-agent-security-test")
+    result = exec_command("rm -rf /tmp/quantevolens-agent-security-test")
 
     assert result["error"].startswith("安全拦截")
     assert "高风险命令" in result["error"]
@@ -38,8 +38,8 @@ def test_exec_command_blocks_environment_dump():
     assert "高风险命令" in result["error"]
 
 
-def test_exec_command_blocks_wyckoff_config_path():
-    result = exec_command("ls ~/.wyckoff/config.json")
+def test_exec_command_blocks_quantevolens_config_path():
+    result = exec_command("ls ~/.quantevolens/config.json")
 
     assert result["error"].startswith("安全拦截")
     assert "凭据" in result["error"] or "会话" in result["error"]

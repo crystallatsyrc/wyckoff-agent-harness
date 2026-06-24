@@ -133,7 +133,7 @@ def _build_stock_payload(
     return generate_stock_payload(
         stock_code=code,
         stock_name=str(row.get("name", code)),
-        wyckoff_tag=_wyckoff_tag(row, source_label),
+        quantevolens_tag=_quantevolens_tag(row, source_label),
         df=stock_df,
         industry=str(row.get("industry", "")),
         market_cap_yi=pd.to_numeric(row.get("market_cap_yi"), errors="coerce"),
@@ -173,9 +173,9 @@ def _row_text_or_none(row: pd.Series, field: str) -> str | None:
     return text or None
 
 
-def _wyckoff_tag(row: pd.Series, source_label: str) -> str:
-    wyckoff_tag = str(row.get("tag", "")).strip()
-    return f"[{source_label}] {wyckoff_tag}".strip() if source_label else wyckoff_tag
+def _quantevolens_tag(row: pd.Series, source_label: str) -> str:
+    quantevolens_tag = str(row.get("tag", "")).strip()
+    return f"[{source_label}] {quantevolens_tag}".strip() if source_label else quantevolens_tag
 
 
 def _benchmark_header_lines(benchmark_context: dict) -> list[str]:

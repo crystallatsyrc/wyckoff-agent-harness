@@ -26,4 +26,4 @@ TABLE_EXTERNAL_SEED_OBSERVATIONS = "external_seed_observations"
 # Local SQLite DB path
 from pathlib import Path as _Path
 
-LOCAL_DB_PATH = _Path.home() / ".wyckoff" / "wyckoff.db"
+LOCAL_DB_PATH = _Path.home() / ".quantevolens" / "quantevolens.db"

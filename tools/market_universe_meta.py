@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import Any
 
 UNIVERSE_DIR = Path(__file__).resolve().parent.parent / "data" / "market_universes"
-DIST_UNIVERSE_DIR = Path(sys.prefix) / "share" / "youngcan-wyckoff-analysis" / "market_universes"
+DIST_UNIVERSE_DIR = Path(sys.prefix) / "share" / "quantevolens" / "market_universes"
 META_FILES = {
     "us": "us_meta.json",
     "hk": "hk_meta.json",

@@ -60,7 +60,7 @@ export function useReadingRoomWatchlist(userId: string | undefined): ReadingRoom
 }
 
 function watchlistStorageKey(userId: string | undefined): string {
-  return `wyckoff:${userId || 'guest'}:${WATCHLIST_STORAGE_VERSION}`
+  return `quantevolens:${userId || 'guest'}:${WATCHLIST_STORAGE_VERSION}`
 }
 
 function readWatchlist(key: string): WatchItem[] {

@@ -12,7 +12,7 @@ from dataclasses import dataclass
 import pandas as pd
 
 from core.market_breadth import calc_market_breadth as calc_core_market_breadth
-from core.wyckoff_engine import FunnelConfig
+from core.quantevolens_engine import FunnelConfig
 from tools.market_liquidity import calc_amount_distribution_health, calc_market_money_flow
 
 _PV_OUTLOOK_FALLBACK: dict[str, str] = {
@@ -25,7 +25,7 @@ _PV_OUTLOOK_FALLBACK: dict[str, str] = {
 }
 
 _PV_SYSTEM_PROMPT = (
-    "你是 Wyckoff 量价分析师。根据以下大盘结构化数据，给出次日操作推演。\n"
+    "你是 QuantEvoLens 量价分析师。根据以下大盘结构化数据，给出次日操作推演。\n"
     "要求：1-2句话，不超过80字，纯操作指引（若X则Y格式），不要废话和客套。"
 )
 

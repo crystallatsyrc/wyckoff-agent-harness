@@ -5,7 +5,7 @@
 
 from __future__ import annotations
 
-from core.prompts import WYCKOFF_FUNNEL_SYSTEM_PROMPT
+from core.prompts import QUANTEVOLENS_FUNNEL_SYSTEM_PROMPT
 from workflows.step3_candidates import build_step3_candidate_bundle, load_step3_market_context
 from workflows.step3_inputs import (
     build_step3_benchmark_lines,
@@ -88,7 +88,7 @@ def _build_step3_track_plan(
         benchmark_context=market_context.benchmark_context,
         compressed=options.runtime_config.enable_compression,
         model_label=route_label(options.provider, options.model),
-        system_prompt=WYCKOFF_FUNNEL_SYSTEM_PROMPT,
+        system_prompt=QUANTEVOLENS_FUNNEL_SYSTEM_PROMPT,
     )
     return Step3TrackPlan(track_inputs, track_requests, active_tracks)
 
@@ -117,7 +117,7 @@ def _run_step3_selection(
     track_plan = _build_step3_track_plan(items, selection, options)
     if not track_plan:
         return (False, "payload_build_failed", "")
-    preview_result = maybe_return_step3_preview(options, track_plan.track_requests, WYCKOFF_FUNNEL_SYSTEM_PROMPT)
+    preview_result = maybe_return_step3_preview(options, track_plan.track_requests, QUANTEVOLENS_FUNNEL_SYSTEM_PROMPT)
     if preview_result:
         return preview_result
     llm_result = call_step3_track_reports(
@@ -125,7 +125,7 @@ def _run_step3_selection(
         track_plan.track_inputs,
         selected_df,
         options,
-        WYCKOFF_FUNNEL_SYSTEM_PROMPT,
+        QUANTEVOLENS_FUNNEL_SYSTEM_PROMPT,
         report_progress,
     )
     if not llm_result.ok:

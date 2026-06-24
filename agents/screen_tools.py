@@ -1,4 +1,4 @@
-"""Agent-facing Wyckoff funnel screen tool."""
+"""Agent-facing QuantEvoLens funnel screen tool."""
 
 from __future__ import annotations
 
@@ -24,7 +24,7 @@ _BOARD_ALIAS = {
 
 
 def screen_stocks(board: str = "all", tool_context: ToolContext | None = None) -> dict:
-    """运行 Wyckoff 五层漏斗筛选。"""
+    """运行 QuantEvoLens 五层漏斗筛选。"""
     try:
         ensure_tushare_token(tool_context)
         board = _normalize_board(board)
@@ -55,7 +55,7 @@ def _normalize_board(board: str) -> str:
 
 
 def _run_funnel_with_board(board: str):
-    from workflows.wyckoff_funnel import run as run_funnel
+    from workflows.quantevolens_funnel import run as run_funnel
 
     return run_funnel("", notify=False, return_details=True, pool_board=board, executor_mode="thread")
 

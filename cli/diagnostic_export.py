@@ -10,7 +10,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-from cli.scratchpad import wyckoff_home
+from cli.scratchpad import quantevolens_home
 
 _SENSITIVE_KEY_RE = re.compile(r"(api[_-]?key|token|password|secret|authorization|cookie)", re.IGNORECASE)
 _TEXT_SECRET_PATTERNS = (
@@ -67,11 +67,11 @@ def _loads_json_maybe(text: str) -> Any:
 
 
 def _default_output_path(session_id: str, *, output_format: str) -> Path:
-    out_dir = wyckoff_home() / "diagnostics"
+    out_dir = quantevolens_home() / "diagnostics"
     out_dir.mkdir(parents=True, exist_ok=True)
     stamp = datetime.now().strftime("%Y-%m-%d-%H%M%S")
     suffix = "zip" if output_format == "zip" else "json"
-    return out_dir / f"wyckoff-diagnostic-{session_id[:8]}-{stamp}.{suffix}"
+    return out_dir / f"quantevolens-diagnostic-{session_id[:8]}-{stamp}.{suffix}"
 
 
 def _latest_session_id() -> str:
@@ -96,7 +96,7 @@ def _session_manifest(session_id: str, logs: list[dict[str, Any]]) -> dict[str, 
     models = sorted({str(row.get("model", "") or "") for row in logs if row.get("model")})
     providers = sorted({str(row.get("provider", "") or "") for row in logs if row.get("provider")})
     return {
-        "schema": "wyckoff.diagnostic.v1",
+        "schema": "quantevolens.diagnostic.v1",
         "session_id": session_id,
         "exported_at": datetime.now().isoformat(timespec="seconds"),
         "message_count": len(logs),
@@ -110,7 +110,7 @@ def _session_manifest(session_id: str, logs: list[dict[str, Any]]) -> dict[str, 
 
 
 def _transcript_markdown(session_id: str, logs: list[dict[str, Any]]) -> str:
-    lines = ["# Wyckoff Diagnostic Transcript", "", f"- session_id: `{session_id}`", ""]
+    lines = ["# QuantEvoLens Diagnostic Transcript", "", f"- session_id: `{session_id}`", ""]
     for row in logs:
         role = str(row.get("role", "") or "unknown")
         created_at = str(row.get("created_at", "") or "")
@@ -142,7 +142,7 @@ def _safe_under_home(path: Path, home: Path) -> bool:
 
 
 def _collect_referenced_files(logs: list[dict[str, Any]]) -> tuple[list[Path], list[Path]]:
-    home = wyckoff_home()
+    home = quantevolens_home()
     scratchpads: dict[str, Path] = {}
     tool_results: dict[str, Path] = {}
 
@@ -233,7 +233,7 @@ def _write_zip(path: Path, payload: dict[str, Any]) -> None:
 
 
 def _filtered_tool_result_index(tool_results: list[Path]) -> str:
-    index_path = wyckoff_home() / "tool-results" / "index.jsonl"
+    index_path = quantevolens_home() / "tool-results" / "index.jsonl"
     if not tool_results or not index_path.exists() or not index_path.is_file():
         return ""
     refs = {str(path.resolve()) for path in tool_results}
