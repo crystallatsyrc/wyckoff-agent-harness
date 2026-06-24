@@ -1,0 +1,80 @@
+[project]
+name = "youngcan-wyckoff-analysis"
+version = "0.9.19"
+requires-python = ">=3.11"
+description = "Wyckoff method quantitative analysis system for A-shares, Hong Kong stocks, and US stocks"
+readme = "README.md"
+license = "AGPL-3.0-only"
+authors = [{ name = "youngcan" }]
+keywords = ["wyckoff", "stock", "a-share", "quantitative", "agent"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Topic :: Office/Business :: Financial :: Investment",
+]
+dependencies = [
+    "akshare>=1.18.9",
+    "baostock",
+    "efinance>=0.2.0",
+    "tushare>=1.2.89",
+    "pandas>=2.2.0,<3.0",
+    "google-genai>=0.6.0",
+    "requests>=2.31.0",
+    "urllib3>=2.7.0",
+    "idna>=3.15",
+    "certifi",
+    "tavily-python>=0.3.0",
+    "sqlalchemy>=2.0.0",
+    "tenacity>=8.2.0",
+    "python-dotenv>=1.0.0",
+    "python-multipart>=0.0.31",
+    "supabase>=2.0.0",
+    "py-mini-racer>=0.6.0",
+    "matplotlib>=3.8.0",
+    "pillow>=10.0.0",
+    "rich>=13.0.0",
+    "prompt-toolkit>=3.0.0",
+    "textual>=0.50.0",
+    "anthropic>=0.30.0",
+    "openai>=1.30.0",
+    "litellm>=1.83.11",
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+mcp = ["mcp>=1.0.0", "starlette>=1.0.1"]
+wbt = ["wbt>=0.1.6"]
+dev = ["pytest>=7.0", "ruff>=0.4.0", "pre-commit>=3.7.0"]
+
+[project.scripts]
+wyckoff = "cli.__main__:main"
+wyckoff-mcp = "mcp_server:main"
+
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["agents*", "cli*", "core*", "integrations*", "tools*", "utils*", "scripts*"]
+
+[tool.setuptools.data-files]
+"share/youngcan-wyckoff-analysis/market_universes" = [
+    "data/market_universes/*.json",
+    "data/market_universes/*.txt",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 120
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B"]
+ignore = ["E501", "E402", "E741", "B904", "B905"]
+
+[tool.ruff.lint.isort]
+known-third-party = ["supabase"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["B011", "S101"]
