@@ -13,8 +13,8 @@ from core.candidate_policy import (
     trigger_sets_by_code,
 )
 from core.candidate_ranker import rank_l3_candidates
-from core.sector_rotation import analyze_sector_rotation
 from core.quantevolens_engine import FunnelConfig, FunnelResult
+from core.sector_rotation import analyze_sector_rotation
 
 TRADEABLE_L4_SELECTION_MODES = {"tradeable_l4"}
 STRICT_L4_SELECTION_MODES = {"quality_l4", "strict_l4"}

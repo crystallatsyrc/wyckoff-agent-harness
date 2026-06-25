@@ -85,6 +85,7 @@ _LAYER_TYPES = {
 DEFAULT_MAX_CHARS_PER_MEMORY = 200
 DEFAULT_MAX_TOTAL_RECALL_CHARS = 1200
 _RECALL_TRUNCATION_SUFFIX = "…（已截断，可用 quantevolens memory trace 查看来源）"
+_RECALL_TRUNCATION_SHORT_SUFFIX = "…（已截断）"
 _LAYER_SOURCE_LIMIT = 30
 _LAYER_MIN_ATOMS = 3
 _LAYER_VERSION = 3
@@ -443,6 +444,8 @@ def _truncate_text(text: str, max_chars: int) -> str:
     if max_chars <= 0 or len(text) <= max_chars:
         return text
     if max_chars <= len(_RECALL_TRUNCATION_SUFFIX):
+        if max_chars > len(_RECALL_TRUNCATION_SHORT_SUFFIX):
+            return text[: max_chars - len(_RECALL_TRUNCATION_SHORT_SUFFIX)].rstrip() + _RECALL_TRUNCATION_SHORT_SUFFIX
         return text[:max_chars]
     return text[: max_chars - len(_RECALL_TRUNCATION_SUFFIX)].rstrip() + _RECALL_TRUNCATION_SUFFIX
 

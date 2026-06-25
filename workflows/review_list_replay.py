@@ -13,10 +13,10 @@ import pandas as pd
 from core.candidate_ranker import TRIGGER_LABELS
 from core.quantevolens_engine import FunnelConfig, sort_by_date_if_needed
 from utils.feishu import send_feishu_notification
+from workflows.quantevolens_funnel import run_funnel_job
 from workflows.review_big_gainers import is_target_cn_board, load_today_review_codes
 from workflows.review_recommendation_lookup import format_recommendation_history, load_recommendation_lookup
 from workflows.review_report_render import build_report_lines
-from workflows.quantevolens_funnel import run_funnel_job
 
 
 @dataclass(frozen=True)

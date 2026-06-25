@@ -21,12 +21,26 @@ MAX_AGENT_TEXT_WRITE_BYTES = 2 * 1024 * 1024
 MAX_AGENT_WEB_BYTES = 1024 * 1024
 
 
+def _windows_builtin_result(args: list[str]) -> dict | None:
+    if os.name != "nt" or not args:
+        return None
+    if args[0].lower() != "echo":
+        return None
+
+    stdout = " ".join(args[1:]) + "\n"
+    stdout = redact_sensitive_text(stdout)
+    return {"stdout": stdout[:8000] + ("...(鎴柇)" if len(stdout) > 8000 else ""), "stderr": "", "returncode": 0}
+
+
 def exec_command(command: str, timeout: int = 30, tool_context: Any = None) -> dict:
     args = validate_agent_command(command)
     if isinstance(args, dict):
         return args
 
     timeout = max(1, min(int(timeout), 120))
+    if (result := _windows_builtin_result(args)) is not None:
+        return result
+
     try:
         result = subprocess.run(
             args,

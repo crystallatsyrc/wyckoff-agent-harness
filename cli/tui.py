@@ -99,7 +99,12 @@ def _make_csi_u_input_thread(driver_self) -> None:
 
 
 def _patch_driver_no_kitty() -> None:
-    from textual.drivers.linux_driver import LinuxDriver
+    try:
+        from textual.drivers.linux_driver import LinuxDriver
+    except ModuleNotFoundError as exc:
+        if exc.name == "termios":
+            return
+        raise
 
     _orig_write = LinuxDriver.write
 

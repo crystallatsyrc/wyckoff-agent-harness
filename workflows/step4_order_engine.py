@@ -349,7 +349,9 @@ class QuantEvoLensOrderEngine:
 
     def _resolve_entry_limits(self, ctx: OrderContext) -> tuple[float | None, str, str]:
         chase_profile = ""
-        quantevolens_context = _format_quantevolens_context(ctx.dec.quantevolens_track, ctx.dec.quantevolens_stage, ctx.dec.quantevolens_tag)
+        quantevolens_context = _format_quantevolens_context(
+            ctx.dec.quantevolens_track, ctx.dec.quantevolens_stage, ctx.dec.quantevolens_tag
+        )
         if ctx.action not in {"PROBE", "ATTACK"}:
             return None, chase_profile, quantevolens_context
         gap_pct_limit, atr_mult_limit, chase_profile, quantevolens_context = _resolve_chase_limits(

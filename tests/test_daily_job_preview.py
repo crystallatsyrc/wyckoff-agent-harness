@@ -12,9 +12,9 @@ def test_preview_only_skips_persistence_and_keeps_llm_input_path(monkeypatch, tm
     import workflows.daily_job_persistence as daily_persistence
     import workflows.daily_job_runtime as daily_runtime
     import workflows.daily_job_step2 as daily_step2
+    import workflows.quantevolens_funnel as quantevolens_funnel
     import workflows.step2_signal_confirmation as signal_confirmation
     import workflows.step3_batch_report as step3_batch_report
-    import workflows.quantevolens_funnel as quantevolens_funnel
 
     captured: dict[str, object] = {}
 

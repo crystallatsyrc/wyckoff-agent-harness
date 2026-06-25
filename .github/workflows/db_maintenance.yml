@@ -37,4 +37,4 @@ jobs:
 
       - name: Run DB maintenance
         run: |
-          python -u scripts/db_maintenance.py
+          python -u scripts/db_maintenance.py --skip-if-unconfigured

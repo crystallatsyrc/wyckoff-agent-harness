@@ -9,7 +9,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-from utils.local_state import scrub_sensitive_value, quantevolens_home
+from utils.local_state import quantevolens_home, scrub_sensitive_value
 
 _CODE_RE = re.compile(r"\b\d{6}\b")
 _FILE_RE = re.compile(r"(?:[\w.-]+/)+[\w.-]+")

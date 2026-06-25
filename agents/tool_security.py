@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import ipaddress
+import os
 import pathlib
 import re
 import shlex
@@ -89,6 +90,7 @@ _BLOCKED_COMMANDS = {
 }
 _INLINE_CODE_COMMANDS = {"python", "python3", "node", "ruby", "perl", "php"}
 _SHELL_META_RE = re.compile(r"[\n\r;&|<>`]|(?<!\\)\$\(")
+_POSIX_SYSTEM_PATH_RE = re.compile(r"^/(?:bin|etc|Library|private/etc|sbin|System|usr|var)(?:/|$)")
 _SAFE_WRITE_SUFFIXES = {
     ".csv",
     ".html",
@@ -147,6 +149,9 @@ def _is_under_path(path: pathlib.Path, root: pathlib.Path) -> bool:
 def validate_agent_path(path: str, *, for_write: bool = False) -> pathlib.Path | dict:
     if not path or not str(path).strip():
         return security_error("文件路径不能为空")
+    raw_path = str(path).strip().replace("\\", "/")
+    if os.name == "nt" and _POSIX_SYSTEM_PATH_RE.match(raw_path):
+        return security_error("禁止访问系统目录")
 
     try:
         p = pathlib.Path(path).expanduser().resolve()

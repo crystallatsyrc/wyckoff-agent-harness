@@ -3,8 +3,8 @@ from __future__ import annotations
 import pandas as pd
 
 from core.kline_quality import check_kline_quality, check_kline_quality_map, summarize_quality_reports
-from core.signal_lifecycle import evaluate_signal_lifecycle
 from core.quantevolens_events import classify_quantevolens_event
+from core.signal_lifecycle import evaluate_signal_lifecycle
 
 
 def test_classify_quantevolens_event_right_side_ignition():

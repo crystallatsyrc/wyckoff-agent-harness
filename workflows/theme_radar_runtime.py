@@ -13,8 +13,8 @@ from integrations.market_metadata import CONCEPT_HEAT_HISTORY
 from integrations.supabase_concept_heat import load_concept_heat_history_from_supabase
 from integrations.theme_radar_storage import persist_theme_radar_snapshot
 from utils.feishu import send_feishu_notification
-from workflows.theme_radar_report import render_theme_radar_html, render_theme_radar_report
 from workflows.quantevolens_funnel import run_funnel_job
+from workflows.theme_radar_report import render_theme_radar_html, render_theme_radar_report
 
 
 @dataclass(frozen=True)

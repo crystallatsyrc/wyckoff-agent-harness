@@ -2,7 +2,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from workflows.db_maintenance import cleanup_recommendation_table, cleanup_recommendation_tracking
+from workflows import db_maintenance
+from workflows.db_maintenance import DbMaintenanceRequest, cleanup_recommendation_table, cleanup_recommendation_tracking
 
 
 @dataclass
@@ -66,6 +67,21 @@ class _FakeClient:
 
     def table(self, name: str):
         return _FakeTable(self, name)
+
+
+def test_run_db_maintenance_skips_when_admin_config_missing(monkeypatch, capsys):
+    monkeypatch.delenv("SUPABASE_URL", raising=False)
+    monkeypatch.delenv("SUPABASE_SERVICE_ROLE_KEY", raising=False)
+
+    def fail_create_admin_client():
+        raise AssertionError("admin client should not be created")
+
+    monkeypatch.setattr(db_maintenance, "create_admin_client", fail_create_admin_client)
+
+    code = db_maintenance.run_db_maintenance(DbMaintenanceRequest(skip_if_unconfigured=True))
+
+    assert code == 0
+    assert "skipped" in capsys.readouterr().out
 
 
 def test_cleanup_recommendation_tracking_keeps_latest_distinct_dates():

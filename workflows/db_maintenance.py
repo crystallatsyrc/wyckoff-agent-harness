@@ -17,12 +17,13 @@ from core.constants import (
     TABLE_TAIL_BUY_HISTORY,
     TABLE_TRADE_ORDERS,
 )
-from integrations.supabase_base import create_admin_client
+from integrations.supabase_base import create_admin_client, is_admin_configured
 
 
 @dataclass(frozen=True)
 class DbMaintenanceRequest:
     dry_run: bool = False
+    skip_if_unconfigured: bool = False
 
 
 def _int_env(name: str, default: int, *, minimum: int = 1) -> int:
@@ -57,6 +58,10 @@ RECOMMENDATION_TRACKING_TABLES = (
 
 
 def run_db_maintenance(request: DbMaintenanceRequest) -> int:
+    if request.skip_if_unconfigured and not is_admin_configured():
+        print("[db_maintenance] skipped: SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY not configured")
+        return 0
+
     client = create_admin_client()
     all_ok = True
     for table, date_col, ttl_days, cutoff_kind in CLEANUP_RULES:

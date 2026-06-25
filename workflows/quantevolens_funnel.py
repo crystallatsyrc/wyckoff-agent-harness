@@ -17,11 +17,11 @@ import pandas as pd
 
 from core.candidate_policy import apply_loss_guard, rerank_selected_codes
 from core.funnel_etf import etf_metrics
-from core.theme_radar import summarize_theme_radar
 from core.quantevolens_engine import (
     FunnelConfig,
     layer4_triggers,
 )
+from core.theme_radar import summarize_theme_radar
 from workflows.candidate_policy_config import candidate_policy_config_from_env
 from workflows.funnel_ai_selection import (
     FunnelAiSelection,

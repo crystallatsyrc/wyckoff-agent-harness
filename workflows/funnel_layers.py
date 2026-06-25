@@ -10,8 +10,6 @@ import pandas as pd
 
 from core.funnel_theme import empty_theme_snapshot, select_linked_theme_radar
 from core.funnel_theme import theme_candidate_map as build_theme_candidate_map
-from core.sector_rotation import analyze_sector_rotation
-from core.theme_radar import build_theme_radar_snapshot
 from core.quantevolens_engine import (
     FunnelConfig,
     detect_leader_radar,
@@ -20,6 +18,8 @@ from core.quantevolens_engine import (
     layer3_sector_resonance,
     layer4_triggers,
 )
+from core.sector_rotation import analyze_sector_rotation
+from core.theme_radar import build_theme_radar_snapshot
 from integrations.market_metadata import CONCEPT_HEAT_HISTORY
 from workflows.funnel_data import FunnelReferenceData
 from workflows.funnel_settings import (
