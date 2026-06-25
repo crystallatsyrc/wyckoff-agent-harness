@@ -7,7 +7,11 @@ import os
 from dataclasses import dataclass
 
 from core.strategy_reflection import build_policy_candidate, build_strategy_reflection
-from integrations.supabase_signal_feedback import load_policy_shadow_runs, load_recent_signal_outcomes
+from integrations.supabase_signal_feedback import (
+    load_policy_shadow_runs,
+    load_recent_signal_observations,
+    load_recent_signal_outcomes,
+)
 from integrations.supabase_strategy_reflection import upsert_strategy_policy_candidate, upsert_strategy_reflection
 
 
@@ -28,10 +32,12 @@ def strategy_reflection_enabled() -> bool:
 
 def build_strategy_reflection_payloads(request: StrategyReflectionRequest) -> tuple[dict, dict | None]:
     outcomes = load_recent_signal_outcomes(request.outcome_days, request.limit, request.market)
+    observations = load_recent_signal_observations(request.outcome_days, request.limit, request.market)
     shadow_runs = load_policy_shadow_runs(request.shadow_days, request.limit, request.market)
     reflection = build_strategy_reflection(
         outcomes,
         shadow_runs,
+        observations=observations,
         market=request.market,
         as_of_date=request.as_of_date,
         horizon_days=request.horizon_days,
