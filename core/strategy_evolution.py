@@ -123,7 +123,8 @@ def build_execution_trajectories(
                 "max_drawdown_pct": drawdown,
                 "snapshot": _snapshot(outcome, obs, features),
                 "prediction": _prediction(outcome, obs, score),
-                "critique": _dict(outcome.get("critique")) or {"return_pct": _round(ret), "max_drawdown_pct": _round(drawdown)},
+                "critique": _dict(outcome.get("critique"))
+                or {"return_pct": _round(ret), "max_drawdown_pct": _round(drawdown)},
             }
         )
     return _sort_rows(rows)
@@ -144,7 +145,11 @@ def sample_critic_trajectories(
     cfg = config or DEFAULT_EVOLUTION_CONFIG
     by_score = sorted(trajectories, key=lambda x: (_float(x.get("critic_score")), str(x.get("trade_date"))))
     by_recent = sorted(trajectories, key=lambda x: str(x.get("trade_date") or ""), reverse=True)
-    return {"worst": by_score[: cfg.worst_limit], "best": list(reversed(by_score[-cfg.best_limit :])), "recent": by_recent[: cfg.recent_limit]}
+    return {
+        "worst": by_score[: cfg.worst_limit],
+        "best": list(reversed(by_score[-cfg.best_limit :])),
+        "recent": by_recent[: cfg.recent_limit],
+    }
 
 
 def compact_trajectory(row: dict[str, Any]) -> dict[str, Any]:
@@ -226,7 +231,9 @@ def validate_strategy_suite(
     }
 
 
-def choose_evolution_direction(validation: dict[str, Any], config: StrategyEvolutionConfig | None = None) -> dict[str, Any]:
+def choose_evolution_direction(
+    validation: dict[str, Any], config: StrategyEvolutionConfig | None = None
+) -> dict[str, Any]:
     cfg = config or DEFAULT_EVOLUTION_CONFIG
     baseline = validation.get("baseline") if isinstance(validation.get("baseline"), dict) else {}
     candidates = [x for x in validation.get("candidates", []) if x.get("viable")]
@@ -316,7 +323,9 @@ def fuse_strategy_policy(
     )
 
 
-def validate_policy(policy: dict[str, Any], validation_set: list[dict[str, Any]], *, min_samples: int = 1) -> dict[str, Any]:
+def validate_policy(
+    policy: dict[str, Any], validation_set: list[dict[str, Any]], *, min_samples: int = 1
+) -> dict[str, Any]:
     selected, adjusted = [], []
     for row in validation_set:
         weight = _policy_weight(policy, row)
@@ -326,7 +335,13 @@ def validate_policy(policy: dict[str, Any], validation_set: list[dict[str, Any]]
             selected.append(row)
             adjusted.append(score)
     metrics = _validation_metrics(selected, len(validation_set), adjusted)
-    metrics.update({"variant": policy.get("variant"), "viable": metrics["selected_count"] >= min_samples, "min_samples": min_samples})
+    metrics.update(
+        {
+            "variant": policy.get("variant"),
+            "viable": metrics["selected_count"] >= min_samples,
+            "min_samples": min_samples,
+        }
+    )
     return metrics
 
 
@@ -355,7 +370,9 @@ def _policy(
     }
 
 
-def _candidate_strategy(variant: str, intensity: float, diagnostic: dict[str, Any], horizon_days: int) -> dict[str, Any]:
+def _candidate_strategy(
+    variant: str, intensity: float, diagnostic: dict[str, Any], horizon_days: int
+) -> dict[str, Any]:
     weak_track, strong_track = str(diagnostic.get("weak_track") or ""), str(diagnostic.get("strong_track") or "")
     weak_signal, strong_signal = str(diagnostic.get("weak_signal") or ""), str(diagnostic.get("strong_signal") or "")
     weak_regime, strong_regime = str(diagnostic.get("weak_regime") or ""), str(diagnostic.get("strong_regime") or "")
@@ -365,7 +382,10 @@ def _candidate_strategy(variant: str, intensity: float, diagnostic: dict[str, An
         track_weights=_weights(weak_track, strong_track, down=0.25 * intensity, up=0.25 * intensity),
         signal_weights=_weights(weak_signal, strong_signal, down=0.35 * intensity, up=0.30 * intensity),
         regime_weights=_weights(weak_regime, strong_regime, down=0.20 * intensity, up=0.15 * intensity),
-        selection={"critic_score_floor": _round(25.0 + 20.0 * intensity), "minimum_policy_weight": _round(0.75 + 0.10 * intensity)},
+        selection={
+            "critic_score_floor": _round(25.0 + 20.0 * intensity),
+            "minimum_policy_weight": _round(0.75 + 0.10 * intensity),
+        },
         prompt_directives=[
             f"Prefer {strong_track or 'validated'} structures when evidence quality is comparable.",
             f"De-emphasize {weak_signal or weak_track or 'weak'} setups unless Critic score is strong.",
@@ -382,18 +402,40 @@ def _candidate_strategy(variant: str, intensity: float, diagnostic: dict[str, An
     )
 
 
-def _index_observations(rows: list[dict[str, Any]]) -> tuple[dict[str, dict[str, Any]], dict[tuple[str, str, str, str], dict[str, Any]]]:
+def _index_observations(
+    rows: list[dict[str, Any]],
+) -> tuple[dict[str, dict[str, Any]], dict[tuple[str, str, str, str], dict[str, Any]]]:
     by_id, by_key = {}, {}
     for row in rows:
         if row.get("id") is not None:
             by_id[str(row.get("id"))] = row
-        by_key[(str(row.get("market") or ""), str(row.get("trade_date") or ""), str(row.get("code") or ""), str(row.get("signal_type") or "").lower())] = row
+        by_key[
+            (
+                str(row.get("market") or ""),
+                str(row.get("trade_date") or ""),
+                str(row.get("code") or ""),
+                str(row.get("signal_type") or "").lower(),
+            )
+        ] = row
     return by_id, by_key
 
 
-def _match_observation(outcome: dict[str, Any], by_id: dict[str, dict[str, Any]], by_key: dict[tuple[str, str, str, str], dict[str, Any]]) -> dict[str, Any]:
+def _match_observation(
+    outcome: dict[str, Any], by_id: dict[str, dict[str, Any]], by_key: dict[tuple[str, str, str, str], dict[str, Any]]
+) -> dict[str, Any]:
     obs_id = str(outcome.get("observation_id") or "")
-    return by_id.get(obs_id) or by_key.get((str(outcome.get("market") or ""), str(outcome.get("trade_date") or ""), str(outcome.get("code") or ""), str(outcome.get("signal_type") or "").lower())) or {}
+    return (
+        by_id.get(obs_id)
+        or by_key.get(
+            (
+                str(outcome.get("market") or ""),
+                str(outcome.get("trade_date") or ""),
+                str(outcome.get("code") or ""),
+                str(outcome.get("signal_type") or "").lower(),
+            )
+        )
+        or {}
+    )
 
 
 def _dict(raw: Any) -> dict[str, Any]:
@@ -438,14 +480,18 @@ def _critic_score(row: dict[str, Any], obs: dict[str, Any], features: dict[str, 
     shadow = features.get("candidate_shadow_score")
     if isinstance(shadow, dict) and "score" in shadow:
         return _bounded(_float(shadow.get("score"), 50.0)), "features_json.candidate_shadow_score.score"
-    return _bounded(50.0 + _float(row.get("return_pct")) * 8.0 - abs(_float(row.get("max_drawdown_pct"))) * 2.0), "outcome_proxy"
+    return _bounded(
+        50.0 + _float(row.get("return_pct")) * 8.0 - abs(_float(row.get("max_drawdown_pct"))) * 2.0
+    ), "outcome_proxy"
 
 
 def _snapshot(row: dict[str, Any], obs: dict[str, Any], features: dict[str, Any]) -> dict[str, Any]:
     explicit = _dict(row.get("snapshot")) or _dict(obs.get("snapshot"))
     if explicit:
         return explicit
-    footprint = features.get("price_action_footprint") if isinstance(features.get("price_action_footprint"), dict) else {}
+    footprint = (
+        features.get("price_action_footprint") if isinstance(features.get("price_action_footprint"), dict) else {}
+    )
     return {
         "features": {
             "candidate_shadow_score": features.get("candidate_shadow_score"),
@@ -459,11 +505,15 @@ def _snapshot(row: dict[str, Any], obs: dict[str, Any], features: dict[str, Any]
 
 
 def _prediction(row: dict[str, Any], obs: dict[str, Any], score: float) -> dict[str, Any]:
-    return _dict(row.get("prediction")) or _dict(obs.get("prediction")) or {
-        "critic_score": _round(score),
-        "policy_version": row.get("policy_version") or obs.get("policy_version") or "",
-        "selection_mode": row.get("selection_mode") or obs.get("selection_mode") or "",
-    }
+    return (
+        _dict(row.get("prediction"))
+        or _dict(obs.get("prediction"))
+        or {
+            "critic_score": _round(score),
+            "policy_version": row.get("policy_version") or obs.get("policy_version") or "",
+            "selection_mode": row.get("selection_mode") or obs.get("selection_mode") or "",
+        }
+    )
 
 
 def _performance_by(rows: list[dict[str, Any]], field: str) -> list[dict[str, Any]]:
@@ -478,7 +528,17 @@ def _performance_by(rows: list[dict[str, Any]], field: str) -> list[dict[str, An
         win_rate = sum(x > 0 for x in returns) / len(returns)
         avg_return, avg_drawdown, avg_score = mean(returns), mean(drawdowns), mean(scores)
         rank = avg_return + win_rate * 2.0 - avg_drawdown * 0.35 + avg_score * 0.01
-        stats.append({field: key, "sample_count": len(values), "win_rate": _round(win_rate), "avg_return_pct": _round(avg_return), "avg_drawdown_pct": _round(avg_drawdown), "avg_critic_score": _round(avg_score), "rank_score": _round(rank)})
+        stats.append(
+            {
+                field: key,
+                "sample_count": len(values),
+                "win_rate": _round(win_rate),
+                "avg_return_pct": _round(avg_return),
+                "avg_drawdown_pct": _round(avg_drawdown),
+                "avg_critic_score": _round(avg_score),
+                "rank_score": _round(rank),
+            }
+        )
     return sorted(stats, key=lambda x: _float(x.get("rank_score")), reverse=True)
 
 
@@ -501,7 +561,16 @@ def _failure_tag_counts(rows: list[dict[str, Any]]) -> dict[str, int]:
     return dict(sorted(counts.items(), key=lambda x: (-x[1], x[0]))[:10])
 
 
-def _root_causes(weak_track: str, strong_track: str, weak_signal: str, strong_signal: str, weak_regime: str, shadow_runs: list[dict[str, Any]], shadow_summary: dict[str, Any], failure_tags: dict[str, int]) -> list[str]:
+def _root_causes(
+    weak_track: str,
+    strong_track: str,
+    weak_signal: str,
+    strong_signal: str,
+    weak_regime: str,
+    shadow_runs: list[dict[str, Any]],
+    shadow_summary: dict[str, Any],
+    failure_tags: dict[str, int],
+) -> list[str]:
     causes = []
     if weak_track and strong_track and weak_track != strong_track:
         causes.append(f"{weak_track} track underperforms while {strong_track} track leads validation evidence")
@@ -532,7 +601,11 @@ def _fuse_weights(raw: Any, alpha: float) -> dict[str, float]:
 
 def _policy_weight(policy: dict[str, Any], row: dict[str, Any]) -> float:
     weight = 1.0
-    for field, key in (("track", "track_weights"), ("signal_type", "signal_weight_adjustments"), ("regime", "regime_weight_adjustments")):
+    for field, key in (
+        ("track", "track_weights"),
+        ("signal_type", "signal_weight_adjustments"),
+        ("regime", "regime_weight_adjustments"),
+    ):
         weights = policy.get(key) if isinstance(policy.get(key), dict) else {}
         weight *= _float(weights.get(str(row.get(field) or "")), 1.0)
     return max(weight, 0.0)
@@ -546,8 +619,21 @@ def _validation_metrics(selected: list[dict[str, Any]], total: int, adjusted: li
     avg_return = mean(returns) if returns else 0.0
     avg_drawdown = mean(drawdowns) if drawdowns else 0.0
     selection_rate = n / total if total else 0.0
-    score = -999999.0 if not selected else avg_return + win_rate * 2.0 - avg_drawdown * 0.35 - max(0.0, 0.2 - selection_rate) * 0.5
-    return {"selected_count": n, "total_count": total, "selection_rate": _round(selection_rate), "win_rate": _round(win_rate), "avg_return_pct": _round(avg_return), "avg_drawdown_pct": _round(avg_drawdown), "avg_adjusted_score": _round(mean(adjusted) if adjusted else 0.0), "validation_score": _round(score)}
+    score = (
+        -999999.0
+        if not selected
+        else avg_return + win_rate * 2.0 - avg_drawdown * 0.35 - max(0.0, 0.2 - selection_rate) * 0.5
+    )
+    return {
+        "selected_count": n,
+        "total_count": total,
+        "selection_rate": _round(selection_rate),
+        "win_rate": _round(win_rate),
+        "avg_return_pct": _round(avg_return),
+        "avg_drawdown_pct": _round(avg_drawdown),
+        "avg_adjusted_score": _round(mean(adjusted) if adjusted else 0.0),
+        "validation_score": _round(score),
+    }
 
 
 def _sort_rows(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:

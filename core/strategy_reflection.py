@@ -100,7 +100,6 @@ def _reflection_text(
     return base + " No candidate beat baseline on validation; keep baseline policy."
 
 
-
 def build_strategy_reflection(
     outcomes: list[dict[str, Any]],
     shadow_runs: list[dict[str, Any]],
@@ -172,7 +171,9 @@ def _build_evolved_policy_candidate(
 ) -> dict[str, Any]:
     now_iso = datetime.now(UTC).isoformat()
     decision = str(evolution.get("status") or "")
-    fused_policy = ((evolution.get("fusion") or {}).get("policy")) if isinstance(evolution.get("fusion"), dict) else None
+    fused_policy = (
+        ((evolution.get("fusion") or {}).get("policy")) if isinstance(evolution.get("fusion"), dict) else None
+    )
     if decision == "CONFIRMED" and isinstance(fused_policy, dict):
         status = "READY_FOR_REVIEW"
         candidate_policy = dict(fused_policy)

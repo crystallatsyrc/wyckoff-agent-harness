@@ -98,9 +98,10 @@ def test_strategy_evolution_confirms_fused_policy_on_synthetic_edge():
         "balanced",
         "aggressive",
     ]
-    assert evolution["validation"]["baseline"]["validation_score"] < evolution["fusion"]["validation_result"][
-        "validation_score"
-    ]
+    assert (
+        evolution["validation"]["baseline"]["validation_score"]
+        < evolution["fusion"]["validation_result"]["validation_score"]
+    )
     assert candidate is not None
     assert candidate["status"] == "READY_FOR_REVIEW"
     assert candidate["candidate_policy"]["variant"].startswith("fused_")
@@ -111,7 +112,9 @@ def test_strategy_evolution_rejects_when_candidates_do_not_beat_baseline():
     from core.strategy_reflection import build_policy_candidate, build_strategy_reflection
 
     outcomes, observations = _synthetic_rows(edge=False)
-    reflection = build_strategy_reflection(outcomes, [], observations=observations, market="cn", as_of_date="2026-06-12")
+    reflection = build_strategy_reflection(
+        outcomes, [], observations=observations, market="cn", as_of_date="2026-06-12"
+    )
     evolution = reflection["summary"]["evolution"]
     candidate = build_policy_candidate(reflection)
 
