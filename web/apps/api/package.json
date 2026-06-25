@@ -6,13 +6,13 @@
     "dev": "wrangler dev",
     "build": "wrangler deploy --dry-run",
     "deploy": "wrangler deploy",
-    "lint": "eslint ."
+    "lint": "tsc --noEmit"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^3.0.84",
     "@ai-sdk/openai": "^3.0.71",
-    "@supabase/supabase-js": "^2.49.0",
     "@quantevolens/shared": "workspace:*",
+    "@supabase/supabase-js": "^2.49.0",
     "ai": "^6.0.205",
     "hono": "^4.12.21",
     "zod": "^3.25.76"
