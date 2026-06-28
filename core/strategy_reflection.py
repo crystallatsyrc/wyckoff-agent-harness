@@ -5,7 +5,7 @@ from __future__ import annotations
 from datetime import UTC, date, datetime
 from typing import Any
 
-from core.strategy_evolution import run_strategy_evolution
+from core.strategy_evolution import ReflectorFn, run_strategy_evolution
 
 
 def _safe_float(raw: Any, default: float = 0.0) -> float:
@@ -108,6 +108,7 @@ def build_strategy_reflection(
     market: str = "cn",
     as_of_date: str | None = None,
     horizon_days: int = 5,
+    reflector_fn: ReflectorFn | None = None,
 ) -> dict[str, Any]:
     track_summary = summarize_track_performance(outcomes, horizon_days)
     shadow_summary = summarize_shadow_runs(shadow_runs)
@@ -119,6 +120,7 @@ def build_strategy_reflection(
         as_of_date=as_of_date or date.today().isoformat(),
         horizon_days=horizon_days,
         shadow_summary=shadow_summary,
+        reflector_fn=reflector_fn,
     )
     now_iso = datetime.now(UTC).isoformat()
     return {

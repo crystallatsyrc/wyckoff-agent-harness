@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+from collections.abc import Callable
 from dataclasses import asdict, dataclass
 from statistics import mean
 from typing import Any
@@ -19,11 +20,41 @@ class StrategyEvolutionConfig:
     min_score_improvement: float = 0.05
     fusion_alpha: float = 0.8
     fusion_regression_tolerance: float = 0.35
+    max_generations: int = 2
+    population_size: int = 6
+    children_per_generation: int = 3
+    trace_char_budget: int = 12000
 
 
 DEFAULT_EVOLUTION_CONFIG = StrategyEvolutionConfig()
 _VARIANTS = {"conservative": 0.35, "balanced": 0.65, "aggressive": 1.0}
 _META_KEYS = {"sample_count", "win_rate", "avg_return_pct", "avg_drawdown_pct", "avg_critic_score", "rank_score"}
+ReflectorFn = Callable[[dict[str, Any]], dict[str, Any]]
+
+
+@dataclass(frozen=True)
+class PromptGenome:
+    id: str
+    parent_ids: tuple[str, ...]
+    variant: str
+    generation: int
+    prompt_directives: tuple[str, ...]
+    mutation_rationale: str
+    reflection_summary: str
+    pareto_objective: str = ""
+    mode: str = "shadow"
+    auto_promote: bool = False
+
+
+@dataclass(frozen=True)
+class ReflectionReport:
+    reflector: str
+    generation: int
+    root_causes: tuple[str, ...]
+    prompt_failures: tuple[str, ...]
+    suggested_edits: tuple[str, ...]
+    risk_notes: tuple[str, ...]
+    trace_summary: str
 
 
 def run_strategy_evolution(
@@ -36,6 +67,7 @@ def run_strategy_evolution(
     horizon_days: int = 5,
     shadow_summary: dict[str, Any] | None = None,
     config: StrategyEvolutionConfig | None = None,
+    reflector_fn: ReflectorFn | None = None,
 ) -> dict[str, Any]:
     """Run Critic sampling -> Reflector -> Evolver -> validation -> fusion."""
 
@@ -50,20 +82,90 @@ def run_strategy_evolution(
             "horizon_days": int(horizon_days),
             "trajectory_count": len(trajectories),
             "required_trajectories": cfg.min_validation_samples,
+            "generation_history": [],
+            "pareto_frontier": [],
+            "prompt_genomes": [],
+            "trace_bundle": {},
             "config": asdict(cfg),
         }
 
     diagnostic_pool, validation_set, holdout = split_diagnostic_validation(trajectories, cfg)
     samples = sample_critic_trajectories(diagnostic_pool, cfg)
     diagnostic = build_diagnostic_report(samples, diagnostic_pool, shadow_runs, shadow_summary or {})
+    trace_bundle = render_trace_bundle(samples, cfg)
     baseline_policy = build_baseline_policy(horizon_days)
-    candidates = generate_candidate_strategies(diagnostic, horizon_days)
-    validation = validate_strategy_suite(baseline_policy, candidates, validation_set, cfg)
-    decision = choose_evolution_direction(validation, cfg)
+    parent_genome = prompt_genome_from_policy(
+        baseline_policy,
+        parent_ids=(),
+        generation=0,
+        reflection_summary="Seed genome from current Wyckoff strategy prompt.",
+        mutation_rationale="baseline",
+    )
+    generation_history: list[dict[str, Any]] = []
+    latest: dict[str, Any] | None = None
+    for generation in range(1, max(int(cfg.max_generations), 1) + 1):
+        reflection = reflect_on_trace_bundle(
+            trace_bundle,
+            diagnostic,
+            parent_genome=parent_genome,
+            generation=generation,
+            reflector_fn=reflector_fn,
+        )
+        candidates = generate_candidate_strategies(
+            diagnostic,
+            horizon_days,
+            parent_genome=parent_genome,
+            reflection=reflection,
+            generation=generation,
+            config=cfg,
+        )
+        validation = validate_strategy_suite(baseline_policy, candidates, validation_set, cfg)
+        frontier = pareto_frontier(validation.get("candidates", []))
+        decision = choose_evolution_direction(validation, cfg)
+        prompt_genomes = [prompt_genome_from_policy(policy) for policy in candidates]
+        generation_result = {
+            "generation": generation,
+            "parent_genome": genome_payload(parent_genome),
+            "reflection": reflection,
+            "candidate_genomes": [genome_payload(genome) for genome in prompt_genomes],
+            "pareto_frontier": frontier,
+            "decision": decision,
+        }
+        generation_history.append(generation_result)
+        latest = {
+            "candidates": candidates,
+            "validation": validation,
+            "decision": decision,
+            "frontier": frontier,
+            "reflection": reflection,
+            "prompt_genomes": prompt_genomes,
+        }
+        selected = selected_policy_from_decision(candidates, decision)
+        if not selected:
+            break
+        parent_genome = prompt_genome_from_policy(
+            selected,
+            parent_ids=(parent_genome.id,),
+            generation=generation,
+            reflection_summary=reflection_summary(reflection),
+            mutation_rationale=str(decision.get("reason") or "selected by heldout validation"),
+        )
+    latest = latest or {
+        "candidates": [],
+        "validation": {"baseline": validate_policy(baseline_policy, validation_set, min_samples=1), "candidates": []},
+        "decision": {"status": "NO_VIABLE_CANDIDATE", "reason": "no GEPA generation completed"},
+        "frontier": [],
+        "reflection": {},
+        "prompt_genomes": [],
+    }
+    candidates = latest["candidates"]
+    validation = latest["validation"]
+    decision = latest["decision"]
     fusion = run_fusion_validation(baseline_policy, candidates, decision, validation_set, diagnostic, cfg)
     status = fusion.get("decision_status") or decision.get("status") or "NO_BETTER_CANDIDATE"
     return {
         "version": "strategy_evolution_v1",
+        "optimizer": "gepa_inspired_prompt_evolution_v1",
         "status": status,
         "market": market,
         "as_of_date": as_of_date,
@@ -73,11 +175,16 @@ def run_strategy_evolution(
         "validation_count": len(validation_set),
         "validation_holdout": holdout,
         "trajectory_samples": {k: [compact_trajectory(x) for x in rows] for k, rows in samples.items()},
+        "trace_bundle": trace_bundle,
         "diagnostic_report": diagnostic,
+        "reflection_report": latest["reflection"],
         "baseline_policy": baseline_policy,
         "candidate_policies": candidates,
+        "prompt_genomes": [genome_payload(genome) for genome in latest["prompt_genomes"]],
         "validation": validation,
         "decision": decision,
+        "pareto_frontier": latest["frontier"],
+        "generation_history": generation_history,
         "fusion": fusion,
         "config": asdict(cfg),
     }
@@ -168,6 +275,49 @@ def compact_trajectory(row: dict[str, Any]) -> dict[str, Any]:
     return out
 
 
+def render_trace_for_reflector(row: dict[str, Any]) -> str:
+    compact = compact_trajectory(row)
+    parts = [
+        f"Trace: {compact.get('trajectory_id')}",
+        f"Date/code: {compact.get('trade_date')} / {compact.get('code')}",
+        f"Signal: {compact.get('signal_type')} ({compact.get('track')}) in {compact.get('regime')}",
+        f"Critic score: {compact.get('critic_score')} from {compact.get('critic_score_source')}",
+        f"Outcome: return={compact.get('return_pct')}%, drawdown={compact.get('max_drawdown_pct')}%",
+        f"Snapshot: {json.dumps(compact.get('snapshot') or {}, ensure_ascii=False, sort_keys=True)}",
+        f"Prediction: {json.dumps(compact.get('prediction') or {}, ensure_ascii=False, sort_keys=True)}",
+        f"Critique: {json.dumps(compact.get('critique') or {}, ensure_ascii=False, sort_keys=True)}",
+    ]
+    return "\n".join(parts)
+
+
+def render_trace_bundle(
+    samples: dict[str, list[dict[str, Any]]],
+    config: StrategyEvolutionConfig | None = None,
+) -> dict[str, Any]:
+    cfg = config or DEFAULT_EVOLUTION_CONFIG
+    sections = []
+    trace_ids: dict[str, list[str]] = {}
+    for label in ("worst", "best", "recent"):
+        rows = samples.get(label, [])
+        trace_ids[label] = [str(row.get("trajectory_id") or "") for row in rows]
+        rendered = "\n\n".join(render_trace_for_reflector(row) for row in rows)
+        sections.append(f"## {label.upper()} TRAJECTORIES ({len(rows)})\n{rendered}")
+    text = "\n\n".join(sections).strip()
+    truncated = False
+    budget = max(int(cfg.trace_char_budget), 1000)
+    if len(text) > budget:
+        text = text[:budget] + "\n\n[trace bundle truncated]"
+        truncated = True
+    return {
+        "format": "gepa_trace_bundle_v1",
+        "text": text,
+        "char_count": len(text),
+        "truncated": truncated,
+        "section_counts": {key: len(samples.get(key, [])) for key in ("worst", "best", "recent")},
+        "trace_ids": trace_ids,
+    }
+
+
 def build_diagnostic_report(
     samples: dict[str, list[dict[str, Any]]],
     diagnostic_pool: list[dict[str, Any]],
@@ -201,6 +351,97 @@ def build_diagnostic_report(
     }
 
 
+def reflect_on_trace_bundle(
+    trace_bundle: dict[str, Any],
+    diagnostic: dict[str, Any],
+    *,
+    parent_genome: PromptGenome,
+    generation: int,
+    reflector_fn: ReflectorFn | None = None,
+) -> dict[str, Any]:
+    fallback = deterministic_reflection_report(trace_bundle, diagnostic, parent_genome, generation)
+    if reflector_fn is None:
+        return asdict(fallback)
+    request = {
+        "optimizer": "gepa_inspired_prompt_evolution_v1",
+        "generation": generation,
+        "trace_bundle": trace_bundle,
+        "diagnostic_report": diagnostic,
+        "parent_genome": genome_payload(parent_genome),
+        "required_json_fields": [
+            "root_causes",
+            "prompt_failures",
+            "suggested_edits",
+            "risk_notes",
+            "trace_summary",
+        ],
+    }
+    try:
+        raw = reflector_fn(request)
+    except Exception as exc:
+        out = asdict(fallback)
+        out["reflector_error"] = str(exc)
+        return out
+    return normalize_reflection_report(raw, fallback)
+
+
+def deterministic_reflection_report(
+    trace_bundle: dict[str, Any],
+    diagnostic: dict[str, Any],
+    parent_genome: PromptGenome,
+    generation: int,
+) -> ReflectionReport:
+    root_causes = tuple(str(x) for x in diagnostic.get("root_causes") or ())
+    weak_signal = str(diagnostic.get("weak_signal") or diagnostic.get("weak_track") or "weak")
+    strong_track = str(diagnostic.get("strong_track") or "validated")
+    prompt_failures = (
+        f"Parent genome {parent_genome.id} may over-trust {weak_signal} setups without enough evidence.",
+        "Current prompt does not explicitly separate failed traces from validated structures.",
+    )
+    suggested_edits = (
+        f"Prefer {strong_track} structures when evidence quality is comparable.",
+        f"De-emphasize {weak_signal} setups unless Critic score is strong and failure tags are absent.",
+        "Keep all changes in shadow review until held-out validation beats the baseline.",
+    )
+    risk_notes = (
+        "Do not remove the existing Wyckoff risk controls.",
+        "Preserve baseline behaviour when the trace bundle is sparse or contradictory.",
+    )
+    trace_summary = (
+        f"Read {sum((trace_bundle.get('section_counts') or {}).values())} compact traces "
+        f"across worst/best/recent buckets."
+    )
+    return ReflectionReport(
+        reflector="deterministic_gepa_reflector_v1",
+        generation=generation,
+        root_causes=root_causes,
+        prompt_failures=prompt_failures,
+        suggested_edits=suggested_edits,
+        risk_notes=risk_notes,
+        trace_summary=trace_summary,
+    )
+
+
+def normalize_reflection_report(raw: dict[str, Any], fallback: ReflectionReport) -> dict[str, Any]:
+    if not isinstance(raw, dict):
+        return asdict(fallback)
+    base = asdict(fallback)
+    for key in ("root_causes", "prompt_failures", "suggested_edits", "risk_notes"):
+        values = raw.get(key)
+        if isinstance(values, list):
+            base[key] = tuple(str(x).strip() for x in values if str(x).strip())
+    for key in ("reflector", "trace_summary"):
+        if str(raw.get(key) or "").strip():
+            base[key] = str(raw[key]).strip()
+    return base
+
+
+def reflection_summary(reflection: dict[str, Any]) -> str:
+    roots = [str(x) for x in reflection.get("root_causes") or [] if str(x).strip()]
+    edits = [str(x) for x in reflection.get("suggested_edits") or [] if str(x).strip()]
+    return "; ".join([*(roots[:2]), *(edits[:2])]) or str(reflection.get("trace_summary") or "")
+
+
 def build_baseline_policy(horizon_days: int) -> dict[str, Any]:
     return _policy(
         "baseline",
@@ -213,8 +454,29 @@ def build_baseline_policy(horizon_days: int) -> dict[str, Any]:
     )
 
 
-def generate_candidate_strategies(diagnostic: dict[str, Any], horizon_days: int) -> list[dict[str, Any]]:
-    return [_candidate_strategy(name, intensity, diagnostic, horizon_days) for name, intensity in _VARIANTS.items()]
+def generate_candidate_strategies(
+    diagnostic: dict[str, Any],
+    horizon_days: int,
+    *,
+    parent_genome: PromptGenome | None = None,
+    reflection: dict[str, Any] | None = None,
+    generation: int = 1,
+    config: StrategyEvolutionConfig | None = None,
+) -> list[dict[str, Any]]:
+    cfg = config or DEFAULT_EVOLUTION_CONFIG
+    variants = list(_VARIANTS.items())[: max(int(cfg.children_per_generation), 1)]
+    return [
+        _candidate_strategy(
+            name,
+            intensity,
+            diagnostic,
+            horizon_days,
+            parent_genome=parent_genome,
+            reflection=reflection or {},
+            generation=generation,
+        )
+        for name, intensity in variants
+    ]
 
 
 def validate_strategy_suite(
@@ -345,6 +607,87 @@ def validate_policy(
     return metrics
 
 
+def selected_policy_from_decision(candidates: list[dict[str, Any]], decision: dict[str, Any]) -> dict[str, Any] | None:
+    if decision.get("status") != "CANDIDATE_SELECTED":
+        return None
+    return next((policy for policy in candidates if policy.get("variant") == decision.get("best_variant")), None)
+
+
+def pareto_frontier(results: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    viable = [row for row in results if row.get("viable")]
+    if not viable:
+        viable = list(results)
+    frontier = [row for row in viable if not any(other is not row and dominates(other, row) for other in viable)]
+    return [
+        {
+            "variant": row.get("variant"),
+            "validation_score": row.get("validation_score"),
+            "avg_return_pct": row.get("avg_return_pct"),
+            "avg_drawdown_pct": row.get("avg_drawdown_pct"),
+            "win_rate": row.get("win_rate"),
+            "selection_rate": row.get("selection_rate"),
+            "selected_count": row.get("selected_count"),
+        }
+        for row in sorted(frontier, key=lambda x: _float(x.get("validation_score"), -999999.0), reverse=True)
+    ]
+
+
+def dominates(left: dict[str, Any], right: dict[str, Any]) -> bool:
+    objectives = (
+        ("validation_score", 1.0),
+        ("avg_return_pct", 1.0),
+        ("win_rate", 1.0),
+        ("avg_drawdown_pct", -1.0),
+        ("selection_rate", 1.0),
+    )
+    better_or_equal = True
+    strictly_better = False
+    for key, direction in objectives:
+        l_val = _float(left.get(key), -999999.0 if direction > 0 else 999999.0) * direction
+        r_val = _float(right.get(key), -999999.0 if direction > 0 else 999999.0) * direction
+        if l_val < r_val:
+            better_or_equal = False
+            break
+        if l_val > r_val:
+            strictly_better = True
+    return better_or_equal and strictly_better
+
+
+def prompt_genome_from_policy(
+    policy: dict[str, Any],
+    *,
+    parent_ids: tuple[str, ...] | None = None,
+    generation: int | None = None,
+    reflection_summary: str | None = None,
+    mutation_rationale: str | None = None,
+) -> PromptGenome:
+    variant = str(policy.get("variant") or "baseline")
+    gen = int((policy.get("generation") if generation is None else generation) or 0)
+    parents_raw = policy.get("parent_genome_ids") if parent_ids is None else parent_ids
+    parents = tuple(str(x) for x in (parents_raw or ()))
+    genome_id = str(policy.get("prompt_genome_id") or f"g{gen}:{variant}")
+    directives = tuple(str(x) for x in (policy.get("prompt_directives") or ()))
+    return PromptGenome(
+        id=genome_id,
+        parent_ids=parents,
+        variant=variant,
+        generation=gen,
+        prompt_directives=directives,
+        mutation_rationale=str(mutation_rationale or policy.get("mutation_rationale") or ""),
+        reflection_summary=str(reflection_summary or policy.get("reflection_summary") or ""),
+        pareto_objective=str(policy.get("pareto_objective") or ""),
+        mode=str(policy.get("mode") or "shadow"),
+        auto_promote=bool(policy.get("auto_promote", False)),
+    )
+
+
+def genome_payload(genome: PromptGenome) -> dict[str, Any]:
+    payload = asdict(genome)
+    payload["parent_ids"] = list(genome.parent_ids)
+    payload["prompt_directives"] = list(genome.prompt_directives)
+    return payload
+
+
 def _policy(
     variant: str,
     horizon_days: int,
@@ -371,11 +714,30 @@ def _policy(
 
 
 def _candidate_strategy(
-    variant: str, intensity: float, diagnostic: dict[str, Any], horizon_days: int
+    variant: str,
+    intensity: float,
+    diagnostic: dict[str, Any],
+    horizon_days: int,
+    *,
+    parent_genome: PromptGenome | None = None,
+    reflection: dict[str, Any] | None = None,
+    generation: int = 1,
 ) -> dict[str, Any]:
     weak_track, strong_track = str(diagnostic.get("weak_track") or ""), str(diagnostic.get("strong_track") or "")
     weak_signal, strong_signal = str(diagnostic.get("weak_signal") or ""), str(diagnostic.get("strong_signal") or "")
     weak_regime, strong_regime = str(diagnostic.get("weak_regime") or ""), str(diagnostic.get("strong_regime") or "")
+    prompt_directives = candidate_prompt_directives(
+        variant, strong_track, weak_signal or weak_track, parent_genome, reflection
+    )
+    parent_ids = (parent_genome.id,) if parent_genome else ()
+    genome_id = ":".join(
+        [
+            f"g{generation}",
+            variant,
+            safe_id_part(weak_signal or weak_track or "none"),
+            safe_id_part(strong_signal or strong_track or "none"),
+        ]
+    )
     return _policy(
         variant,
         horizon_days,
@@ -386,20 +748,67 @@ def _candidate_strategy(
             "critic_score_floor": _round(25.0 + 20.0 * intensity),
             "minimum_policy_weight": _round(0.75 + 0.10 * intensity),
         },
-        prompt_directives=[
-            f"Prefer {strong_track or 'validated'} structures when evidence quality is comparable.",
-            f"De-emphasize {weak_signal or weak_track or 'weak'} setups unless Critic score is strong.",
-            "Treat the change as shadow-only until held-out validation remains better than baseline.",
-        ],
+        prompt_directives=prompt_directives,
         pareto_objective={
             "conservative": "lower drawdown and keep more historical coverage",
             "balanced": "improve risk-adjusted return with moderate coverage loss",
             "aggressive": "maximize validated upside from strongest root-cause signal",
         }[variant],
+        prompt_genome_id=genome_id,
+        parent_genome_ids=list(parent_ids),
+        generation=generation,
+        mutation_rationale=mutation_rationale(variant, reflection),
+        reflection_summary=reflection_summary(reflection or {}),
         preferred_track=strong_track,
         deemphasized_track=weak_track,
         root_causes=diagnostic.get("root_causes") or [],
     )
+
+
+def candidate_prompt_directives(
+    variant: str,
+    strong_track: str,
+    weak_setup: str,
+    parent_genome: PromptGenome | None,
+    reflection: dict[str, Any] | None,
+) -> list[str]:
+    parent_directives = list(parent_genome.prompt_directives if parent_genome else ())
+    suggested = [str(x).strip() for x in (reflection or {}).get("suggested_edits", []) if str(x).strip()]
+    risk_notes = [str(x).strip() for x in (reflection or {}).get("risk_notes", []) if str(x).strip()]
+    variant_directives = [
+        f"Prefer {strong_track or 'validated'} structures when evidence quality is comparable.",
+        f"De-emphasize {weak_setup or 'weak'} setups unless Critic score is strong.",
+        "Treat the change as shadow-only until held-out validation remains better than baseline.",
+    ]
+    if variant == "conservative":
+        variant_directives.append("Prefer preserving coverage over aggressive pruning.")
+    elif variant == "aggressive":
+        variant_directives.append("Prioritize the strongest reflected root-cause fix even if coverage narrows.")
+    return dedupe_text([*parent_directives, *suggested, *variant_directives, *risk_notes])
+
+
+def mutation_rationale(variant: str, reflection: dict[str, Any] | None) -> str:
+    roots = [str(x).strip() for x in (reflection or {}).get("root_causes", []) if str(x).strip()]
+    failures = [str(x).strip() for x in (reflection or {}).get("prompt_failures", []) if str(x).strip()]
+    source = roots[:2] + failures[:1]
+    return f"{variant} mutation from reflection: " + ("; ".join(source) if source else "no dominant failure")
+
+
+def dedupe_text(items: list[str]) -> list[str]:
+    seen: set[str] = set()
+    out = []
+    for item in items:
+        text = str(item).strip()
+        if text and text not in seen:
+            seen.add(text)
+            out.append(text)
+    return out
+
+
+def safe_id_part(raw: str) -> str:
+    text = "".join(ch.lower() if ch.isalnum() else "-" for ch in str(raw or "").strip())
+    text = "-".join(part for part in text.split("-") if part)
+    return text or "none"
 
 
 def _index_observations(
