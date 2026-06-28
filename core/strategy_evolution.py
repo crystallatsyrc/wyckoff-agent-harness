@@ -74,26 +74,83 @@ def run_strategy_evolution(
     cfg = config or DEFAULT_EVOLUTION_CONFIG
     trajectories = build_execution_trajectories(outcomes, observations or [], market=market, horizon_days=horizon_days)
     if len(trajectories) < cfg.min_validation_samples:
-        return {
-            "version": "strategy_evolution_v1",
-            "status": "INSUFFICIENT_DATA",
-            "market": market,
-            "as_of_date": as_of_date,
-            "horizon_days": int(horizon_days),
-            "trajectory_count": len(trajectories),
-            "required_trajectories": cfg.min_validation_samples,
-            "generation_history": [],
-            "pareto_frontier": [],
-            "prompt_genomes": [],
-            "trace_bundle": {},
-            "config": asdict(cfg),
-        }
+        return _insufficient_data_result(trajectories, market, as_of_date, horizon_days, cfg)
 
     diagnostic_pool, validation_set, holdout = split_diagnostic_validation(trajectories, cfg)
     samples = sample_critic_trajectories(diagnostic_pool, cfg)
     diagnostic = build_diagnostic_report(samples, diagnostic_pool, shadow_runs, shadow_summary or {})
     trace_bundle = render_trace_bundle(samples, cfg)
     baseline_policy = build_baseline_policy(horizon_days)
+    generation_state = _run_prompt_generations(
+        trace_bundle=trace_bundle,
+        diagnostic=diagnostic,
+        baseline_policy=baseline_policy,
+        validation_set=validation_set,
+        horizon_days=horizon_days,
+        cfg=cfg,
+        reflector_fn=reflector_fn,
+    )
+    latest = generation_state["latest"]
+    candidates = latest["candidates"]
+    validation = latest["validation"]
+    decision = latest["decision"]
+    fusion = run_fusion_validation(baseline_policy, candidates, decision, validation_set, diagnostic, cfg)
+    status = fusion.get("decision_status") or decision.get("status") or "NO_BETTER_CANDIDATE"
+    return _strategy_evolution_payload(
+        cfg=cfg,
+        status=status,
+        market=market,
+        as_of_date=as_of_date,
+        horizon_days=horizon_days,
+        trajectories=trajectories,
+        diagnostic_pool=diagnostic_pool,
+        validation_set=validation_set,
+        holdout=holdout,
+        samples=samples,
+        trace_bundle=trace_bundle,
+        diagnostic=diagnostic,
+        baseline_policy=baseline_policy,
+        latest=latest,
+        validation=validation,
+        decision=decision,
+        fusion=fusion,
+        generation_history=generation_state["history"],
+    )
+
+
+def _insufficient_data_result(
+    trajectories: list[dict[str, Any]],
+    market: str,
+    as_of_date: str,
+    horizon_days: int,
+    cfg: StrategyEvolutionConfig,
+) -> dict[str, Any]:
+    return {
+        "version": "strategy_evolution_v1",
+        "status": "INSUFFICIENT_DATA",
+        "market": market,
+        "as_of_date": as_of_date,
+        "horizon_days": int(horizon_days),
+        "trajectory_count": len(trajectories),
+        "required_trajectories": cfg.min_validation_samples,
+        "generation_history": [],
+        "pareto_frontier": [],
+        "prompt_genomes": [],
+        "trace_bundle": {},
+        "config": asdict(cfg),
+    }
+
+
+def _run_prompt_generations(
+    *,
+    trace_bundle: dict[str, Any],
+    diagnostic: dict[str, Any],
+    baseline_policy: dict[str, Any],
+    validation_set: list[dict[str, Any]],
+    horizon_days: int,
+    cfg: StrategyEvolutionConfig,
+    reflector_fn: ReflectorFn | None,
+) -> dict[str, Any]:
     parent_genome = prompt_genome_from_policy(
         baseline_policy,
         parent_ids=(),
@@ -101,56 +158,85 @@ def run_strategy_evolution(
         reflection_summary="Seed genome from current Wyckoff strategy prompt.",
         mutation_rationale="baseline",
     )
-    generation_history: list[dict[str, Any]] = []
+    history: list[dict[str, Any]] = []
     latest: dict[str, Any] | None = None
     for generation in range(1, max(int(cfg.max_generations), 1) + 1):
-        reflection = reflect_on_trace_bundle(
-            trace_bundle,
-            diagnostic,
-            parent_genome=parent_genome,
+        latest = _run_prompt_generation(
             generation=generation,
+            trace_bundle=trace_bundle,
+            diagnostic=diagnostic,
+            baseline_policy=baseline_policy,
+            validation_set=validation_set,
+            horizon_days=horizon_days,
+            cfg=cfg,
+            parent_genome=parent_genome,
             reflector_fn=reflector_fn,
         )
-        candidates = generate_candidate_strategies(
-            diagnostic,
-            horizon_days,
-            parent_genome=parent_genome,
-            reflection=reflection,
-            generation=generation,
-            config=cfg,
-        )
-        validation = validate_strategy_suite(baseline_policy, candidates, validation_set, cfg)
-        frontier = pareto_frontier(validation.get("candidates", []))
-        decision = choose_evolution_direction(validation, cfg)
-        prompt_genomes = [prompt_genome_from_policy(policy) for policy in candidates]
-        generation_result = {
-            "generation": generation,
-            "parent_genome": genome_payload(parent_genome),
-            "reflection": reflection,
-            "candidate_genomes": [genome_payload(genome) for genome in prompt_genomes],
-            "pareto_frontier": frontier,
-            "decision": decision,
-        }
-        generation_history.append(generation_result)
-        latest = {
-            "candidates": candidates,
-            "validation": validation,
-            "decision": decision,
-            "frontier": frontier,
-            "reflection": reflection,
-            "prompt_genomes": prompt_genomes,
-        }
-        selected = selected_policy_from_decision(candidates, decision)
+        history.append(latest["history_entry"])
+        selected = selected_policy_from_decision(latest["candidates"], latest["decision"])
         if not selected:
             break
         parent_genome = prompt_genome_from_policy(
             selected,
             parent_ids=(parent_genome.id,),
             generation=generation,
-            reflection_summary=reflection_summary(reflection),
-            mutation_rationale=str(decision.get("reason") or "selected by heldout validation"),
+            reflection_summary=reflection_summary(latest["reflection"]),
+            mutation_rationale=str(latest["decision"].get("reason") or "selected by heldout validation"),
         )
-    latest = latest or {
+    return {"history": history, "latest": latest or _empty_generation_latest(baseline_policy, validation_set)}
+
+
+def _run_prompt_generation(
+    *,
+    generation: int,
+    trace_bundle: dict[str, Any],
+    diagnostic: dict[str, Any],
+    baseline_policy: dict[str, Any],
+    validation_set: list[dict[str, Any]],
+    horizon_days: int,
+    cfg: StrategyEvolutionConfig,
+    parent_genome: PromptGenome,
+    reflector_fn: ReflectorFn | None,
+) -> dict[str, Any]:
+    reflection = reflect_on_trace_bundle(
+        trace_bundle,
+        diagnostic,
+        parent_genome=parent_genome,
+        generation=generation,
+        reflector_fn=reflector_fn,
+    )
+    candidates = generate_candidate_strategies(
+        diagnostic,
+        horizon_days,
+        parent_genome=parent_genome,
+        reflection=reflection,
+        generation=generation,
+        config=cfg,
+    )
+    validation = validate_strategy_suite(baseline_policy, candidates, validation_set, cfg)
+    frontier = pareto_frontier(validation.get("candidates", []))
+    decision = choose_evolution_direction(validation, cfg)
+    prompt_genomes = [prompt_genome_from_policy(policy) for policy in candidates]
+    return {
+        "candidates": candidates,
+        "validation": validation,
+        "decision": decision,
+        "frontier": frontier,
+        "reflection": reflection,
+        "prompt_genomes": prompt_genomes,
+        "history_entry": {
+            "generation": generation,
+            "parent_genome": genome_payload(parent_genome),
+            "reflection": reflection,
+            "candidate_genomes": [genome_payload(genome) for genome in prompt_genomes],
+            "pareto_frontier": frontier,
+            "decision": decision,
+        },
+    }
+
+
+def _empty_generation_latest(baseline_policy: dict[str, Any], validation_set: list[dict[str, Any]]) -> dict[str, Any]:
+    return {
         "candidates": [],
         "validation": {"baseline": validate_policy(baseline_policy, validation_set, min_samples=1), "candidates": []},
         "decision": {"status": "NO_VIABLE_CANDIDATE", "reason": "no GEPA generation completed"},
@@ -158,11 +244,29 @@ def run_strategy_evolution(
         "reflection": {},
         "prompt_genomes": [],
     }
-    candidates = latest["candidates"]
-    validation = latest["validation"]
-    decision = latest["decision"]
-    fusion = run_fusion_validation(baseline_policy, candidates, decision, validation_set, diagnostic, cfg)
-    status = fusion.get("decision_status") or decision.get("status") or "NO_BETTER_CANDIDATE"
+
+
+def _strategy_evolution_payload(
+    *,
+    cfg: StrategyEvolutionConfig,
+    status: str,
+    market: str,
+    as_of_date: str,
+    horizon_days: int,
+    trajectories: list[dict[str, Any]],
+    diagnostic_pool: list[dict[str, Any]],
+    validation_set: list[dict[str, Any]],
+    holdout: bool,
+    samples: dict[str, list[dict[str, Any]]],
+    trace_bundle: dict[str, Any],
+    diagnostic: dict[str, Any],
+    baseline_policy: dict[str, Any],
+    latest: dict[str, Any],
+    validation: dict[str, Any],
+    decision: dict[str, Any],
+    fusion: dict[str, Any],
+    generation_history: list[dict[str, Any]],
+) -> dict[str, Any]:
     return {
         "version": "strategy_evolution_v1",
         "optimizer": "gepa_inspired_prompt_evolution_v1",
@@ -179,7 +283,7 @@ def run_strategy_evolution(
         "diagnostic_report": diagnostic,
         "reflection_report": latest["reflection"],
         "baseline_policy": baseline_policy,
-        "candidate_policies": candidates,
+        "candidate_policies": latest["candidates"],
         "prompt_genomes": [genome_payload(genome) for genome in latest["prompt_genomes"]],
         "validation": validation,
         "decision": decision,
