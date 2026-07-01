@@ -1,9 +1,6 @@
 name: US Recommendation Performance
 
 on:
-  schedule:
-    # 北京时间周二到周六 06:15，衔接美股收盘后的 US Funnel。
-    - cron: '15 22 * * 1-5'
   workflow_dispatch:
 
 concurrency:
