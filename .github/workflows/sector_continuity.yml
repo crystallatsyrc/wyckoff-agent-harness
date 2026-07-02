@@ -1,9 +1,6 @@
 name: Sector Continuity Report
 
 on:
-  schedule:
-    # UTC 08:10 Mon-Fri = 北京时间周一至周五 16:10，A 股收盘后刷新概念热度历史
-    - cron: "10 8 * * 1-5"
   workflow_dispatch:
 
 concurrency:

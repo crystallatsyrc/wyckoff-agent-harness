@@ -1,8 +1,6 @@
 name: Review List Replay
 
 on:
-  schedule:
-    - cron: '25 11 * * 1-5'   # UTC 11:25 Mon-Fri = 北京时间 19:25
   workflow_dispatch:
 
 concurrency:

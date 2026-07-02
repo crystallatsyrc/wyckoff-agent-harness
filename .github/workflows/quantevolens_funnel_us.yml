@@ -1,9 +1,6 @@
 name: QuantEvoLens Funnel US
 
 on:
-  schedule:
-    # 美股常规交易 16:00 ET 收盘；21:35 UTC 覆盖 EST/EDT，始终在收盘后执行。
-    - cron: '35 21 * * 1-5'
   workflow_dispatch:
 
 concurrency:

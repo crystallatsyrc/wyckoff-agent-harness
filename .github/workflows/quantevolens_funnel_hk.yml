@@ -1,9 +1,6 @@
 name: QuantEvoLens Funnel HK
 
 on:
-  schedule:
-    # 港股常规交易 16:00 HKT 收盘；16:35 HKT / 08:35 UTC 执行，给收盘行情留缓冲。
-    - cron: '35 8 * * 1-5'
   workflow_dispatch:
 
 concurrency:
