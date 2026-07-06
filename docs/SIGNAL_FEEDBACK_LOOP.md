@@ -183,6 +183,29 @@ registry 只负责控制动态策略是否使用信号；原始 observations 仍
 
 `strategy_attribution_report.py` 会把 `candidate_shadow_score.grade` 聚合进 `score_bucket_stats_json._candidate_shadow_grade`，Web 端策略归因页展示 S/A/B/C/D 各档在不同持有周期下的胜率、平均收益、大涨率、大跌率和平均回撤。
 
+## GEPA-inspired 策略进化
+
+`strategy_reflection_job.py` 会在读取 `signal_outcomes`、`signal_observations` 和 `signal_policy_shadow_runs` 后运行
+`core.strategy_evolution.run_strategy_evolution`。这部分是 GEPA-inspired 的 shadow/review-only 流程，不是完整 DSPy GEPA
+复刻，也不会自动上线策略。
+
+核心步骤：
+
+1. Critic sampling：把最差 10 条、最好 10 条和最近 20 条轨迹整理成 `gepa_trace_bundle_v1`，轨迹包含
+   snapshot、prediction、critique、收益和回撤。
+2. Reflector：默认使用 deterministic fallback；也支持注入 LLM reflector，让模型读取 trace bundle 后输出
+   root causes、prompt failures、suggested edits 和 risk notes。
+3. Evolver：把反思结果转成 prompt genomes，并生成 conservative / balanced / aggressive 三类 shadow 候选。
+4. Pareto selection：验证集同时看收益、胜率、回撤、覆盖率和综合分，保存 `pareto_frontier`，避免只追单一分数。
+5. Fusion validation：候选胜过 baseline 后仍会与旧策略融合再验证；融合退化超过阈值则 `ROLLBACK`，否则
+   `CONFIRMED`。
+
+安全边界不变：输出只写入 `strategy_policy_candidates`，状态为 `READY_FOR_REVIEW` 或 `REJECTED`，候选策略仍保留
+`mode=shadow` 和 `auto_promote=false`。生产漏斗不会从该表读取并自动替换线上策略。
+
+LLM Reflector 默认关闭。需要真实模型反思时，设置 `STRATEGY_EVOLUTION_LLM_REFLECTOR=1`，并通过
+`STRATEGY_EVOLUTION_REFLECTOR_PROVIDER` / `STRATEGY_EVOLUTION_REFLECTOR_FALLBACKS` 选择现有 LLM provider 路由。
+
 ## Shadow 复盘怎么看
 
 Shadow 模式不会影响真实推荐。它的价值是回答三个问题：

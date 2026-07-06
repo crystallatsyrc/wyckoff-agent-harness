@@ -6,6 +6,8 @@ import argparse
 import os
 from datetime import date
 
+import _bootstrap  # noqa: F401
+
 from workflows.strategy_reflection_job import StrategyReflectionRequest, run_strategy_reflection_job
 
 
